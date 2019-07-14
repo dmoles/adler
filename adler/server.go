@@ -50,6 +50,8 @@ func (s *server) handler(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: generate directory indexes
 
+	// TODO: handle URL paths that already end in `.md`
+	
 	mdPath := filepath.Join(s.rootDir, path + ".md")
 	if _, err := os.Stat(mdPath); err != nil {
 		if os.IsNotExist(err) {
