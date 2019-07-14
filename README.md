@@ -2,6 +2,18 @@
 
 Adler is a minimalist Markdown wiki viewer.
 
+## Usage
+
+```
+adler start <root-dir> [-p <port>]
+```
+
+E.g., to serve from Markdown files in `/Users/irene/suda.wiki` on port 8181:
+
+```
+adler start /Users/irene/suda.wiki -p 8181
+```
+
 ## Name
 
 Adler is named for [Ada Adler](https://en.wikipedia.org/wiki/Ada_Adler)
