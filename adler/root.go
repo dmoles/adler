@@ -2,38 +2,44 @@ package adler
 
 import (
 	"fmt"
-	"io/ioutil"
+	"net/url"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
-type Directory interface {
-	Links() (link Links, err error)
+type Root interface {
+	Page(urlPath string) (Page, error)
 }
 
-func NewDirectory(path string) (dir Directory, err error) {
-	info, err := os.Stat(path)
+func NewRoot(rootDir string) (Root, error) {
+	info, err := os.Stat(rootDir)
 	if err != nil {
 		return nil, err
 	}
 	if !info.IsDir() {
-		return nil, fmt.Errorf("%v is not a directory", path)
+		return nil, fmt.Errorf("%#v is not a directory", rootDir)
 	}
-	return &directory{path: path}, nil
+	rootDirAbs, err := filepath.Abs(rootDir)
+	return &root{rootDirAbs: rootDirAbs}, nil
 }
 
-type directory struct {
-	path string
+type root struct {
+	rootDirAbs string
 }
 
-// TODO: figure out relative paths
-func (d *directory) Links() (link Links, err error) {
-	info, err := ioutil.ReadDir(d.path)
+func (r *root) Page(urlPath string) (Page, error) {
+	pathElements := strings.Split(urlPath, "/")
+	for _, pathElement := range pathElements {
+		if pathElement == ".." {
+			return nil, invalidPath(urlPath)
+		}
+	}
+	decodedPath, err := url.PathUnescape(urlPath)
 	if err != nil {
-		return nil, err
+		return nil, invalidPath(urlPath)
 	}
-	links := make(Links, len(info))
-	for i, l := range info {
-		links[i] = NewLink(l)
-	}
-	return links, nil
+	filePath := filepath.Join(r.rootDirAbs, decodedPath)
+	return NewPage(filePath)
 }
+

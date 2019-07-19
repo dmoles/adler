@@ -19,6 +19,8 @@ becomes
 
 and is served from the Markdown file `Page.md`.
 
+<!-- TODO: Just use real links -->
+
 ## Usage
 
 ```
