@@ -2,12 +2,13 @@ package adler
 
 import (
 	"fmt"
+	"github.com/russross/blackfriday/v2"
+	"gopkg.in/tylerb/graceful.v1"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
-	"github.com/russross/blackfriday/v2"
 	"strings"
 )
 
@@ -30,9 +31,11 @@ type server struct {
 
 func (s *server) Start() error {
 	log.Printf("Serving from %s on port %d", s.rootDir, s.port)
-	http.HandleFunc("/", s.handler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", s.handler)
+
 	var addr = fmt.Sprintf(":%d", s.port)
-	return http.ListenAndServe(addr, nil)
+	return graceful.RunWithErr(addr, 0, mux)
 }
 
 func (s *server) handler(w http.ResponseWriter, r *http.Request) {

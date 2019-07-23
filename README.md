@@ -24,14 +24,14 @@ and is served from the Markdown file `Page.md`.
 ## Usage
 
 ```
-adler start <root-dir> [-p <port>]
+adler <root-dir> [-p <port>]
 ```
 
 E.g., to serve from Markdown files in `/Users/irene/suda.wiki` on port 8181
 (default is 8080):
 
 ```
-adler start /Users/irene/suda.wiki -p 8181
+adler /Users/irene/suda.wiki -p 8181
 ```
 
 ## Known issues
