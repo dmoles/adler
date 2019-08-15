@@ -29,6 +29,7 @@ func invalidPath(urlPath string) error {
 	return fmt.Errorf("invalid path: %#v", urlPath)
 }
 
+// Deprecated TODO: do we need this? does it work?
 func textOfFirstHeading(filePath string) (string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {

@@ -3,7 +3,6 @@ package adler
 import (
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -11,31 +10,50 @@ import (
 	"testing"
 )
 
-func TestResolver(t *testing.T) {
+// ------------------------------------------------------------
+// Resolver
+
+func TestResolverFixture(t *testing.T) {
+	gunit.Run(new(ResolverFixture), t)
+}
+
+type ResolverFixture struct {
+	tempdirFixture
+	resolver *Resolver
+}
+
+func (f *ResolverFixture) SetupResolver() {
+	resolver, err := NewResolver(f.tempDir)
+	f.So(err, should.BeNil)
+	f.resolver = resolver
+}
+
+func (f *ResolverFixture) TestResolveFile() {
+	urlPath := "path/to/file.md"
+	pathExpected := f.CreateFile(urlPath)
+	pathActual, err := f.resolver.Resolve(urlPath)
+	f.So(err, should.BeNil)
+	f.So(pathActual, should.Equal, pathExpected)
+}
+
+func (f *ResolverFixture) SkipTestResolveFileDecodesUrls() {
+
+}
+
+// ------------------------------------------------------------
+// NewResolver
+
+func TestNewResolver(t *testing.T) {
 	gunit.Run(new(NewResolverFixture), t)
 }
 
 type NewResolverFixture struct {
-	*gunit.Fixture
-	tempDir string
-}
-
-func (f *NewResolverFixture) Setup() {
-	tempDir, err := ioutil.TempDir("", "NewResolverFixture")
-	f.So(err, should.BeNil)
-	f.tempDir = tempDir
-}
-
-func (f *NewResolverFixture) Teardown() {
-	err := os.RemoveAll(f.tempDir)
-	f.So(err, should.BeNil)
+	tempdirFixture
 }
 
 func (f *NewResolverFixture) TestSetsAbsoluteRootDir() {
-	rootDir := path.Join(f.tempDir, "root")
+	rootDir := f.CreateDir("root")
 	rootDirAbs, err := filepath.Abs(rootDir)
-	f.So(err, should.BeNil)
-	err = os.Mkdir(rootDirAbs, 0755)
 	f.So(err, should.BeNil)
 
 	r, err := NewResolver(rootDir)
@@ -55,13 +73,9 @@ func (f *NewResolverFixture) TestRootDirMustExist() {
 }
 
 func (f *NewResolverFixture) TestRootDirMustBeADirectory() {
-	rootDir := path.Join(f.tempDir, "root")
-	file, err := os.Create(rootDir)
-	f.So(err, should.BeNil)
-	err = file.Close()
-	f.So(err, should.BeNil)
-
+	rootDir := f.CreateFile("root")
 	r, err := NewResolver(rootDir)
 	f.So(r, should.BeNil)
 	f.So(err, should.NotBeNil)
 }
+
