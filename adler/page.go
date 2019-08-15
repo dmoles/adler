@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Deprecated: TODO: test & integrate w/Resolver
 type Page interface {
 	Title() string
 	Content() ([]byte, error)

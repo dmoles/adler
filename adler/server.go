@@ -41,6 +41,7 @@ func (s *server) Start() error {
 	return graceful.RunWithErr(addr, finishRequestTimeout, mux)
 }
 
+// Deprecated: TODO: reimplement w/Resolver
 func (s *server) handler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path[1:]
 

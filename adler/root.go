@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Deprecated: TODO: use Resolver instead
 type Root interface {
 	Page(urlPath string) (Page, error)
 }
