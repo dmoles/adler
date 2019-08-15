@@ -2,14 +2,18 @@ package adler
 
 import (
 	"fmt"
+	"github.com/russross/blackfriday/v2"
+	"gopkg.in/tylerb/graceful.v1"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
-	"github.com/russross/blackfriday/v2"
 	"strings"
+	"time"
 )
+
+const finishRequestTimeout = 5 * time.Second
 
 type Server interface {
 	Start() error
@@ -24,15 +28,17 @@ func NewServer(port int, rootDir string) (Server, error) {
 }
 
 type server struct {
-	port int
+	port    int
 	rootDir string
 }
 
 func (s *server) Start() error {
 	log.Printf("Serving from %s on port %d", s.rootDir, s.port)
-	http.HandleFunc("/", s.handler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", s.handler)
+
 	var addr = fmt.Sprintf(":%d", s.port)
-	return http.ListenAndServe(addr, nil)
+	return graceful.RunWithErr(addr, finishRequestTimeout, mux)
 }
 
 func (s *server) handler(w http.ResponseWriter, r *http.Request) {
@@ -51,8 +57,8 @@ func (s *server) handler(w http.ResponseWriter, r *http.Request) {
 	// TODO: generate directory indexes
 
 	// TODO: handle URL paths that already end in `.md`
-	
-	mdPath := filepath.Join(s.rootDir, path + ".md")
+
+	mdPath := filepath.Join(s.rootDir, path+".md")
 	if _, err := os.Stat(mdPath); err != nil {
 		if os.IsNotExist(err) {
 			http.Error(w, err.Error(), http.StatusNotFound)
@@ -70,7 +76,6 @@ func (s *server) handler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
 
-
 	// TODO: use a template language
 	// TODO: some CSS
 	_, _ = fmt.Fprintln(w, "<html>")
@@ -87,7 +92,7 @@ func (s *server) handler(w http.ResponseWriter, r *http.Request) {
 	_, _ = fmt.Fprintln(w, "<aside>")
 	_, _ = fmt.Fprintln(w, "<ul>")
 	for _, page := range pages {
-		_, _  = fmt.Fprintf(w, "<li><a href=\"%s\">%s</a></li>\n", page, page)
+		_, _ = fmt.Fprintf(w, "<li><a href=\"%s\">%s</a></li>\n", page, page)
 	}
 	_, _ = fmt.Fprintln(w, "</ul>")
 	_, _ = fmt.Fprintln(w, "</aside>")
@@ -95,4 +100,3 @@ func (s *server) handler(w http.ResponseWriter, r *http.Request) {
 	_, _ = fmt.Fprintln(w, "</body>")
 	_, _ = fmt.Fprintln(w, "</html>")
 }
-
