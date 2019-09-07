@@ -49,7 +49,7 @@ func (f *ResolverFixture) TestResolveFile() {
 }
 
 func (f *ResolverFixture) SkipTestResolveFileDecodesUrls() {
-
+	// TODO: test spaces, high-unicode etc.
 }
 
 // ------------------------------------------------------------

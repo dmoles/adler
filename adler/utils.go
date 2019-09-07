@@ -3,6 +3,7 @@ package adler
 import (
 	"bufio"
 	"fmt"
+	"github.com/lithammer/dedent"
 	"log"
 	"os"
 	"path/filepath"
@@ -68,5 +69,16 @@ func relativeLink(parent string, info os.FileInfo) (string, bool) {
 		}
 	}
 
-	return fmt.Sprintf("[%v](%v)\n", title, relPath), true
+	return fmt.Sprintf("[%v](%v)", title, relPath), true
+}
+
+// Dedents and trims whitespace from the specified string. Preserves
+// up to 1 trailing newline.
+func trim(text string) string {
+	dedented := dedent.Dedent(text)
+	trimmed := strings.TrimSpace(dedented)
+	if strings.HasSuffix(dedented, "\n") {
+		return trimmed + "\n"
+	}
+	return trimmed
 }

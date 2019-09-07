@@ -78,10 +78,16 @@ func (p *indexPage) Content() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	_, err = fmt.Fprintf(&sb, "# %s\n\n", p.Title())
+	if err != nil {
+		return nil, err
+	}
 	for _, info := range files {
 		if link, ok := relativeLink(p.dirPath, info); ok {
-			//noinspection GoUnhandledErrorResult
-			fmt.Fprintf(&sb, "- %v\n", link)
+			_, err = fmt.Fprintf(&sb, "- %v\n", link)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	return []byte(sb.String()), nil
