@@ -27,6 +27,10 @@ func isMarkdownFile(name string) bool {
 	return strings.HasSuffix(name, ".md")
 }
 
+func isHidden(name string) bool {
+	return strings.HasPrefix(name, ".")
+}
+
 func isDirectory(dirPath string) bool {
 	f, err := os.Stat(dirPath)
 	if err != nil {

@@ -108,3 +108,35 @@ func (f *PageFixture) TestIndexPageSupportsSubdirectories() {
 	content := page.Content()
 	f.So(string(content), should.Equal, expectedBody)
 }
+
+func (f *PageFixture) TestIndexPageIgnoresDotfiles() {
+	dir, err := f.CreateDir("dirName")
+	f.So(err, should.BeNil)
+
+	for i := 1; i <= 2; i++ {
+		body := []byte(fmt.Sprintf("# File %d\n", i))
+		baseName := fmt.Sprintf("file%d.md", i)
+		filePath := filepath.Join(dir, baseName)
+		err = ioutil.WriteFile(filePath, body, 0644)
+		f.So(err, should.BeNil)
+
+		dotfilePath := filepath.Join(dir, "." + baseName)
+		err = ioutil.WriteFile(dotfilePath, body, 0644)
+		f.So(err, should.BeNil)
+	}
+
+	expectedBody := trim(`
+	# DirName
+
+	- [File 1](file1.md)
+	- [File 2](file2.md)
+	`)
+
+	page, err := NewPage(dir)
+	f.So(err, should.BeNil)
+
+	f.So(page.Title(), should.Equal, "DirName")
+
+	content := page.Content()
+	f.So(string(content), should.Equal, expectedBody)
+}

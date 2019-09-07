@@ -100,7 +100,11 @@ func newIndexPage(dirPath string) (*page, error) {
 		return nil, err
 	}
 	for _, info := range files {
-		fullPath := filepath.Join(dirPath, info.Name())
+		filename := info.Name()
+		if isHidden(filename) {
+			continue
+		}
+		fullPath := filepath.Join(dirPath, filename)
 		if page, err := NewPage(fullPath); err == nil {
 			link := page.RelativeLink()
 			links = append(links, link)

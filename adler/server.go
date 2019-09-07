@@ -38,7 +38,6 @@ func (s *server) Start() error {
 
 }
 
-// TODO: figure out why '.' seems to be appearing as a subdirectory link for ephemera-wiki
 // TODO: figure out why relative links don't work
 func (s *server) handle(w http.ResponseWriter, r *http.Request) {
 	// TODO: generate TOC sidebar
