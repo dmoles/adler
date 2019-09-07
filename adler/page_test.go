@@ -5,7 +5,7 @@ import (
 	"github.com/smartystreets/assertions/should"
 	"github.com/smartystreets/gunit"
 	"io/ioutil"
-	"path"
+	"path/filepath"
 	"testing"
 
 	"github.com/lithammer/dedent"
@@ -51,13 +51,13 @@ func (f *PageFixture) TestMarkdownPage() {
 }
 
 func (f *PageFixture) TestIndexPage() {
-	dir, err := f.CreateDir("DirName")
+	dir, err := f.CreateDir("dirName")
 	f.So(err, should.BeNil)
 
 	for i := 1; i <= 2; i++ {
 		body := []byte(fmt.Sprintf("# File %d\n", i))
 		baseName := fmt.Sprintf("file%d.md", i)
-		filePath := path.Join(dir, baseName)
+		filePath := filepath.Join(dir, baseName)
 		err = ioutil.WriteFile(filePath, body, 0644)
 		f.So(err, should.BeNil)
 	}
@@ -80,26 +80,26 @@ func (f *PageFixture) TestIndexPage() {
 }
 
 func (f *PageFixture) TestIndexPageSupportsSubdirectories() {
-	dir, err := f.CreateDir("DirName")
+	dir, err := f.CreateDir("dirName")
 	f.So(err, should.BeNil)
 
 	for i := 1; i <= 2; i++ {
 		body := []byte(fmt.Sprintf("# File %d\n", i))
 		baseName := fmt.Sprintf("file%d.md", i)
-		filePath := path.Join(dir, baseName)
+		filePath := filepath.Join(dir, baseName)
 		err = ioutil.WriteFile(filePath, body, 0644)
 		f.So(err, should.BeNil)
 	}
 
-	_, err = f.CreateDir("DirName/Subdirectory")
+	_, err = f.CreateDir("dirName/subdirectory")
 	f.So(err, should.BeNil)
 
 	expectedBody := trim(`
 	# DirName
 
-	- [Subdirectory](Subdirectory)
 	- [File 1](file1.md)
 	- [File 2](file2.md)
+	- [Subdirectory](subdirectory)
 	`)
 
 	page, err := NewPage(dir)

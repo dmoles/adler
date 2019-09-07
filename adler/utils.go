@@ -6,7 +6,6 @@ import (
 	"github.com/lithammer/dedent"
 	"log"
 	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -30,7 +29,7 @@ func invalidPath(urlPath string) error {
 	return fmt.Errorf("invalid path: %#v", urlPath)
 }
 
-// Deprecated TODO: do we need this? does it work?
+// Deprecated TODO: consider reading markdownPage.Content at initialization
 func textOfFirstHeading(filePath string) (string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -50,26 +49,6 @@ func textOfFirstHeading(filePath string) (string, error) {
 
 func isMarkdownFile(name string) bool {
 	return strings.HasSuffix(name, ".md")
-}
-
-// TODO: wrap os.Stat and ioutil.ReadDir to return something encapsulating full path
-func relativeLink(parent string, info os.FileInfo) (string, bool) {
-	name := info.Name()
-	title := name
-	relPath := name
-
-	if !info.IsDir() {
-		if !strings.HasSuffix(name, ".md") {
-			return "", false
-		}
-		filePath := filepath.Join(parent, name)
-		firstHeading, _ := textOfFirstHeading(filePath)
-		if firstHeading != "" {
-			title = firstHeading
-		}
-	}
-
-	return fmt.Sprintf("[%v](%v)", title, relPath), true
 }
 
 // Dedents and trims whitespace from the specified string. Preserves
