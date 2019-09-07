@@ -18,21 +18,33 @@ func TestResolverFixture(t *testing.T) {
 }
 
 type ResolverFixture struct {
-	tempdirFixture
+	*gunit.Fixture
+	TempdirManager
 	resolver *Resolver
 }
 
-func (f *ResolverFixture) SetupResolver() {
+func (f *ResolverFixture) Setup() {
+	err := f.InitTempDir()
+	f.So(err, should.BeNil)
+
 	resolver, err := NewResolver(f.tempDir)
 	f.So(err, should.BeNil)
 	f.resolver = resolver
 }
 
+func (f *ResolverFixture) Teardown() {
+	err := f.RemoveTempDir()
+	f.So(err, should.BeNil)
+}
+
 func (f *ResolverFixture) TestResolveFile() {
 	urlPath := "path/to/file.md"
-	pathExpected := f.CreateFile(urlPath)
+	pathExpected, err := f.CreateFile(urlPath)
+	f.So(err, should.BeNil)
+
 	pathActual, err := f.resolver.Resolve(urlPath)
 	f.So(err, should.BeNil)
+
 	f.So(pathActual, should.Equal, pathExpected)
 }
 
@@ -47,12 +59,24 @@ func TestNewResolver(t *testing.T) {
 	gunit.Run(new(NewResolverFixture), t)
 }
 
+func (f *NewResolverFixture) Setup() {
+	err := f.InitTempDir()
+	f.So(err, should.BeNil)
+}
+
+func (f *NewResolverFixture) Teardown() {
+	err := f.RemoveTempDir()
+	f.So(err, should.BeNil)
+}
+
 type NewResolverFixture struct {
-	tempdirFixture
+	*gunit.Fixture
+	TempdirManager
 }
 
 func (f *NewResolverFixture) TestSetsAbsoluteRootDir() {
-	rootDir := f.CreateDir("root")
+	rootDir, err := f.CreateDir("root")
+	f.So(err, should.BeNil)
 	rootDirAbs, err := filepath.Abs(rootDir)
 	f.So(err, should.BeNil)
 
@@ -73,7 +97,8 @@ func (f *NewResolverFixture) TestRootDirMustExist() {
 }
 
 func (f *NewResolverFixture) TestRootDirMustBeADirectory() {
-	rootDir := f.CreateFile("root")
+	rootDir, err := f.CreateFile("root")
+	f.So(err, should.BeNil)
 	r, err := NewResolver(rootDir)
 	f.So(r, should.BeNil)
 	f.So(err, should.NotBeNil)
