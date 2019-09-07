@@ -49,6 +49,26 @@ func (f *PageFixture) TestMarkdownPage() {
 	f.So(string(content), should.Equal, body)
 }
 
+func (f *PageFixture) TestTitleIgnoresQuoted() {
+	body := dedent.Dedent(`
+		> # Not the title
+
+		# Expected title
+
+		Body of document
+	`)
+
+	filePath, err := f.CreateFile("path/to/file.md")
+	f.So(err, should.BeNil)
+	err = ioutil.WriteFile(filePath, []byte(body), 0644)
+	f.So(err, should.BeNil)
+
+	page, err := NewPage(filePath)
+	f.So(err, should.BeNil)
+
+	f.So(page.Title(), should.Equal, "Expected title")
+}
+
 func (f *PageFixture) TestIndexPage() {
 	dir, err := f.CreateDir("dirName")
 	f.So(err, should.BeNil)

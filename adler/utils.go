@@ -14,7 +14,7 @@ import (
 // ------------------------------------------------------------
 // Utility globals
 
-var headingRegexp = regexp.MustCompile("#+ +(.+)$")
+var headingRegexp = regexp.MustCompile("^[\\s#]*#+ +(.+)$")
 
 // ------------------------------------------------------------
 // Utility methods
@@ -42,7 +42,8 @@ func isDirectory(dirPath string) bool {
 func textOfFirstHeading(markdownBody []byte) string {
 	scanner := bufio.NewScanner(bytes.NewBuffer(markdownBody))
 	for scanner.Scan() {
-		matches := headingRegexp.FindStringSubmatch(scanner.Text())
+		text := scanner.Text()
+		matches := headingRegexp.FindStringSubmatch(text)
 		if len(matches) > 1 {
 			return matches[1]
 		}
