@@ -8,11 +8,12 @@ import (
 	"strings"
 )
 
-type Resolver struct {
-	rootDir string
+type Resolver interface {
+	Resolve(urlPath string) (string, error)
+	RootDir() string
 }
 
-func NewResolver(rootDir string) (*Resolver, error) {
+func NewResolver(rootDir string) (Resolver, error) {
 	rootDirAbs, err := filepath.Abs(rootDir)
 	if err != nil {
 		return nil, err
@@ -24,10 +25,18 @@ func NewResolver(rootDir string) (*Resolver, error) {
 	if !info.IsDir() {
 		return nil, fmt.Errorf("not a directory: %s", rootDirAbs)
 	}
-	return &Resolver{rootDir: rootDirAbs}, nil
+	return &resolver{rootDir: rootDirAbs}, nil
 }
 
-func (r *Resolver) Resolve(urlPath string) (string, error) {
+type resolver struct {
+	rootDir string
+}
+
+func (r *resolver) RootDir() string {
+	return r.rootDir
+}
+
+func (r *resolver) Resolve(urlPath string) (string, error) {
 	pathElements := strings.Split(urlPath, "/")
 	for _, pathElement := range pathElements {
 		if pathElement == ".." {

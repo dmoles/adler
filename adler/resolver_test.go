@@ -20,7 +20,7 @@ func TestResolverFixture(t *testing.T) {
 type ResolverFixture struct {
 	*gunit.Fixture
 	TempdirManager
-	resolver *Resolver
+	resolver Resolver
 }
 
 func (f *ResolverFixture) Setup() {
@@ -83,7 +83,7 @@ func (f *NewResolverFixture) TestSetsAbsoluteRootDir() {
 	r, err := NewResolver(rootDir)
 	f.So(err, should.BeNil)
 	f.So(r, should.NotBeNil)
-	f.So(r.rootDir, should.Equal, rootDirAbs)
+	f.So(r.RootDir(), should.Equal, rootDirAbs)
 }
 
 func (f *NewResolverFixture) TestRootDirMustExist() {

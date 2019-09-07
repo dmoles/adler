@@ -2,6 +2,7 @@ package adler
 
 import (
 	"fmt"
+	"github.com/russross/blackfriday/v2"
 	"io/ioutil"
 	"os"
 	"path"
@@ -14,6 +15,7 @@ type Page interface {
 	Title() string
 	Content() []byte
 	RelativeLink() string
+	ToHtml() string
 }
 
 func NewPage(filePath string) (Page, error) {
@@ -35,6 +37,7 @@ type page struct {
 	title    string
 	content []byte
 	filePath string
+	html string
 }
 
 func newPage(path string, content []byte) *page {
@@ -55,6 +58,13 @@ func (p *page) Content() []byte {
 
 func (p *page) RelativeLink() string {
 	return fmt.Sprintf("[%v](%v)", p.title, path.Base(p.filePath))
+}
+
+func (p *page) ToHtml() string {
+	if p.html == "" {
+		p.html = string(blackfriday.Run(p.content))
+	}
+	return p.html
 }
 
 // ------------------------------------------------------------
