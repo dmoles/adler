@@ -45,8 +45,7 @@ func (f *PageFixture) TestMarkdownPage() {
 
 	f.So(page.Title(), should.Equal, "Expected title")
 
-	content, err := page.Content()
-	f.So(err, should.BeNil)
+	content := page.Content()
 	f.So(string(content), should.Equal, body)
 }
 
@@ -74,8 +73,7 @@ func (f *PageFixture) TestIndexPage() {
 
 	f.So(page.Title(), should.Equal, "DirName")
 
-	content, err := page.Content()
-	f.So(err, should.BeNil)
+	content := page.Content()
 	f.So(string(content), should.Equal, expectedBody)
 }
 
@@ -107,7 +105,6 @@ func (f *PageFixture) TestIndexPageSupportsSubdirectories() {
 
 	f.So(page.Title(), should.Equal, "DirName")
 
-	content, err := page.Content()
-	f.So(err, should.BeNil)
+	content := page.Content()
 	f.So(string(content), should.Equal, expectedBody)
 }

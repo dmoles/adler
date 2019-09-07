@@ -12,7 +12,7 @@ import (
 
 type Page interface {
 	Title() string
-	Content() ([]byte, error)
+	Content() []byte
 	RelativeLink() string
 }
 
@@ -23,76 +23,74 @@ func NewPage(filePath string) (Page, error) {
 	}
 
 	if info.IsDir() {
-		return newIndexPage(filePath), nil
+		return newIndexPage(filePath)
 	}
 	return newMarkdownPage(filePath)
 }
 
 // ------------------------------------------------------------
-// markdownPage
+// page
 
-type markdownPage struct {
+type page struct {
 	title    string
+	content []byte
 	filePath string
 }
 
-func newMarkdownPage(filePath string) (*markdownPage, error) {
-	if !isMarkdownFile(filePath) {
-		return nil, fmt.Errorf("%#v is neither a Markdown file nor a directory", filePath)
-	}
-
-	// TODO: just read & cache the content immediately
-	title, err := textOfFirstHeading(filePath)
-	if err != nil {
-		return nil, err
-	}
+func newPage(path string, content []byte) *page {
+	title := textOfFirstHeading(content)
 	if title == "" {
-		title = filepath.Base(filePath)
+		title = asTitle(path)
 	}
-	return &markdownPage{title: title, filePath: filePath}, nil
+	return &page{title: title, content: content, filePath: path}
 }
 
-func (p *markdownPage) Title() string {
+func (p *page) Title() string {
 	return p.title
 }
 
-func (p *markdownPage) Content() ([]byte, error) {
-	return ioutil.ReadFile(p.filePath)
+func (p *page) Content() []byte {
+	return p.content
 }
 
-func (p *markdownPage) RelativeLink() string {
+func (p *page) RelativeLink() string {
 	return fmt.Sprintf("[%v](%v)", p.title, path.Base(p.filePath))
 }
 
 // ------------------------------------------------------------
-// indexPage
+// Initializers
 
-type indexPage struct {
-	dirPath string
+func newMarkdownPage(filePath string) (*page, error) {
+	if !isMarkdownFile(filePath) {
+		return nil, fmt.Errorf("%#v is not a Markdown file", filePath)
+	}
+
+	content, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+	return newPage(filePath, content), nil
 }
 
-func newIndexPage(dirPath string) *indexPage {
-	return &indexPage{dirPath: dirPath}
-}
 
-func (p *indexPage) Title() string {
-	return strings.Title(filepath.Base(p.dirPath))
-}
+func newIndexPage(dirPath string) (*page, error) {
+	if !isDirectory(dirPath) {
+		return nil, fmt.Errorf("%#v is not a directory", dirPath)
+	}
 
-func (p *indexPage) Content() ([]byte, error) {
 	var sb strings.Builder
-	_, err := fmt.Fprintf(&sb, "# %s\n\n", p.Title())
+	_, err := fmt.Fprintf(&sb, "# %s\n\n", asTitle(dirPath))
 	if err != nil {
 		return nil, err
 	}
 
 	var links []string
-	files, err := ioutil.ReadDir(p.dirPath)
+	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, err
 	}
 	for _, info := range files {
-		fullPath := filepath.Join(p.dirPath, info.Name())
+		fullPath := filepath.Join(dirPath, info.Name())
 		if page, err := NewPage(fullPath); err == nil {
 			link := page.RelativeLink()
 			links = append(links, link)
@@ -106,10 +104,5 @@ func (p *indexPage) Content() ([]byte, error) {
 		}
 	}
 
-	return []byte(sb.String()), nil
+	return newPage(dirPath, []byte(sb.String())), nil
 }
-
-func (p *indexPage) RelativeLink() string {
-	return fmt.Sprintf("[%v](%v)", p.Title(), path.Base(p.dirPath))
-}
-
