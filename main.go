@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const defaultPort = 8080
+const defaultPort = 8181
 
 func start(port int, rootDir string) error {
 	server, err := adler.NewServer(port, rootDir)

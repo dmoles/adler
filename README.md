@@ -2,36 +2,17 @@
 
 Adler is a minimalist Markdown wiki viewer.
 
-It follows the [Gollum](https://github.com/gollum/gollum) / [GitHub
-wiki](https://help.github.com/en/articles/about-wikis) convention of
-linking based on the page title without extension, so a link of the
-form
-
-```
-[some link text](Page)
-```
-
-becomes
-
-```
-<a href="Page">some link text</a>
-```
-
-and is served from the Markdown file `Page.md`.
-
-<!-- TODO: Just use real links -->
-
 ## Usage
 
 ```
 adler <root-dir> [-p <port>]
 ```
 
-E.g., to serve from Markdown files in `/Users/irene/suda.wiki` on port 8181
-(default is 8080):
+E.g., to serve from Markdown files in `/Users/irene/suda.wiki` on port 8282
+(default is 8181):
 
 ```
-adler /Users/irene/suda.wiki -p 8181
+adler /Users/irene/suda.wiki -p 8282
 ```
 
 ## Known issues
