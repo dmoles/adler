@@ -200,14 +200,14 @@ var pageTemplate = func() *template.Template {
 	</nav>
 	</header>
 	<body>
-	<main>
-	{{.Body}}
-	</main>
 	<aside>
 	<nav>
 		{{.TOC}}
 	</nav>
 	</aside>
+	<main>
+	{{.Body}}
+	</main>
 	<footer>
 	<p><img class="adler-icon" src="/favicon-96x96.png"/> Served by <a href="https://github.com/dmoles/adler/">Adler</a>.</p>
 	</footer>

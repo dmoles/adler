@@ -102,7 +102,7 @@ body {
     background-color: #fffef8;
     color: #000000;
     display: grid;
-    grid-template-columns: 1fr 20em;
+    grid-template-columns: 20em 1fr;
     font-family: "IBM Plex Sans", sans-serif;
     font-weight: 200;
     font-size: medium;
@@ -112,15 +112,20 @@ body {
     min-height: min-content;
 }
 
-main {
+aside {
     grid-column: 1;
+    margin-right: 0.5em;
+    padding-right: 0.5em;
+    border-right: 1px dotted #202b49;
 }
 
-aside {
+main {
     grid-column: 2;
-    margin-left: 0.5em;
-    padding-left: 0.5em;
-    border-left: 1px dotted #202b49;
+}
+
+header {
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 footer {
