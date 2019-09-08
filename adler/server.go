@@ -5,6 +5,7 @@ import (
 	"gopkg.in/tylerb/graceful.v1"
 	"log"
 	"net/http"
+	"strings"
 	"text/template"
 	"time"
 )
@@ -25,7 +26,7 @@ func NewServer(port int, rootDir string) (Server, error) {
 
 type server struct {
 	Resolver
-	port    int
+	port int
 }
 
 func (s *server) Start() error {
@@ -38,37 +39,76 @@ func (s *server) Start() error {
 
 }
 
-// TODO: figure out why relative links don't work
+// TODO: handle images etc.
 func (s *server) handle(w http.ResponseWriter, r *http.Request) {
 	// TODO: generate TOC sidebar
 
-	mdPath, err := s.Resolve(r.URL.Path[1:])
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusNotFound)
+	path := r.URL.Path
+	if s.isCSS(path) {
+		err := s.serveCSS(w, path)
+		if err != nil {
+			s.error404(w, err)
+		}
 		return
+	}
+
+	err := s.serveHTML(w, path)
+	if err != nil {
+		s.error404(w, err)
+	}
+}
+
+func (s *server) logError(err error) {
+	log.Println(err)
+}
+
+func (s *server) error404(w http.ResponseWriter, err error) {
+	s.logError(err)
+	http.Error(w, err.Error(), http.StatusNotFound)
+}
+
+func (s *server) isCSS(path string) bool {
+	return strings.HasPrefix(path, "/css/")
+}
+
+func (s *server) serveCSS(w http.ResponseWriter, path string) error {
+	cssPath := strings.TrimPrefix(path, "/css")
+	data, err := findCSS(cssPath)
+	if err != nil {
+		return err
+	}
+	w.Header().Add("Content-Type", "text/css; charset=UTF-8")
+	n, err := w.Write(data)
+	if err != nil {
+		return err
+	}
+	if n != len(data) {
+		return err
+	}
+	return nil
+}
+
+func (s *server) serveHTML(w http.ResponseWriter, path string) error {
+	mdPath, err := s.Resolve(path[1:])
+	if err != nil {
+		return err
 	}
 
 	page, err := NewPage(mdPath)
 	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
+		return err
 	}
 
 	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
 
-	data := pageData { page.Title(), page.ToHtml() }
-	err = pageTemplate.Execute(w, data)
-
-	if err != nil {
-		log.Println(err)
-	}
+	// TODO: make sure all possible errors happen before first body write
+	data := pageData{page.Title(), page.ToHtml()}
+	return pageTemplate.Execute(w, data)
 }
 
 type pageData struct {
 	Title string
-	Body string
+	Body  string
 }
 
 var pageTemplate = func() *template.Template {
@@ -76,6 +116,8 @@ var pageTemplate = func() *template.Template {
 	<html>
 	<head>
 		<title>{{.Title}}</title>
+		<link rel="stylesheet" href="/css/reset.css">
+		<link rel="stylesheet" href="/css/main.css">
 	</head>
 	<body>
 	<main>
@@ -91,64 +133,3 @@ var pageTemplate = func() *template.Template {
 	}
 	return tmpl
 }()
-
-//// Deprecated: TODO: reimplement w/Resolver
-//func (s *server) handler(w http.ResponseWriter, r *http.Request) {
-//	path := r.URL.Path[1:]
-//
-//	var pages []string
-//	err := filepath.Walk(s.rootDir, func(path string, info os.FileInfo, err error) error {
-//		// TODO: handle subdirectories properly
-//		name := info.Name()
-//		if strings.HasSuffix(name, ".md") {
-//			pages = append(pages, strings.TrimSuffix(name, ".md"))
-//		}
-//		return nil
-//	})
-//
-//	// TODO: generate directory indexes
-//
-//	// TODO: handle URL paths that already end in `.md`
-//
-//	mdPath := filepath.Join(s.rootDir, path+".md")
-//	if _, err := os.Stat(mdPath); err != nil {
-//		if os.IsNotExist(err) {
-//			http.Error(w, err.Error(), http.StatusNotFound)
-//			return
-//		}
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//		return
-//	}
-//	content, err := ioutil.ReadFile(mdPath)
-//	if err != nil {
-//		http.Error(w, err.Error(), http.StatusInternalServerError)
-//		return
-//	}
-//	output := blackfriday.Run(content)
-//
-//	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
-//
-//	// TODO: use a template language
-//	// TODO: some CSS
-//	_, _ = fmt.Fprintln(w, "<html>")
-//	_, _ = fmt.Fprintln(w, "<head>")
-//	_, _ = fmt.Fprintf(w, "  <title>%s</title>\n", path)
-//	_, _ = fmt.Fprintln(w, "</head>")
-//	_, _ = fmt.Fprintln(w, "<body>")
-//	_, _ = fmt.Fprintln(w, "<main>")
-//
-//	_, _ = w.Write(output)
-//
-//	_, _ = fmt.Fprintln(w, "</main>")
-//
-//	_, _ = fmt.Fprintln(w, "<aside>")
-//	_, _ = fmt.Fprintln(w, "<ul>")
-//	for _, page := range pages {
-//		_, _ = fmt.Fprintf(w, "<li><a href=\"%s\">%s</a></li>\n", page, page)
-//	}
-//	_, _ = fmt.Fprintln(w, "</ul>")
-//	_, _ = fmt.Fprintln(w, "</aside>")
-//
-//	_, _ = fmt.Fprintln(w, "</body>")
-//	_, _ = fmt.Fprintln(w, "</html>")
-//}
