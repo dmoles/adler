@@ -3,7 +3,6 @@ package adler
 import (
 	"fmt"
 	"net/url"
-	"os"
 	"path/filepath"
 	"strings"
 )
@@ -18,11 +17,7 @@ func NewResolver(rootDir string) (Resolver, error) {
 	if err != nil {
 		return nil, err
 	}
-	info, err := os.Stat(rootDirAbs)
-	if err != nil {
-		return nil, err
-	}
-	if !info.IsDir() {
+	if !isDirectory(rootDirAbs) {
 		return nil, fmt.Errorf("not a directory: %s", rootDirAbs)
 	}
 	return &resolver{rootDir: rootDirAbs}, nil
@@ -48,5 +43,13 @@ func (r *resolver) Resolve(urlPath string) (string, error) {
 		return "", invalidPath(urlPath)
 	}
 	filePath := filepath.Join(r.rootDir, decodedPath)
+
+	if isDirectory(filePath) {
+		readmePath := filepath.Join(filePath, "README.md")
+		if isFile(readmePath) {
+			return readmePath, nil
+		}
+	}
+
 	return filePath, nil
 }

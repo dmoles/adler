@@ -101,6 +101,8 @@
 body {
     background-color: #fffef8;
     color: #000000;
+    display: grid;
+    grid-template-columns: 1fr 20em;
     font-family: "IBM Plex Sans", sans-serif;
     font-weight: 200;
     font-size: medium;
@@ -108,9 +110,24 @@ body {
     margin: 1rem;
 }
 
+main {
+    grid-column: 1;
+}
+
+aside {
+    grid-column: 2;
+    margin-left: 0.5em;
+    padding-left: 0.5em;
+    border-left: 1px dotted #202b49;
+}
+
 a {
     color: #035a5c;
     text-decoration: none;
+}
+
+p a {
+    font-weight: bold;
 }
 
 em {
@@ -118,7 +135,7 @@ em {
 }
 
 strong {
-    font-weight: normal;
+    font-weight: bold;
 }
 
 h1, h2, h3, h4, h5 {
@@ -168,21 +185,12 @@ blockquote {
     line-height: 1.16667;
     margin-top: 0.75rem;
     margin-left: 1rem;
+    padding-left: 1rem;
     border-left: 1px dotted #747171;
 }
 
 blockquote p {
-    font-style: italic;
     margin-bottom: 3px;
-}
-
-blockquote p em {
-    font-style: normal;
-}
-
-blockquote p strong {
-    font-style: normal;
-    font-variant: all-small-caps;
 }
 
 blockquote p:last-of-type {
@@ -211,6 +219,24 @@ ol {
 
 li {
     padding-left: 0.25rem;
+}
+
+dl {
+    display:grid;
+    grid-gap: 0.5rem;
+    grid-template-columns: max-content 1fr;
+    margin-top: 1rem;
+}
+
+dt {
+    display:block;
+    font-weight: bold;
+    grid-column: 1;
+}
+
+dd {
+    display:block;
+    grid-column: 2;
 }
 
 table {

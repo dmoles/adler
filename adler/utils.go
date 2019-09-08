@@ -39,6 +39,14 @@ func isDirectory(dirPath string) bool {
 	return f.IsDir()
 }
 
+func isFile(filePath string) bool {
+	f, err := os.Stat(filePath)
+	if err != nil {
+		return false
+	}
+	return !f.IsDir()
+}
+
 func textOfFirstHeading(markdownBody []byte) string {
 	scanner := bufio.NewScanner(bytes.NewBuffer(markdownBody))
 	for scanner.Scan() {

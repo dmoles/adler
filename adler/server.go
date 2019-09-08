@@ -94,6 +94,11 @@ func (s *server) serveHTML(w http.ResponseWriter, path string) error {
 		return err
 	}
 
+	tocPage, err := NewPage(s.RootDir())
+	if err != nil {
+		return err
+	}
+
 	page, err := NewPage(mdPath)
 	if err != nil {
 		return err
@@ -102,15 +107,21 @@ func (s *server) serveHTML(w http.ResponseWriter, path string) error {
 	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
 
 	// TODO: make sure all possible errors happen before first body write
-	data := pageData{page.Title(), page.ToHtml()}
+	data := pageData{
+		TOC: tocPage.ToHtml(),
+		Title: page.Title(),
+		Body: page.ToHtml(),
+	}
 	return pageTemplate.Execute(w, data)
 }
 
 type pageData struct {
+	TOC string
 	Title string
 	Body  string
 }
 
+// TODO: move this to a file cf. CSS
 var pageTemplate = func() *template.Template {
 	headTmpl := trim(`
 	<html>
@@ -119,10 +130,20 @@ var pageTemplate = func() *template.Template {
 		<link rel="stylesheet" href="/css/reset.css">
 		<link rel="stylesheet" href="/css/main.css">
 	</head>
+	<header>
+	<nav>
+		<h5><a href="/">Home</a></h5>
+	</nav>
+	</header>
 	<body>
 	<main>
 	{{.Body}}
 	</main>
+	<aside>
+	<nav>
+		{{.TOC}}
+	</nav>
+	</aside>
 	</body>
 	</html>
 	`)
