@@ -69,6 +69,7 @@ func (p *page) RelativeLink() string {
 
 func (p *page) ToHtml() string {
 	if p.html == "" {
+		// TODO: figure out AutoHeadingIds
 		p.html = string(blackfriday.Run(p.content))
 	}
 	return p.html
