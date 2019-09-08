@@ -5,6 +5,7 @@ import (
 	"gopkg.in/tylerb/graceful.v1"
 	"log"
 	"net/http"
+	"path"
 	"strings"
 	"text/template"
 	"time"
@@ -43,16 +44,24 @@ func (s *server) Start() error {
 func (s *server) handle(w http.ResponseWriter, r *http.Request) {
 	// TODO: generate TOC sidebar
 
-	path := r.URL.Path
-	if s.isCSS(path) {
-		err := s.serveCSS(w, path)
+	urlPath := r.URL.Path
+	if s.isCSS(urlPath) {
+		err := s.serveCSS(w, urlPath)
 		if err != nil {
 			s.error404(w, err)
 		}
 		return
 	}
 
-	err := s.serveHTML(w, path)
+	if s.isFavicon(urlPath) {
+		err := s.serveFavicon(w, urlPath)
+		if err != nil {
+			s.error404(w, err)
+		}
+		return
+	}
+
+	err := s.serveHTML(w, urlPath)
 	if err != nil {
 		s.error404(w, err)
 	}
@@ -67,17 +76,51 @@ func (s *server) error404(w http.ResponseWriter, err error) {
 	http.Error(w, err.Error(), http.StatusNotFound)
 }
 
-func (s *server) isCSS(path string) bool {
-	return strings.HasPrefix(path, "/css/")
+func (s *server) isCSS(urlPath string) bool {
+	return strings.HasPrefix(urlPath, "/css/")
 }
 
-func (s *server) serveCSS(w http.ResponseWriter, path string) error {
-	cssPath := strings.TrimPrefix(path, "/css")
+func (s *server) serveCSS(w http.ResponseWriter, urlPath string) error {
+	cssPath := strings.TrimPrefix(urlPath, "/css")
 	data, err := findCSS(cssPath)
 	if err != nil {
 		return err
 	}
 	w.Header().Add("Content-Type", "text/css; charset=UTF-8")
+	n, err := w.Write(data)
+	if err != nil {
+		return err
+	}
+	if n != len(data) {
+		return err
+	}
+	return nil
+}
+
+func (s *server) isFavicon(urlPath string) bool {
+	if "/favicon.ico" == urlPath {
+		return true
+	}
+	dir := path.Dir(urlPath)
+	if dir != "/" {
+		return false;
+	}
+	if !strings.HasSuffix(urlPath, ".png") {
+		return false
+	}
+	if !strings.Contains(urlPath, "icon") {
+		return false
+	}
+	return true
+}
+
+func (s *server) serveFavicon(w http.ResponseWriter, urlPath string) error {
+	imagePath := path.Join("favicons/", path.Base(urlPath))
+	data, contentType, err := findImage(imagePath)
+	if err != nil {
+		return err
+	}
+	w.Header().Add("Content-Type", contentType)
 	n, err := w.Write(data)
 	if err != nil {
 		return err
@@ -132,6 +175,24 @@ var pageTemplate = func() *template.Template {
 		<title>{{.Title}}</title>
 		<link rel="stylesheet" href="/css/reset.css">
 		<link rel="stylesheet" href="/css/main.css">
+
+		<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+		<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<link rel="manifest" href="/manifest.json">
+		<meta name="msapplication-TileColor" content="#ffffff">
+		<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+		<meta name="theme-color" content="#ffffff">
 	</head>
 	<header>
 	<nav>
@@ -147,6 +208,9 @@ var pageTemplate = func() *template.Template {
 		{{.TOC}}
 	</nav>
 	</aside>
+	<footer>
+	<p><img class="adler-icon" src="/favicon-96x96.png"/> Served by <a href="https://github.com/dmoles/adler/">Adler</a>.</p>
+	</footer>
 	</body>
 	</html>
 	`)

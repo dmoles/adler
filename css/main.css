@@ -108,6 +108,8 @@ body {
     font-size: medium;
     line-height: 1.33333;
     margin: 1rem;
+    height: 100%;
+    min-height: min-content;
 }
 
 main {
@@ -119,6 +121,11 @@ aside {
     margin-left: 0.5em;
     padding-left: 0.5em;
     border-left: 1px dotted #202b49;
+}
+
+footer {
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 a {
@@ -268,4 +275,21 @@ table tr:not(:last-child) th {
 
 table tr:not(:last-child) td {
     border-bottom: 1px solid #7c7e7f;
+}
+
+footer {
+    border-top: 1px solid #202b49;
+    color: #202b49;
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+footer p {
+    font-size: small;
+}
+
+img.adler-icon {
+    height: 1rem;
+    width: 1rem;
+    vertical-align: text-top;
 }
