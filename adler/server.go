@@ -94,6 +94,9 @@ func (s *server) serveHTML(w http.ResponseWriter, path string) error {
 		return err
 	}
 
+	// TODO: something smarter
+	//       - title
+	//       - subdirectories
 	tocPage, err := NewPage(s.RootDir())
 	if err != nil {
 		return err
