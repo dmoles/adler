@@ -18,12 +18,7 @@ type Page interface {
 	ToHtml() string
 }
 
-var pageCache = map[string]Page{}
-
 func NewPage(filePath string) (Page, error) {
-	if page, ok := pageCache[filePath]; ok {
-		return page, nil
-	}
 	info, err := os.Stat(filePath)
 	if err != nil {
 		return nil, err
@@ -51,7 +46,6 @@ func newPage(path string, content []byte) *page {
 		title = asTitle(path)
 	}
 	p := &page{title: title, content: content, filePath: path}
-	pageCache[path] = p
 	return p
 }
 
