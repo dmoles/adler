@@ -102,7 +102,7 @@ body {
     background-color: #fffef8;
     color: #000000;
     display: grid;
-    grid-template-columns: 20em 1fr;
+    grid-template-columns: 15em 1fr;
     font-family: "IBM Plex Sans", sans-serif;
     font-weight: 200;
     font-size: medium;
@@ -159,13 +159,13 @@ h1, h2, h3, h4, h5 {
 }
 
 h1 {
-    font-size: x-large;
+    font-size: large;
     font-weight: bold;
     text-transform: uppercase;
 }
 
 h2 {
-    font-size: large;
+    font-size: medium;
     font-weight: bold;
     text-transform: uppercase;
 }
