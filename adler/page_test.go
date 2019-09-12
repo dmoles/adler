@@ -40,7 +40,7 @@ func (f *PageFixture) TestMarkdownPage() {
 	err = ioutil.WriteFile(filePath, []byte(body), 0644)
 	f.So(err, should.BeNil)
 
-	page, err := NewPage(filePath)
+	page, err := NewPageFromPath(filePath)
 	f.So(err, should.BeNil)
 
 	f.So(page.Title(), should.Equal, "Expected title")
@@ -63,7 +63,7 @@ func (f *PageFixture) TestTitleIgnoresQuoted() {
 	err = ioutil.WriteFile(filePath, []byte(body), 0644)
 	f.So(err, should.BeNil)
 
-	page, err := NewPage(filePath)
+	page, err := NewPageFromPath(filePath)
 	f.So(err, should.BeNil)
 
 	f.So(page.Title(), should.Equal, "Expected title")
@@ -88,7 +88,7 @@ func (f *PageFixture) TestIndexPage() {
 	- [File 2](file2.md)
 	`)
 
-	page, err := NewPage(dir)
+	page, err := NewPageFromPath(dir)
 	f.So(err, should.BeNil)
 
 	f.So(page.Title(), should.Equal, "DirName")
@@ -120,7 +120,7 @@ func (f *PageFixture) TestIndexPageSupportsSubdirectories() {
 	- [Subdirectory](subdirectory)
 	`)
 
-	page, err := NewPage(dir)
+	page, err := NewPageFromPath(dir)
 	f.So(err, should.BeNil)
 
 	f.So(page.Title(), should.Equal, "DirName")
@@ -152,7 +152,7 @@ func (f *PageFixture) TestIndexPageIgnoresDotfiles() {
 	- [File 2](file2.md)
 	`)
 
-	page, err := NewPage(dir)
+	page, err := NewPageFromPath(dir)
 	f.So(err, should.BeNil)
 
 	f.So(page.Title(), should.Equal, "DirName")

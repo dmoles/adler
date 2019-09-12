@@ -18,7 +18,7 @@ type Page interface {
 	ToHtml() string
 }
 
-func NewPage(filePath string) (Page, error) {
+func NewPageFromPath(filePath string) (Page, error) {
 	info, err := os.Stat(filePath)
 	if err != nil {
 		return nil, err
@@ -30,23 +30,27 @@ func NewPage(filePath string) (Page, error) {
 	return newMarkdownPage(filePath)
 }
 
+func NewPage(title string, content []byte, basePath string) Page {
+	return &page{title: title, content: content, basePath: basePath}
+}
+
 // ------------------------------------------------------------
 // page
 
 type page struct {
 	title    string
-	content []byte
-	filePath string
-	html string
+	content  []byte
+	basePath string
+	html     string
 }
 
-func newPage(path string, content []byte) *page {
+func newPage(realPath string, content []byte) Page {
 	title := textOfFirstHeading(content)
 	if title == "" {
-		title = asTitle(path)
+		title = asTitle(realPath)
 	}
-	p := &page{title: title, content: content, filePath: path}
-	return p
+	basePath := path.Base(realPath)
+	return NewPage(title, content, basePath)
 }
 
 func (p *page) Title() string {
@@ -58,7 +62,7 @@ func (p *page) Content() []byte {
 }
 
 func (p *page) RelativeLink() string {
-	return fmt.Sprintf("[%v](%v)", p.title, path.Base(p.filePath))
+	return fmt.Sprintf("[%v](%v)", p.title, p.basePath)
 }
 
 func (p *page) ToHtml() string {
@@ -69,13 +73,47 @@ func (p *page) ToHtml() string {
 	return p.html
 }
 
+type singlePage struct {
+	title    string
+	pages []Page
+	basePath string
+}
+
+func (p *singlePage) Title() string {
+	return p.title
+}
+
+func (p *singlePage) Content() []byte {
+	// TODO straighten out these types
+	panic("not implemented")
+}
+
+func (p *singlePage) RelativeLink() string {
+	return fmt.Sprintf("[%v](%v)", p.title, p.basePath)
+}
+
+func (p *singlePage) ToHtml() string {
+	var sb strings.Builder
+	_, _ = fmt.Fprintf(&sb, "<h1>%s</h1>\n\n", p.title)
+	for i, p := range(p.pages) {
+		if i > 0 {
+			sb.WriteString("\n\n")
+			sb.WriteString("<section class=\"page\">\n")
+			sb.WriteString(p.ToHtml())
+			sb.WriteString("</section>\n")
+		}
+	}
+	return sb.String()
+}
+
 // ------------------------------------------------------------
 // Initializers
 
-func newMarkdownPage(filePath string) (*page, error) {
+func newMarkdownPage(filePath string) (Page, error) {
 	if !isMarkdownFile(filePath) {
 		return nil, fmt.Errorf("%#v is not a Markdown file", filePath)
 	}
+
 
 	content, err := ioutil.ReadFile(filePath)
 	if err != nil {
@@ -85,7 +123,7 @@ func newMarkdownPage(filePath string) (*page, error) {
 }
 
 
-func newIndexPage(dirPath string) (*page, error) {
+func newIndexPage(dirPath string) (Page, error) {
 	if !isDirectory(dirPath) {
 		return nil, fmt.Errorf("%#v is not a directory", dirPath)
 	}
@@ -107,7 +145,7 @@ func newIndexPage(dirPath string) (*page, error) {
 			continue
 		}
 		fullPath := filepath.Join(dirPath, filename)
-		if page, err := NewPage(fullPath); err == nil {
+		if page, err := NewPageFromPath(fullPath); err == nil {
 			link := page.RelativeLink()
 			links = append(links, link)
 		}
@@ -122,3 +160,35 @@ func newIndexPage(dirPath string) (*page, error) {
 
 	return newPage(dirPath, []byte(sb.String())), nil
 }
+
+func NewSinglePage(dirPath string) (Page, error) {
+	if !isDirectory(dirPath) {
+		return nil, fmt.Errorf("%#v is not a directory", dirPath)
+	}
+
+	title := asTitle(dirPath)
+
+	var pages []Page
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return nil, err
+	}
+	for _, info := range files {
+		filename := info.Name()
+		if isHidden(filename) {
+			continue
+		}
+		fullPath := filepath.Join(dirPath, filename)
+		if !isMarkdownFile(fullPath) {
+			continue
+		}
+		if page, err := NewPageFromPath(fullPath); err == nil {
+			pages = append(pages, page)
+		}
+	}
+
+	// TODO: sort pages by title
+
+	return &singlePage{title, pages, path.Base(dirPath)}, nil
+}
+

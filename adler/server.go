@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"path"
+	"path/filepath"
 	"strings"
 	"text/template"
 	"time"
@@ -61,6 +62,14 @@ func (s *server) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if s.isSinglePage(urlPath) {
+		err := s.serveSinglePage(w, urlPath)
+		if err != nil {
+			s.error404(w, err)
+		}
+		return
+	}
+
 	err := s.serveHTML(w, urlPath)
 	if err != nil {
 		s.error404(w, err)
@@ -78,6 +87,10 @@ func (s *server) error404(w http.ResponseWriter, err error) {
 
 func (s *server) isCSS(urlPath string) bool {
 	return strings.HasPrefix(urlPath, "/css/")
+}
+
+func (s *server) isSinglePage(urlPath string) bool {
+	return strings.HasPrefix(urlPath, "/single")
 }
 
 func (s *server) serveCSS(w http.ResponseWriter, urlPath string) error {
@@ -131,6 +144,27 @@ func (s *server) serveFavicon(w http.ResponseWriter, urlPath string) error {
 	return nil
 }
 
+func (s *server) serveSinglePage(w http.ResponseWriter, path string) error {
+	dirPath, err := s.Resolve(path)
+	if err != nil {
+		return err
+	}
+	dirPath = filepath.Dir(dirPath)
+	page, err := NewSinglePage(dirPath)
+	if err != nil {
+		return err
+	}
+
+	w.Header().Add("Content-Type", "text/html; charset=UTF-8")
+
+	data := pageData {
+		TOC: "",
+		Title: page.Title(),
+		Body: page.ToHtml(),
+	}
+	return singlePageTemplate.Execute(w, data)
+}
+
 func (s *server) serveHTML(w http.ResponseWriter, path string) error {
 	mdPath, err := s.Resolve(path[1:])
 	if err != nil {
@@ -140,12 +174,12 @@ func (s *server) serveHTML(w http.ResponseWriter, path string) error {
 	// TODO: something smarter
 	//       - title
 	//       - subdirectories
-	tocPage, err := NewPage(s.RootDir())
+	tocPage, err := NewPageFromPath(s.RootDir())
 	if err != nil {
 		return err
 	}
 
-	page, err := NewPage(mdPath)
+	page, err := NewPageFromPath(mdPath)
 	if err != nil {
 		return err
 	}
@@ -206,6 +240,50 @@ var pageTemplate = func() *template.Template {
 	</nav>
 	</aside>
 	<main>
+		{{.Body}}
+	</main>
+	<footer>
+	<p><img class="adler-icon" src="/favicon-96x96.png"/> Served by <a href="https://github.com/dmoles/adler/">Adler</a>.</p>
+	</footer>
+	</body>
+	</html>
+	`)
+
+	tmpl, err := template.New("page").Parse(headTmpl)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return tmpl
+}()
+
+var singlePageTemplate = func() *template.Template {
+	headTmpl := trim(`
+	<html>
+	<head>
+		<title>{{.Title}}</title>
+		<link rel="stylesheet" href="/css/reset.css">
+		<link rel="stylesheet" href="/css/main.css">
+
+		<link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+		<link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<link rel="manifest" href="/manifest.json">
+		<meta name="msapplication-TileColor" content="#ffffff">
+		<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+		<meta name="theme-color" content="#ffffff">
+	</head>
+	<body>
+	<main style="grid-column: 1/3;">
 	{{.Body}}
 	</main>
 	<footer>
@@ -221,3 +299,4 @@ var pageTemplate = func() *template.Template {
 	}
 	return tmpl
 }()
+
