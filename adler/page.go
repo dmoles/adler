@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -194,8 +195,24 @@ func NewSinglePage(dirPath string) (Page, error) {
 		}
 	}
 
-	// TODO: sort pages by title
+	sort.Slice(pages, func(i, j int) bool {
+		t1 := pages[i].Title()
+		t2 := pages[j].Title()
+
+		n1 := numericTitleRegexp.MatchString(t1)
+		n2 := numericTitleRegexp.MatchString(t2)
+		if n1 && !n2 {
+			return false
+		}
+		if n2 && !n1 {
+			return true
+		}
+
+		return t1 < t2
+	})
 
 	return &singlePage{title, pages, path.Base(dirPath)}, nil
 }
+
+var numericTitleRegexp = regexp.MustCompile("^[0-9]")
 
