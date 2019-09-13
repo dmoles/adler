@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/russross/blackfriday/v2"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -98,10 +99,10 @@ func (p *singlePage) ToHtml() string {
 	for i, p := range(p.pages) {
 		if i > 0 {
 			sb.WriteString("\n\n")
-			sb.WriteString("<section class=\"page\">\n")
-			sb.WriteString(p.ToHtml())
-			sb.WriteString("</section>\n")
 		}
+		sb.WriteString("<article>\n")
+		sb.WriteString(p.ToHtml())
+		sb.WriteString("</article>\n")
 	}
 	return sb.String()
 }
@@ -176,14 +177,20 @@ func NewSinglePage(dirPath string) (Page, error) {
 	for _, info := range files {
 		filename := info.Name()
 		if isHidden(filename) {
+			log.Printf("skipping hidden file %v\n", filename)
 			continue
 		}
 		fullPath := filepath.Join(dirPath, filename)
 		if !isMarkdownFile(fullPath) {
+			log.Printf("skipping non-Markdown file %v\n", filename)
 			continue
 		}
-		if page, err := NewPageFromPath(fullPath); err == nil {
+		page, err := NewPageFromPath(fullPath);
+		if err == nil {
+			log.Printf("adding Markdown file %v\n", filename)
 			pages = append(pages, page)
+		} else {
+			log.Printf("error adding file %v: %v\n", filename, err)
 		}
 	}
 

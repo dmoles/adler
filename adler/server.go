@@ -70,7 +70,15 @@ func (s *server) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := s.serveHTML(w, urlPath)
+	if isMarkdownFile(urlPath) {
+		err := s.serveHTML(w, urlPath)
+		if err != nil {
+			s.error404(w, err)
+		}
+		return
+	}
+
+	err := s.serveImage(w, urlPath)
 	if err != nil {
 		s.error404(w, err)
 	}
@@ -163,6 +171,26 @@ func (s *server) serveSinglePage(w http.ResponseWriter, path string) error {
 		Body: page.ToHtml(),
 	}
 	return singlePageTemplate.Execute(w, data)
+}
+
+func (s *server) serveImage(w http.ResponseWriter, path string) error {
+	rawPath, err := s.Resolve(path)
+	if err != nil {
+		return err
+	}
+	data, contentType, err := findImage(rawPath)
+	if err != nil {
+		return err;
+	}
+	w.Header().Add("Content-Type", contentType)
+	n, err := w.Write(data)
+	if err != nil {
+		return err
+	}
+	if n != len(data) {
+		return err
+	}
+	return nil
 }
 
 func (s *server) serveHTML(w http.ResponseWriter, path string) error {
@@ -283,7 +311,7 @@ var singlePageTemplate = func() *template.Template {
 		<meta name="theme-color" content="#ffffff">
 	</head>
 	<body>
-	<main style="grid-column: 1/3;">
+	<main class="full">
 	{{.Body}}
 	</main>
 	<footer>

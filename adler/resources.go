@@ -2,6 +2,8 @@ package adler
 
 import (
 	"github.com/gobuffalo/packr"
+	"io/ioutil"
+	"path/filepath"
 	"strings"
 )
 
@@ -16,7 +18,16 @@ func findCSS(cssPath string) ([]byte, error) {
 var images = packr.NewBox("../images")
 
 func findImage(imagePath string) ([]byte, string, error) {
-	data, err := images.Find(imagePath)
+	// TODO: straghten this out
+
+	var data []byte
+	var err error
+	if filepath.IsAbs(imagePath) {
+		data, err = ioutil.ReadFile(imagePath)
+	} else {
+		data, err = images.Find(imagePath)
+	}
+
 	if err != nil {
 		return nil, "", err
 	}
