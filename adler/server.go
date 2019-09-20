@@ -70,7 +70,7 @@ func (s *server) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if isMarkdownFile(urlPath) {
+	if isMarkdownFile(urlPath) || isDirectory(urlPath) {
 		err := s.serveHTML(w, urlPath)
 		if err != nil {
 			s.error404(w, err)
@@ -102,6 +102,8 @@ func (s *server) isSinglePage(urlPath string) bool {
 }
 
 func (s *server) serveCSS(w http.ResponseWriter, urlPath string) error {
+	log.Printf("serveCSS(%#v)", urlPath)
+
 	cssPath := strings.TrimPrefix(urlPath, "/css")
 	data, err := findCSS(cssPath)
 	if err != nil {
@@ -136,6 +138,8 @@ func (s *server) isFavicon(urlPath string) bool {
 }
 
 func (s *server) serveFavicon(w http.ResponseWriter, urlPath string) error {
+	log.Printf("serveFavicon(%#v)", urlPath)
+
 	imagePath := path.Join("favicons/", path.Base(urlPath))
 	data, contentType, err := findImage(imagePath)
 	if err != nil {
@@ -153,6 +157,8 @@ func (s *server) serveFavicon(w http.ResponseWriter, urlPath string) error {
 }
 
 func (s *server) serveSinglePage(w http.ResponseWriter, path string) error {
+	log.Printf("serveSinglePage(%#v)", path)
+
 	dirPath, err := s.Resolve(path)
 	if err != nil {
 		return err
@@ -174,6 +180,8 @@ func (s *server) serveSinglePage(w http.ResponseWriter, path string) error {
 }
 
 func (s *server) serveImage(w http.ResponseWriter, path string) error {
+	log.Printf("serveImage(%#v)", path)
+
 	rawPath, err := s.Resolve(path)
 	if err != nil {
 		return err
@@ -194,6 +202,8 @@ func (s *server) serveImage(w http.ResponseWriter, path string) error {
 }
 
 func (s *server) serveHTML(w http.ResponseWriter, path string) error {
+	log.Printf("serveHTML(%#v)", path)
+	
 	mdPath, err := s.Resolve(path[1:])
 	if err != nil {
 		return err
