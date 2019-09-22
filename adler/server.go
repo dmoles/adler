@@ -266,12 +266,12 @@ var pageTemplate = func() *template.Template {
 		<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
 		<meta name="theme-color" content="#ffffff">
 	</head>
+	<body>
 	<header>
 	<nav>
 		<h5><a href="/">Home</a></h5>
 	</nav>
 	</header>
-	<body>
 	<aside>
 	<nav>
 		{{.TOC}}

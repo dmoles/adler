@@ -135,6 +135,10 @@ aside {
     border-right: 1px dotted #202b49;
 }
 
+aside nav ul {
+    font-size: 75%;
+}
+
 main {
     grid-column: 2;
 }
@@ -334,3 +338,5 @@ pre {
 code {
     font-family: Hasklig, "Fira Code", monospace;
 }
+
+
