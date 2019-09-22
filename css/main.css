@@ -102,13 +102,14 @@ body {
     background-color: #fffef8;
     color: #000000;
     display: grid;
-    grid-template-columns: 15em 1fr;
+    grid-template-columns: 15em minmax(0, 1fr);
     font-family: "IBM Plex Sans", sans-serif;
     font-weight: 200;
     font-size: 1rem;
     line-height: 1.33333;
     margin: 1em;
     height: 100%;
+    width: available;
     min-height: min-content;
 }
 
