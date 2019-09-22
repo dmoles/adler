@@ -152,6 +152,7 @@ func newIndexPage(dirPath string) (Page, error) {
 			links = append(links, link)
 		}
 	}
+	// TODO: sort w/o articles, numbers
 	sort.Strings(links)
 	for _, link := range links {
 		_, err = fmt.Fprintf(&sb, "- %v\n", link)

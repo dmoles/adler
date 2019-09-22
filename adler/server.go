@@ -41,9 +41,7 @@ func (s *server) Start() error {
 
 }
 
-// TODO: handle images etc.
 func (s *server) handle(w http.ResponseWriter, r *http.Request) {
-	// TODO: generate TOC sidebar
 
 	urlPath := r.URL.Path
 	if s.isCSS(urlPath) {
