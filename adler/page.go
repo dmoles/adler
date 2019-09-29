@@ -136,7 +136,8 @@ func newIndexPage(dirPath string) (Page, error) {
 		return nil, err
 	}
 
-	var links []string
+	var titles []string
+	var links = map[string]string{}
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, err
@@ -149,12 +150,18 @@ func newIndexPage(dirPath string) (Page, error) {
 		fullPath := filepath.Join(dirPath, filename)
 		if page, err := NewPageFromPath(fullPath); err == nil {
 			link := page.RelativeLink()
-			links = append(links, link)
+			title := page.Title()
+			titles = append(titles, title)
+			links[title] = link
 		}
 	}
-	// TODO: sort w/o articles, numbers
-	sort.Strings(links)
-	for _, link := range links {
+	sort.Slice(titles, func(i, j int) bool {
+		st1 := sortingTitle(titles[i])
+		st2 := sortingTitle(titles[j])
+		return st1 < st2;
+	})
+	for _, title := range titles {
+		link := links[title]
 		_, err = fmt.Fprintf(&sb, "- %v\n", link)
 		if err != nil {
 			return nil, err
@@ -162,6 +169,24 @@ func newIndexPage(dirPath string) (Page, error) {
 	}
 
 	return newPage(dirPath, []byte(sb.String())), nil
+}
+
+var numericPrefixRegexp = regexp.MustCompile("^[0-9-]+ (.+)")
+
+func sortingTitle(t string) string {
+	st := strings.TrimSpace(strings.ToLower(t));
+
+	if submatch := numericPrefixRegexp.FindStringSubmatch(st); submatch != nil {
+		return submatch[1]
+	}
+
+	for _, prefix := range []string{"a ", "the "} {
+		if strings.HasPrefix(st, prefix) {
+			return strings.TrimPrefix(st, prefix)
+		}
+	}
+
+	return st;
 }
 
 func NewSinglePage(dirPath string) (Page, error) {
@@ -197,23 +222,9 @@ func NewSinglePage(dirPath string) (Page, error) {
 	}
 
 	sort.Slice(pages, func(i, j int) bool {
-		t1 := pages[i].Title()
-		t2 := pages[j].Title()
-
-		n1 := numericTitleRegexp.MatchString(t1)
-		n2 := numericTitleRegexp.MatchString(t2)
-		if n1 && !n2 {
-			return false
-		}
-		if n2 && !n1 {
-			return true
-		}
-
-		return t1 < t2
+		st1 := sortingTitle(pages[i].Title())
+		st2 := sortingTitle(pages[j].Title())
+		return st1 < st2;
 	})
-
 	return &singlePage{title, pages, path.Base(dirPath)}, nil
 }
-
-var numericTitleRegexp = regexp.MustCompile("^[0-9]")
-
