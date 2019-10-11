@@ -284,6 +284,7 @@ dd {
 table {
     border-collapse: collapse;
     table-layout: auto;
+    margin-bottom: 0.75em;
 }
 
 table thead tr:last-child th {
