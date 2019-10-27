@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/adler"
+	"github.com/dmoles/adler/server"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -10,11 +10,7 @@ import (
 const defaultPort = 8181
 
 func start(port int, rootDir string) error {
-	server, err := adler.NewServer(port, rootDir)
-	if err != nil {
-		return err
-	}
-	return server.Start()
+	return server.Start(port, rootDir)
 }
 
 func main() {

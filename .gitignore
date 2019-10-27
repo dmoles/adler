@@ -57,7 +57,7 @@ dist/
 flycheck_*.el
 
 # server auth directory
-/server/
+# /server/
 
 # projectiles files
 .projectile
@@ -148,7 +148,8 @@ fabric.properties
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
