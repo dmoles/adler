@@ -17,6 +17,10 @@ func findCSS(cssPath string) ([]byte, error) {
 
 var images = packr.NewBox("../images")
 
+func listImages() []string {
+	return images.List()
+}
+
 func findImage(imagePath string) ([]byte, string, error) {
 	// TODO: straghten this out
 

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -143,6 +144,8 @@ func (s *server) serveFavicon(w http.ResponseWriter, urlPath string) error {
 	if err != nil {
 		return err
 	}
+	w.Header().Add("Content-Length", strconv.Itoa(len(data)))
+
 	w.Header().Add("Content-Type", contentType)
 	n, err := w.Write(data)
 	if err != nil {
