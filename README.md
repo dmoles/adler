@@ -15,17 +15,6 @@ E.g., to serve from Markdown files in `/Users/irene/suda.wiki` on port 8282
 adler /Users/irene/suda.wiki -p 8282
 ```
 
-## Known issues
-
-```
-$ grep TODO adler/server.go | awk '{$1=$1};1'
-// TODO: handle subdirectories properly
-// TODO: generate directory indexes
-// TODO: handle URL paths that already end in `.md`
-// TODO: use a template language
-// TODO: some CSS
-```
-
 ## Name
 
 Adler is named for [Ada Adler](https://en.wikipedia.org/wiki/Ada_Adler)
