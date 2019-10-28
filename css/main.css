@@ -164,8 +164,17 @@ footer {
 }
 
 a {
-    color: #035a5c;
+    color: #17293a;
     text-decoration: none;
+}
+
+a:visited {
+    color: #17293a;
+}
+
+a:hover {
+    text-decoration-color: #202b49;
+    text-decoration-line: underline;
 }
 
 p a {
