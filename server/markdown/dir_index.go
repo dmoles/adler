@@ -64,7 +64,7 @@ func (d *dirIndex) WriteMarkdown(w io.Writer, rootDir string) {
 			log.Printf("Error determining relative path to file: %v: %v", path, err)
 			continue
 		}
-		fmt.Fprintf(w, "- [%v](%v)\n", title, relPath)
+		fmt.Fprintf(w, "- [%v](/%v)\n", title, relPath)
 	}
 }
 
