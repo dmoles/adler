@@ -97,7 +97,7 @@ func ResolveFile(urlFilePath string, rootDir string) (string, error) {
 func ContentType(urlPath string) string {
 	ext := path.Ext(urlPath)
 	if ext == ".md" || ext == "" {
-		return "text/html; charset=UTF-8"
+		return "text/html; charset=utf-8"
 	}
 	ct := mime.TypeByExtension(ext)
 	if ct == "" {
