@@ -181,6 +181,16 @@ p a {
     font-weight: bold;
 }
 
+blockquote p > cite {
+    display: block;
+    margin-left: -1em;
+    margin-top: 0.5em;
+}
+
+blockquote p > cite::before {
+    content: "—";
+}
+
 em {
     font-style: italic;
 }
@@ -273,20 +283,20 @@ li {
 }
 
 dl {
-    display:grid;
+    display: grid;
     grid-gap: 0.5em;
     grid-template-columns: max-content 1fr;
     margin-top: 1em;
 }
 
 dt {
-    display:block;
+    display: block;
     font-weight: bold;
     grid-column: 1;
 }
 
 dd {
-    display:block;
+    display: block;
     grid-column: 2;
 }
 
