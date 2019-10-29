@@ -181,16 +181,6 @@ p a {
     font-weight: bold;
 }
 
-blockquote p > cite {
-    display: block;
-    margin-left: -1em;
-    margin-top: 0.5em;
-}
-
-blockquote p > cite::before {
-    content: "—";
-}
-
 em {
     font-style: italic;
 }
@@ -242,12 +232,14 @@ p {
 }
 
 blockquote {
-    color: #747171;
+    color: #272525;
+    font-size: smaller;
     line-height: 1.16667;
     margin-top: 0.75em;
-    margin-left: 1em;
-    padding-left: 1em;
-    border-left: 1px dotted #747171;
+    /*margin-left: 1em;*/
+    /*margin-left: 1em;*/
+    margin-right: 5em;
+    /*border-left: 1px dotted #747171;*/
 }
 
 blockquote p {
@@ -260,6 +252,20 @@ blockquote p:last-of-type {
 
 blockquote p + p {
     text-indent: 1em;
+}
+
+blockquote p > cite {
+    display: block;
+    margin-left: -1em;
+    margin-top: 0.75em;
+}
+
+blockquote p > cite a {
+    font-weight: normal;
+}
+
+blockquote p > cite::before {
+    content: "—";
 }
 
 ul {
