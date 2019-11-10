@@ -189,6 +189,11 @@ strong {
     font-weight: bold;
 }
 
+sub {
+    font-size: smaller;
+    vertical-align: sub;
+}
+
 h1, h2, h3, h4, h5 {
     color: #202b49;
     font-family: "Montserrat", sans-serif;
@@ -236,10 +241,8 @@ blockquote {
     font-size: smaller;
     line-height: 1.16667;
     margin-top: 0.75em;
-    /*margin-left: 1em;*/
-    /*margin-left: 1em;*/
+    margin-left: 1em;
     margin-right: 5em;
-    /*border-left: 1px dotted #747171;*/
 }
 
 blockquote p {
