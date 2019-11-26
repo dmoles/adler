@@ -245,6 +245,10 @@ blockquote {
     margin-right: 5em;
 }
 
+li blockquote {
+    margin-left: 0;
+}
+
 blockquote p {
     margin-bottom: 3px;
 }
