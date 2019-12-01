@@ -115,12 +115,28 @@ body {
 
 @media print {
     html {
-        font-size: 16pt;
+        /* TODO: does this help? (w/browser-provided header/footer) */
+        font-size: 12pt;
+        font-family: "IBM Plex Sans", sans-serif;
+        font-weight: 200;
     }
 
     body {
         padding-right: 1in;
         padding-left: 1in;
+        font-size: 12pt;
+    }
+
+    header {
+        display: none;
+    }
+
+    aside {
+        display: none;
+    }
+
+    main {
+        grid-column: 1/3;
     }
 }
 
@@ -140,8 +156,10 @@ aside nav ul {
     font-size: 75%;
 }
 
-main {
-    grid-column: 2;
+@media screen {
+    main {
+        grid-column: 2;
+    }
 }
 
 main.full {
