@@ -16,7 +16,7 @@ func start(port int, rootDir string) error {
 func main() {
 	var port int
 	var cmd = &cobra.Command{
-		Use: "adler",
+		Use: "adler <rootDir>",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return start(port, args[0])
