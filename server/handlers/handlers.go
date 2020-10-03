@@ -12,11 +12,11 @@ type Handler interface {
 }
 
 func CSS() Handler {
-	return &resourceHandler{dir: "/css", varname: "css"}
+	return &resourceHandler{dir: "/resources/css", varname: "css"}
 }
 
 func Favicon() Handler {
-	return &resourceHandler{dir: "/images/favicons", varname: "favicon"}
+	return &resourceHandler{dir: "/resources/images/favicons", varname: "favicon"}
 }
 
 func Raw(rootDir string) Handler {

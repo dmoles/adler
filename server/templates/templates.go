@@ -35,7 +35,7 @@ type PageData struct {
 // Unexported
 
 func load(name string) *template.Template {
-	tmplPath := path.Join("/templates", name)
+	tmplPath := path.Join("/resources/templates", name)
 	tmplFile, err := pkger.Open(tmplPath)
 	if err != nil {
 		log.Fatal(err)
