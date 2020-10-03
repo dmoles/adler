@@ -13,6 +13,7 @@ import (
 )
 
 // TODO: centralize resource utility code & also use for templates
+// TODO: in makefile: pkger -include /templates -include /css -include /images
 
 type resourceHandler struct {
 	dir string;
