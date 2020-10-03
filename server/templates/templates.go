@@ -1,8 +1,11 @@
 package templates
 
 import (
-	"github.com/gobuffalo/packr"
+	"github.com/markbates/pkger"
+	"io"
 	"log"
+	"path"
+	"strings"
 	"text/template"
 )
 
@@ -13,7 +16,14 @@ const (
 	page = "page.html.tmpl"
 )
 
-var Page = load(page)
+var pageTemplate *template.Template
+
+func Page() *template.Template {
+	if pageTemplate == nil {
+		pageTemplate = load(page)
+	}
+	return pageTemplate
+}
 
 type PageData struct {
 	Title string
@@ -24,14 +34,19 @@ type PageData struct {
 // ------------------------------------------------------------
 // Unexported
 
-var templateBox = packr.NewBox("../../templates")
-
 func load(name string) *template.Template {
-	tmplData, err := templateBox.Find(name)
+	tmplPath := path.Join("/templates", name)
+	tmplFile, err := pkger.Open(tmplPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	tmpl, err := template.New(name).Parse(string(tmplData))
+	sb := new(strings.Builder)
+	_, err = io.Copy(sb, tmplFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	tmplData := sb.String()
+	tmpl, err := template.New(name).Parse(tmplData)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -56,6 +56,7 @@ func (s *server) Start() error {
 func (s *server) newRouter() *mux.Router {
 	// TODO: support single-page version
 	r := mux.NewRouter()
+	// TODO: look up handlers automatically from path pattern/prefix
 	r.PathPrefix("/css/{css:.+}").HandlerFunc(s.css)
 	r.HandleFunc("/{favicon:[^/]+\\.(?:ico|png|jpg)}", s.favicon)
 	r.HandleFunc("/{markdown:.+\\.md}", s.markdown)

@@ -48,7 +48,7 @@ func (h *markdownHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var sb strings.Builder
-	err = templates.Page.Execute(&sb, pageData)
+	err = templates.Page().Execute(&sb, pageData)
 	if err != nil {
 		log.Printf("Error executing template for %v: %v", urlPath, err)
 		http.NotFound(w, r)

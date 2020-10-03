@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"github.com/gobuffalo/packr"
 	"net/http"
 )
 
@@ -13,11 +12,11 @@ type Handler interface {
 }
 
 func CSS() Handler {
-	return &boxHandler{box: cssBox, varname: "css"}
+	return &resourceHandler{dir: "/css", varname: "css"}
 }
 
 func Favicon() Handler {
-	return &boxHandler{box: faviconBox, varname: "favicon"}
+	return &resourceHandler{dir: "/images/favicons", varname: "favicon"}
 }
 
 func Raw(rootDir string) Handler {
@@ -27,9 +26,3 @@ func Raw(rootDir string) Handler {
 func Markdown(rootDir string) Handler {
 	return &markdownHandler{rootDir: rootDir}
 }
-
-// ------------------------------------------------------------
-// Unexported
-
-var cssBox = packr.NewBox("../../css")
-var faviconBox = packr.NewBox("../../images/favicons")
