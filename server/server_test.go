@@ -2,11 +2,11 @@ package server
 
 import (
 	"github.com/dmoles/adler/server/util"
+	. "github.com/onsi/gomega"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"testing"
-	. "github.com/onsi/gomega"
 )
 
 const (
@@ -19,19 +19,21 @@ func testdataDir() string {
 }
 
 func TestRouter(t *testing.T) {
+	expect := NewWithT(t).Expect
+	
 	s, err := New(invalidPort, testdataDir())
-	Expect(err).NotTo(HaveOccurred())
+	expect(err).NotTo(HaveOccurred())
 
 	router := s.(*server).newRouter()
 
 	req, err := http.NewRequest("GET", "/hello.md", nil)
-	Expect(err).NotTo(HaveOccurred())
+	expect(err).NotTo(HaveOccurred())
 
 	recorder := httptest.NewRecorder()
 	router.ServeHTTP(recorder, req)
 
-	Expect(recorder.Code).To(Equal(http.StatusOK))
+	expect(recorder.Code).To(Equal(http.StatusOK))
 
 	body := recorder.Body.String()
-	Expect(body).To(ContainSubstring("Hello, world"))
+	expect(body).To(ContainSubstring("Hello, world"))
 }
