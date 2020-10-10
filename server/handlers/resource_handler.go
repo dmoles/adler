@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"github.com/dmoles/adler/server/resources"
 	"github.com/dmoles/adler/server/util"
 	"github.com/gorilla/mux"
-	"github.com/markbates/pkger"
 	"io"
 	"log"
 	"net/http"
@@ -13,13 +13,14 @@ import (
 )
 
 // TODO: centralize resource utility code & also use for templates
-// TODO: in makefile: pkger -include /templates -include /css -include /images
+// TODO: in makefile: statik -src=resources
 
 type resourceHandler struct {
-	dir string;
-	varname string;
+	dir     string
+	varname string
 }
 
+// TODO: optionally log errors?
 func (h *resourceHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	relativePath := vars[h.varname]
@@ -29,7 +30,7 @@ func (h *resourceHandler) Handle(w http.ResponseWriter, r *http.Request) {
 	}
 	relativePathClean := path.Clean(relativePath)
 	resourcePath := path.Join(h.dir, relativePathClean)
-	file, err := pkger.Open(resourcePath)
+	file, err := resources.Open(resourcePath)
 	if err != nil {
 		http.NotFound(w, r)
 		return
