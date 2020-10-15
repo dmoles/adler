@@ -1,25 +1,57 @@
 package resources
 
 import (
+	"github.com/dmoles/adler/server/util"
 	_ "github.com/dmoles/adler/statik"
 	"github.com/rakyll/statik/fs"
+	"io/ioutil"
 	"net/http"
-	"path"
+	"os"
+	"path/filepath"
 )
 
-func Open(resourcePath string) (http.File, error) {
-	if !path.IsAbs(resourcePath) {
-		resourcePath = path.Join("/", resourcePath)
-	}
-	return resourceFS.Open(resourcePath)
+// ------------------------------------------------------------
+// Exported
+
+type Resources interface {
+	Open(resourcePath string) (http.File, error)
+	Walk(walkFn filepath.WalkFunc) error
+	AbsPath(resourcePath string) string
+	RelativePath(absPath string) string
 }
 
-var resourceFS http.FileSystem
+func Open(resourcePath string) (http.File, error) {
+	return defaultResources.Open(resourcePath)
+}
 
-func init() {
-	staticFS, err := fs.NewWithNamespace("adler")
+func Stat(resources Resources, resourcePath string) (os.FileInfo, error) {
+	f, err := resources.Open(resourcePath)
+	if err != nil {
+		return nil, err
+	}
+	defer util.CloseQuietly(f)
+	return f.Stat()
+}
+
+func Read(resources Resources, resourcePath string) ([]byte, error) {
+	f, err := resources.Open(resourcePath)
+	if err != nil {
+		return nil, err
+	}
+	defer util.CloseQuietly(f)
+	return ioutil.ReadAll(f)
+}
+
+// ------------------------------------------------------------
+// Unexported
+
+var defaultResources Resources = fromStatikNamespace("adler")
+
+func fromStatikNamespace(namespace string) *httpResources {
+	staticFS, err := fs.NewWithNamespace(namespace)
 	if err != nil {
 		panic(err)
 	}
-	resourceFS = staticFS
+	rr := httpResources{desc: namespace, resourceFS: staticFS}
+	return &rr
 }

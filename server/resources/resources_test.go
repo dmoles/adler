@@ -1,48 +1,84 @@
 package resources
 
 import (
-	"fmt"
+	"bytes"
+	"crypto/md5"
+	fmt "fmt"
 	"github.com/dmoles/adler/server/util"
-	. "github.com/onsi/gomega"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 )
 
-// TODO: reverse test to make sure package doesn't include files deleted from the repo
-func TestPackagedResources(t *testing.T) {
-	expect := NewWithT(t).Expect
+// ------------------------------------------------------------
+// Helper functions
 
+func verify(expectedInfo os.FileInfo, expected Resources, actual Resources, path string) error {
+	resourcePath := expected.RelativePath(path)
+
+	actualInfo, err := Stat(actual, resourcePath)
+	if err != nil {
+		return fmt.Errorf("%v present in %v, but can't stat from %v: %v", resourcePath, expected, actual, err)
+	}
+
+	if expectedInfo.Name() != actualInfo.Name() {
+		return fmt.Errorf("%v: expected %v, got %v", expectedInfo.Name(), expectedInfo.Name(), actualInfo.Name())
+	}
+
+	if expectedInfo.Size() != actualInfo.Size() {
+		return fmt.Errorf("%v: expected size %v, got %v", expectedInfo.Name(), expectedInfo.Size(), actualInfo.Size())
+	}
+
+	expectedData, err := Read(expected, resourcePath)
+	if err != nil {
+		return fmt.Errorf("%v: can't read from %v: %v", resourcePath, expected, err)
+	}
+	actualData, err := Read(actual, resourcePath)
+	if err != nil {
+		return fmt.Errorf("%v: can't read from %v: %v", resourcePath, actual, err)
+	}
+
+	if !bytes.Equal(expectedData, actualData) {
+		return fmt.Errorf("%v: expected %x (%d bytes), got %x (%d bytes)", resourcePath, md5.Sum(expectedData), len(expectedData), md5.Sum(actualData), len(actualData))
+	}
+
+	return nil
+}
+
+// ------------------------------------------------------------
+// Tests
+
+func TestPackagedResourcesMatchesResourceDir(t *testing.T) {
 	resourcesDir := filepath.Join(util.ProjectRoot(), "resources")
-	err := filepath.Walk(resourcesDir, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() {
+	expected := newDirResources(resourcesDir)
+	actual := defaultResources
+
+	_ = expected.Walk(func(path string, expectedInfo os.FileInfo, err error) error {
+		if err != nil {
+			t.Error(err)
 			return nil
 		}
-
-		relativePath, err := filepath.Rel(resourcesDir, path)
-		expect(err).NotTo(HaveOccurred())
-
-		resourcePath := relativePath
-		packagedFile, err := Open(resourcePath)
-		expect(err).NotTo(HaveOccurred(), fmt.Sprintf("Error reading %s from resources: %v", resourcePath, err))
-
-		pkgInfo, err := packagedFile.Stat()
-		expect(err).NotTo(HaveOccurred())
-		expect(pkgInfo.Name()).To(Equal(info.Name()))
-		expect(pkgInfo.Size()).To(Equal(info.Size()))
-
-		expectedData, err := ioutil.ReadFile(path)
-		expect(err).NotTo(HaveOccurred())
-
-		actualData, err := ioutil.ReadAll(packagedFile)
-		expect(err).NotTo(HaveOccurred())
-
-		expect(actualData).To(Equal(expectedData))
-
-		//t.Logf("Verified %v = %v\n", resourcePath, path)
-
+		if expectedInfo.IsDir() {
+			return nil
+		}
+		err = verify(expectedInfo, expected, actual, path)
+		if err != nil {
+			t.Error(err)
+		}
 		return nil
 	})
-	expect(err).NotTo(HaveOccurred())
+}
+
+func TestPackagedResourcesHasNoExtraFiles(t *testing.T) {
+	resourcesDir := filepath.Join(util.ProjectRoot(), "resources")
+	expected := newDirResources(resourcesDir)
+	actual := defaultResources
+
+	_ = actual.Walk(func(resourcePath string, rightInfo os.FileInfo, err error) error {
+		_, err = Stat(expected, resourcePath)
+		if err != nil {
+			t.Errorf("%v not found in %v, but present in %v: %v", resourcePath, expected, actual, err)
+		}
+		return nil
+	})
 }
