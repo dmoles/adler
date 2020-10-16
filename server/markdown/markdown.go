@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"github.com/dmoles/adler/server/util"
-	"github.com/russross/blackfriday/v2"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
 	"io"
 	"io/ioutil"
 	"log"
@@ -14,12 +15,30 @@ import (
 	"strings"
 )
 
+var md = goldmark.New(
+	goldmark.WithExtensions(extension.GFM),
+)
+
+// TODO: accept a Writer
+func toHtml(markdown []byte) ([]byte, error) {
+	var buf bytes.Buffer
+	if err := md.Convert(markdown, &buf); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
 func FileToHtml(filePath string) []byte {
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		log.Printf("Error reading file %v: %v", filePath, err)
 	}
-	return blackfriday.Run(data)
+
+	html, err := toHtml(data)
+	if err != nil {
+		log.Printf("Error parsing file %v: %v", filePath, err)
+	}
+	return html
 }
 
 func DirToHtml(dirPath string, rootDir string) ([]byte, error) {
@@ -46,14 +65,6 @@ func GetTitle(in io.Reader) string {
 	return ""
 }
 
-func GetTitleFromString(s string) string {
-	return GetTitle(bytes.NewBuffer([]byte(s)))
-}
-
-func GetTitleFromBytes(b []byte) string {
-	return GetTitle(bytes.NewBuffer(b))
-}
-
 func GetTitleFromFile(path string) (string, error) {
 	if util.IsDirectory(path) {
 		return asTitle(path), nil
@@ -65,7 +76,7 @@ func GetTitleFromFile(path string) (string, error) {
 	}
 	title := GetTitle(in)
 	if title != "" {
-		return title, nil;
+		return title, nil
 	}
 	return asTitle(path), nil
 }
@@ -80,3 +91,7 @@ func asTitle(filePath string) string {
 // Unexported
 
 var headingRegexp = regexp.MustCompile("^[\\s#]*#+ +(.+)$")
+
+func stringToHtml(s string) ([]byte, error) {
+	return toHtml([]byte(s))
+}

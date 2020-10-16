@@ -35,5 +35,7 @@ func TestRouter(t *testing.T) {
 	expect(recorder.Code).To(Equal(http.StatusOK))
 
 	body := recorder.Body.String()
-	expect(body).To(ContainSubstring("Hello, world"))
+	expect(body).To(ContainSubstring("<title>Hello</title>"))
+	expect(body).To(ContainSubstring("<h1>Hello</h1>"))
+	expect(body).To(ContainSubstring("<p>Hello, world</p>"))
 }

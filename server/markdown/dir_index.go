@@ -3,7 +3,6 @@ package markdown
 import (
 	"fmt"
 	"github.com/dmoles/adler/server/util"
-	"github.com/russross/blackfriday/v2"
 	"io"
 	"io/ioutil"
 	"log"
@@ -36,7 +35,7 @@ func NewDirIndex(dirPath string) (DirIndex, error) {
 // Unexported
 
 type dirIndex struct {
-	dirPath string
+	dirPath      string
 	titles       []string
 	pathsByTitle map[string]string
 }
@@ -52,7 +51,7 @@ func (d *dirIndex) ToHtml(rootDir string) ([]byte, error) {
 	fmt.Fprintf(&sb, "# %s\n\n", title)
 	d.WriteMarkdown(&sb, rootDir)
 
-	return blackfriday.Run([]byte(sb.String())), nil
+	return stringToHtml(sb.String())
 }
 
 //noinspection GoUnhandledErrorResult
@@ -81,7 +80,7 @@ func sortedTitles(pathsByTitle map[string]string) []string {
 	sort.Slice(titles, func(i, j int) bool {
 		st1 := sortingTitle(titles[i])
 		st2 := sortingTitle(titles[j])
-		return st1 < st2;
+		return st1 < st2
 	})
 	return titles
 }
@@ -121,7 +120,7 @@ func getPathsByTitle(dirPath string) (map[string]string, error) {
 var numericPrefixRegexp = regexp.MustCompile("^[0-9-]+ (.+)")
 
 func sortingTitle(t string) string {
-	st := strings.TrimSpace(strings.ToLower(t));
+	st := strings.TrimSpace(strings.ToLower(t))
 	if submatch := numericPrefixRegexp.FindStringSubmatch(st); submatch != nil {
 		st = submatch[1]
 	}
@@ -132,5 +131,5 @@ func sortingTitle(t string) string {
 		}
 	}
 
-	return st;
+	return st
 }
