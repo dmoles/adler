@@ -78,6 +78,10 @@ func TestPackagedResourcesHasNoExtraFiles(t *testing.T) {
 	actual := defaultBundle
 
 	_ = actual.Walk(func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			t.Error(err)
+			return nil
+		}
 		_, err = expected.Get(path)
 		if err != nil {
 			t.Errorf("%v not found in %v, but present in %v: %v", path, expected, actual, err)
