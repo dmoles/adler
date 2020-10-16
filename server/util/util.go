@@ -122,10 +122,14 @@ func WriteData(w http.ResponseWriter, urlPath string, data []byte) {
 	}
 }
 
-func CloseQuietly(f *os.File) func() {
+type Closeable interface {
+	Close() error
+}
+
+func CloseQuietly(cl Closeable) func() {
 	return func() {
-		if f != nil {
-			err := f.Close()
+		if cl != nil {
+			err := cl.Close()
 			if err != nil {
 				log.Printf("Error closing file: %v", err)
 			}

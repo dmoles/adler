@@ -1,7 +1,8 @@
 package templates
 
 import (
-	"github.com/markbates/pkger"
+	"fmt"
+	"github.com/dmoles/adler/server/resources"
 	"io"
 	"log"
 	"path"
@@ -27,7 +28,7 @@ func Page() *template.Template {
 
 type PageData struct {
 	Title string
-	TOC string
+	TOC   string
 	Body  string
 }
 
@@ -36,19 +37,22 @@ type PageData struct {
 
 func load(name string) *template.Template {
 	tmplPath := path.Join("/templates", name)
-	tmplFile, err := pkger.Open(tmplPath)
+	tmplFile, err := resources.Open(tmplPath)
 	if err != nil {
-		log.Fatal(err)
+		msg := fmt.Sprintf("Error locating template %s: %v", tmplPath, err)
+		log.Fatal(msg)
 	}
 	sb := new(strings.Builder)
 	_, err = io.Copy(sb, tmplFile)
 	if err != nil {
-		log.Fatal(err)
+		msg := fmt.Sprintf("Error reading template %s: %v", tmplPath, err)
+		log.Fatal(msg)
 	}
 	tmplData := sb.String()
 	tmpl, err := template.New(name).Parse(tmplData)
 	if err != nil {
-		log.Fatal(err)
+		msg := fmt.Sprintf("Error parsing template %s: %v", tmplPath, err)
+		log.Fatal(msg)
 	}
 	return tmpl
 }

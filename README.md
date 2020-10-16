@@ -2,6 +2,20 @@
 
 Adler is a minimalist Markdown wiki viewer.
 
+## Building
+
+1. install `pkger`
+
+```
+go get github.com/markbates/pkger/cmd/pkger
+```
+
+2. recompile resources
+
+```
+pkger -include /resources
+```
+
 ## Usage
 
 ```
