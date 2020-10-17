@@ -20,7 +20,7 @@ func testdataDir() string {
 
 func TestRouter(t *testing.T) {
 	expect := NewWithT(t).Expect
-	
+
 	s, err := New(invalidPort, testdataDir())
 	expect(err).NotTo(HaveOccurred())
 

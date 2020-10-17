@@ -87,4 +87,3 @@ func (r *resource) Size() int64 {
 func (r *resource) ContentType() string {
 	return util.ContentType(r.path)
 }
-
