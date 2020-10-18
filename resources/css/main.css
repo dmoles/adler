@@ -1,402 +1,329 @@
-/* montserrat-200 - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext */
-@font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 200;
-    src: url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200.eot'); /* IE9 Compat Modes */
-    src: local('Montserrat ExtraLight'), local('Montserrat-ExtraLight'),
-    url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200.woff') format('woff'), /* Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200.svg#Montserrat') format('svg'); /* Legacy iOS */
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,700;1,300;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,700;1,300;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;700&display=swap");
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
 }
 
-/* montserrat-200italic - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext */
-@font-face {
-    font-family: 'Montserrat';
-    font-style: italic;
-    font-weight: 200;
-    src: url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200italic.eot'); /* IE9 Compat Modes */
-    src: local('Montserrat ExtraLight Italic'), local('Montserrat-ExtraLightItalic'),
-    url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200italic.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200italic.woff') format('woff'), /* Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200italic.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-200italic.svg#Montserrat') format('svg'); /* Legacy iOS */
-}
-
-/* montserrat-500 - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext */
-@font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: normal;
-    src: url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500.eot'); /* IE9 Compat Modes */
-    src: local('Montserrat Medium'), local('Montserrat-Medium'),
-    url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500.woff') format('woff'), /* Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500.svg#Montserrat') format('svg'); /* Legacy iOS */
-}
-
-/* montserrat-500italic - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext */
-@font-face {
-    font-family: 'Montserrat';
-    font-style: italic;
-    font-weight: normal;
-    src: url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500italic.eot'); /* IE9 Compat Modes */
-    src: local('Montserrat Medium Italic'), local('Montserrat-MediumItalic'),
-    url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500italic.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500italic.woff') format('woff'), /* Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500italic.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-500italic.svg#Montserrat') format('svg'); /* Legacy iOS */
-}
-
-/* montserrat-900 - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext */
-@font-face {
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: bold;
-    src: url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900.eot'); /* IE9 Compat Modes */
-    src: local('Montserrat Black'), local('Montserrat-Black'),
-    url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900.woff') format('woff'), /* Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900.svg#Montserrat') format('svg'); /* Legacy iOS */
-}
-
-/* montserrat-900italic - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext */
-@font-face {
-    font-family: 'Montserrat';
-    font-style: italic;
-    font-weight: bold;
-    src: url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900italic.eot'); /* IE9 Compat Modes */
-    src: local('Montserrat Black Italic'), local('Montserrat-BlackItalic'),
-    url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900italic.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900italic.woff') format('woff'), /* Modern Browsers */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900italic.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/montserrat-v14-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext-900italic.svg#Montserrat') format('svg'); /* Legacy iOS */
-}
-
-/* ibm-plex-sans-regular - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek */
-@font-face {
-    font-family: 'IBM Plex Sans';
-    font-style: normal;
-    font-weight: normal;
-    src: url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-regular.eot'); /* IE9 Compat Modes */
-    src: local('IBM Plex Sans'), local('IBMPlexSans'),
-    url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-regular.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-regular.woff') format('woff'), /* Modern Browsers */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-regular.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-regular.svg#IBMPlexSans') format('svg'); /* Legacy iOS */
-}
-
-/* ibm-plex-sans-italic - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek */
-@font-face {
-    font-family: 'IBM Plex Sans';
-    font-style: italic;
-    font-weight: normal;
-    src: url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-italic.eot'); /* IE9 Compat Modes */
-    src: local('IBM Plex Sans Italic'), local('IBMPlexSans-Italic'),
-    url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-italic.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-italic.woff') format('woff'), /* Modern Browsers */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-italic.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-italic.svg#IBMPlexSans') format('svg'); /* Legacy iOS */
-}
-
-/* ibm-plex-sans-700italic - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek */
-@font-face {
-    font-family: 'IBM Plex Sans';
-    font-style: italic;
-    font-weight: bold;
-    src: url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700italic.eot'); /* IE9 Compat Modes */
-    src: local('IBM Plex Sans Bold Italic'), local('IBMPlexSans-BoldItalic'),
-    url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700italic.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700italic.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700italic.woff') format('woff'), /* Modern Browsers */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700italic.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700italic.svg#IBMPlexSans') format('svg'); /* Legacy iOS */
-}
-
-/* ibm-plex-sans-700 - cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek */
-@font-face {
-    font-family: 'IBM Plex Sans';
-    font-style: normal;
-    font-weight: bold;
-    src: url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700.eot'); /* IE9 Compat Modes */
-    src: local('IBM Plex Sans Bold'), local('IBMPlexSans-Bold'),
-    url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700.woff2') format('woff2'), /* Super Modern Browsers */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700.woff') format('woff'), /* Modern Browsers */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700.ttf') format('truetype'), /* Safari, Android, iOS */ url('fonts/ibm-plex-sans-v7-cyrillic_latin_vietnamese_latin-ext_cyrillic-ext_greek-700.svg#IBMPlexSans') format('svg'); /* Legacy iOS */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
 }
 
 body {
-    background-color: #fffef8;
-    color: #000000;
-    display: grid;
-    grid-template-columns: 15em minmax(0, 1fr);
-    font-family: "IBM Plex Sans", sans-serif;
-    font-weight: 200;
-    font-size: 1.2rem;
-    line-height: 1.33333;
-    margin: 1em;
-    height: 100%;
-    width: available;
-    min-height: min-content;
+  line-height: 1;
 }
 
-@media print {
-    html {
-        /* TODO: does this help? (w/browser-provided header/footer) */
-        font-size: 12pt;
-        font-family: "IBM Plex Sans", sans-serif;
-        font-weight: 200;
-    }
-
-    body {
-        padding-right: 1in;
-        padding-left: 1in;
-        font-size: 12pt;
-    }
-
-    header {
-        display: none;
-    }
-
-    aside {
-        display: none;
-    }
-
-    main {
-        grid-column: 1/3;
-    }
+ol, ul {
+  list-style: none;
 }
 
-@page {
-    margin-top: 1in;
-    margin-bottom: 1.5in;
+blockquote, q {
+  quotes: none;
 }
 
-aside {
-    grid-column: 1;
-    margin-right: 0.5em;
-    padding-right: 0.5em;
-    border-right: 1px dotted #202b49;
-}
-
-aside nav ul {
-    font-size: 75%;
-}
-
-@media screen {
-    main {
-        grid-column: 2;
-    }
-}
-
-main.full {
-    grid-column: 1/3;
-}
-
-main.full article {
-    clear: both;
-    page-break-after: always;
-}
-
-header {
-    grid-column-start: 1;
-    grid-column-end: 3;
-}
-
-footer {
-    grid-column-start: 1;
-    grid-column-end: 3;
-}
-
-a {
-    color: #17293a;
-    text-decoration: none;
-}
-
-a:visited {
-    color: #17293a;
-}
-
-a:hover {
-    text-decoration-color: #202b49;
-    text-decoration-line: underline;
-}
-
-main a {
-    font-weight: bold;
-}
-
-em {
-    font-style: italic;
-}
-
-strong {
-    font-weight: bold;
-}
-
-sub {
-    font-size: smaller;
-    vertical-align: sub;
-}
-
-h1, h2, h3, h4, h5 {
-    color: #202b49;
-    font-family: "Montserrat", sans-serif;
-    margin-top: 1.5em;
-    margin-bottom: 0.75em;
-    border-bottom: 1px solid #7a88a3;
-}
-
-h1 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-h2 {
-    font-size: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-h3 {
-    font-size: 1rem;
-    font-weight: 200;
-    text-transform: uppercase;
-}
-
-h4 {
-    font-size: 1rem;
-    font-weight: 200;
-}
-
-h5 {
-    font-size: 1rem;
-    font-style: italic;
-    font-weight: 200;
-    border-bottom: none;
-}
-
-p {
-    margin-bottom: 0.75em;
-}
-
-blockquote {
-    color: #272525;
-    font-size: smaller;
-    line-height: 1.16667;
-    margin-top: 0.75em;
-    margin-left: 1em;
-    margin-right: 5em;
-}
-
-li blockquote {
-    margin-left: 0;
-}
-
-blockquote p {
-    margin-bottom: 3px;
-}
-
-blockquote p:last-of-type {
-    margin-bottom: 1em;
-}
-
-blockquote p + p {
-    text-indent: 1em;
-}
-
-blockquote p > cite {
-    display: block;
-    margin-left: -1em;
-    margin-top: 0.75em;
-}
-
-blockquote p > cite a {
-    font-weight: normal;
-}
-
-blockquote p > cite::before {
-    content: "—";
-}
-
-ul {
-    list-style-position: outside;
-    list-style-type: square;
-    margin-bottom: 1em;
-    margin-left: 1em;
-    padding-left: 1em;
-}
-
-ol {
-    list-style-position: outside;
-    list-style-type: decimal;
-    margin-bottom: 1em;
-    margin-left: 1em;
-    padding-left: 1em;
-}
-
-li {
-    padding-left: 0.25em;
-}
-
-dl {
-    display: grid;
-    grid-gap: 0.5em;
-    grid-template-columns: max-content 1fr;
-    margin-top: 1em;
-}
-
-dt {
-    display: block;
-    font-weight: bold;
-    grid-column: 1;
-}
-
-dd {
-    display: block;
-    grid-column: 2;
+blockquote ::before, blockquote ::after, q ::before, q ::after {
+  content: none;
 }
 
 table {
-    border-collapse: collapse;
-    table-layout: auto;
-    margin-bottom: 0.75em;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
-table thead tr:last-child th {
-    border-bottom: 1px solid #7c7e7f;
+@media screen {
+  main {
+    grid-column: 2;
+  }
 }
 
-table th {
-    text-align: left;
-    vertical-align: top;
-    padding: 0.25em;
-    font-weight: bold;
-    margin-top: 1em;
-    margin-bottom: 1em;
+@media print {
+  html {
+    /* TODO: does this help? (w/browser-provided header/footer) */
+    font-size: 12pt;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 300;
+  }
+  body {
+    padding-right: 1in;
+    padding-left: 1in;
+    font-size: 12pt;
+  }
+  header {
+    display: none;
+  }
+  aside {
+    display: none;
+  }
+  main {
+    grid-column: 1/3;
+  }
+  @page {
+    margin-top: 1in;
+    margin-bottom: 1.5in;
+  }
 }
 
-table td {
-    vertical-align: top;
-    padding: 0.25em;
+body {
+  display: grid;
+  margin: 1em;
+  background-color: #fffef8;
+  width: available;
+  height: 100%;
+  min-height: min-content;
+  line-height: 1.33333;
+  color: #000000;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  grid-template-columns: 15em minmax(0, 1fr);
 }
 
-table th:first-child {
-    text-align: right;
+aside {
+  margin-right: 0.5em;
+  border-right: 1px dotted #202b49;
+  padding-right: 0.5em;
+  grid-column: 1;
 }
 
-table td:first-child {
-    text-align: right;
+aside nav ul {
+  font-size: 75%;
 }
 
-table tr:not(:last-child) th {
-    border-bottom: 1px solid #d8d8d9;
+main a {
+  font-weight: 700;
 }
 
-table tr:not(:last-child) td {
-    border-bottom: 1px solid #7c7e7f;
+main.full {
+  grid-column: 1 / 3;
+}
+
+main.full article {
+  clear: both;
+  page-break-after: always;
+}
+
+header {
+  grid-column-end: 3;
+  grid-column-start: 1;
 }
 
 footer {
-    border-top: 1px solid #202b49;
-    color: #202b49;
-    margin-top: 1em;
-    padding-top: 1em;
+  margin-top: 1em;
+  border-top: 1px solid #202b49;
+  padding-top: 1em;
+  color: #202b49;
+  grid-column-end: 3;
+  grid-column-start: 1;
 }
 
 footer p {
-    font-size: 0.8rem;
+  font-size: 0.8rem;
+}
+
+a {
+  text-decoration: none;
+  color: #17293a;
+}
+
+a:visited {
+  color: #17293a;
+}
+
+a:hover {
+  text-decoration-color: #202b49;
+  text-decoration-line: underline;
+}
+
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: 700;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+h1, h2, h3, h4, h5 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  border-bottom: 1px solid #7a88a3;
+  color: #202b49;
+  font-family: "Montserrat", sans-serif;
+}
+
+h1 {
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+h2 {
+  text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+h3 {
+  text-transform: uppercase;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+h4 {
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+h5 {
+  border-bottom-style: none;
+  font-size: 1rem;
+  font-weight: 300;
+  font-style: italic;
+}
+
+p {
+  margin-bottom: 0.75em;
+}
+
+blockquote {
+  margin-top: 0.75em;
+  margin-right: 5em;
+  margin-left: 1em;
+  line-height: 1.16667;
+  color: #272525;
+  font-size: smaller;
+}
+
+blockquote p {
+  margin-bottom: 3px;
+}
+
+blockquote p:last-of-type {
+  margin-bottom: 1em;
+}
+
+blockquote p + p {
+  text-indent: 1em;
+}
+
+blockquote p > cite {
+  display: block;
+  margin-top: 0.75em;
+  margin-left: -1em;
+}
+
+blockquote p > cite a {
+  font-weight: 300;
+}
+
+blockquote p > cite::before {
+  content: '—';
+}
+
+ul {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  padding-left: 1em;
+  list-style-position: outside;
+  list-style-type: square;
+}
+
+ol {
+  margin-bottom: 1em;
+  margin-left: 1em;
+  padding-left: 1em;
+  list-style-position: outside;
+  list-style-type: decimal;
+}
+
+li {
+  padding-left: 0.25em;
+}
+
+li blockquote {
+  margin-left: 0;
+}
+
+dl {
+  display: grid;
+  margin-top: 1em;
+  grid-gap: 0.5em;
+  grid-template-columns: max-content 1fr;
+}
+
+dt {
+  display: block;
+  font-weight: 700;
+  grid-column: 1;
+}
+
+dd {
+  display: block;
+  grid-column: 2;
+}
+
+table {
+  margin-bottom: 0.75em;
+  table-layout: auto;
+  border-collapse: collapse;
+}
+
+table thead th {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 0.25em;
+  vertical-align: top;
+  text-align: left;
+  font-weight: 700;
+}
+
+table thead th:first-child {
+  text-align: right;
+}
+
+table thead td {
+  padding: 0.25em;
+  vertical-align: top;
+}
+
+table thead td:first-child {
+  text-align: right;
+}
+
+table thead tr:last-child th {
+  border-bottom: 1px solid #7c7e7f;
+}
+
+table thead tr:not(:last-child) th {
+  border-bottom: 1px solid #d8d8d9;
 }
 
 img.adler-icon {
-    height: 1em;
-    width: 1em;
-    vertical-align: text-top;
+  width: 1em;
+  height: 1em;
+  vertical-align: text-top;
 }
 
 pre {
-    font-family: Hasklig, "Fira Code", monospace;
-    line-height: 1em;
-    margin-top: 1em;
-    margin-bottom: 1em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  line-height: 1em;
+  font-family: Hasklig, "Fira Code", monospace;
 }
 
 code {
-    font-family: Hasklig, "Fira Code", monospace;
+  font-family: Hasklig, "Fira Code", monospace;
 }
-
-

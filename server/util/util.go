@@ -131,7 +131,8 @@ func CloseQuietly(cl Closeable) func() {
 		if cl != nil {
 			err := cl.Close()
 			if err != nil {
-				log.Printf("Error closing file: %v", err)
+				msg := fmt.Sprintf("Error closing %v: %v\n", cl, err)
+				log.Println(msg)
 			}
 		}
 	}

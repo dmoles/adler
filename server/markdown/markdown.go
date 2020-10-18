@@ -19,13 +19,16 @@ var md = goldmark.New(
 	goldmark.WithExtensions(extension.GFM),
 )
 
-// TODO: accept a Writer
-func toHtml(markdown []byte) ([]byte, error) {
-	var buf bytes.Buffer
-	if err := md.Convert(markdown, &buf); err != nil {
-		return nil, err
+func GetBodyHTML(resolvedPath string, rootDir string) ([]byte, error) {
+	if util.IsDirectory(resolvedPath) {
+		readmePath := filepath.Join(resolvedPath, "README.md")
+		if util.IsFile(readmePath) {
+			resolvedPath = readmePath
+		} else {
+			return DirToHtml(resolvedPath, rootDir)
+		}
 	}
-	return buf.Bytes(), nil
+	return FileToHtml(resolvedPath), nil
 }
 
 func FileToHtml(filePath string) []byte {
@@ -94,4 +97,13 @@ var headingRegexp = regexp.MustCompile("^[\\s#]*#+ +(.+)$")
 
 func stringToHtml(s string) ([]byte, error) {
 	return toHtml([]byte(s))
+}
+
+// TODO: accept a Writer
+func toHtml(markdown []byte) ([]byte, error) {
+	var buf bytes.Buffer
+	if err := md.Convert(markdown, &buf); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }

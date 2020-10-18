@@ -1,0 +1,35 @@
+rules:
+  hex-length:
+    - 1
+    - style: 'long'
+
+  nesting-depth:
+    - 1
+    - max-depth: 4
+
+  property-sort-order:
+    - 1
+    - order: concentric
+
+  single-line-per-selector:
+    - 0
+
+  no-mergeable-selectors:
+    - 1
+
+  # TODO: figure out rationale for this one
+  no-qualifying-elements:
+    - 1
+    - allow-element-with-class: true
+
+  # TODO: figure out why nesting classes doesn't work
+  force-element-nesting:
+    - 1
+
+  # TODO: figure out why nesting pseudoclasses doesn't work
+  force-pseudo-nesting:
+    - 1
+
+  force-attribute-nesting:
+    - 1
+

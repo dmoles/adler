@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/handlers"
 	"github.com/dmoles/adler/server/util"
 	"github.com/gorilla/mux"
 	"gopkg.in/tylerb/graceful.v1"
@@ -18,7 +17,7 @@ type Server interface {
 func Start(port int, rootDir string) error {
 	s, err := New(port, rootDir)
 	if err != nil {
-		return err;
+		return err
 	}
 	return s.Start()
 }
@@ -53,38 +52,31 @@ func (s *server) Start() error {
 // ------------------------------
 // Private functions
 
+const cssPathPrefix = "/css/{css:.+}"
+const faviconPathPattern = "/{favicon:[^/]+\\.(?:ico|png|jpg)}"
+const markdownPathPattern = "/{markdown:.+\\.md}"
+
 func (s *server) newRouter() *mux.Router {
 	// TODO: support single-page version
 	r := mux.NewRouter()
-	// TODO: look up handlers automatically from path pattern/prefix
-	r.PathPrefix("/css/{css:.+}").HandlerFunc(s.css)
-	r.HandleFunc("/{favicon:[^/]+\\.(?:ico|png|jpg)}", s.favicon)
-	r.HandleFunc("/{markdown:.+\\.md}", s.markdown)
-	r.MatcherFunc(s.isDirectory).HandlerFunc(s.markdown)
-	r.MatcherFunc(s.isFile).HandlerFunc(s.raw)
+	r.PathPrefix(cssPathPrefix).HandlerFunc(css)
+	r.HandleFunc(faviconPathPattern, favicon)
+
+	markdown := markdownHandler(s.rootDir)
+	r.HandleFunc(markdownPathPattern, markdown)
+	r.MatcherFunc(s.isDirectory).HandlerFunc(markdown)
+
+	raw := rawHandler(s.rootDir)
+	r.MatcherFunc(s.isFile).HandlerFunc(raw)
 	return r
 }
 
 // ------------------------------
 // Handler methods
 
-func (s *server) css(w http.ResponseWriter, r *http.Request) {
-	// TODO: use SCSS
-	handlers.CSS().Handle(w, r)
-}
-
-func (s *server) favicon(w http.ResponseWriter, r *http.Request) {
-	handlers.Favicon().Handle(w, r)
-}
-
-func (s *server) markdown(w http.ResponseWriter, r *http.Request) {
-	handlers.Markdown(s.rootDir).Handle(w, r)
-}
-
-func (s *server) raw(w http.ResponseWriter, r *http.Request) {
-	log.Printf("raw(): %v", r.URL.Path)
-	handlers.Raw(s.rootDir).Handle(w, r)
-}
+// TODO: use SCSS
+var css = resourceHandler("/css", "css")
+var favicon = resourceHandler("/images/favicons", "favicon")
 
 // ------------------------------
 // Utility methods

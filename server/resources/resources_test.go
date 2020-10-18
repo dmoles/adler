@@ -13,33 +13,34 @@ import (
 // ------------------------------------------------------------
 // Helper functions
 
-func verify(expectedInfo os.FileInfo, expected Resources, actual Resources, path string) error {
-	resourcePath := expected.RelativePath(path)
+func verify(expected Resource, xBundle Bundle, aBundle Bundle, path string) error {
+	resourcePath := xBundle.RelativePath(path)
 
-	actualInfo, err := Stat(actual, resourcePath)
+	actual, err := aBundle.Get(resourcePath)
 	if err != nil {
-		return fmt.Errorf("%v present in %v, but can't stat from %v: %v", resourcePath, expected, actual, err)
+		return fmt.Errorf("%v present in %v, but can't get resource from %v: %v", resourcePath, xBundle, aBundle, err)
 	}
 
-	if expectedInfo.Name() != actualInfo.Name() {
-		return fmt.Errorf("%v: expected %v, got %v", expectedInfo.Name(), expectedInfo.Name(), actualInfo.Name())
+	actualInfo := actual.Stat()
+	expectedInfo := expected.Stat()
+	if actualInfo.Name() != expectedInfo.Name() {
+		return fmt.Errorf("%v: xBundle %v, got %v", expectedInfo.Name(), expectedInfo.Name(), actualInfo.Name())
+	}
+	if actualInfo.Size() != expectedInfo.Size() {
+		return fmt.Errorf("%v: xBundle size %v, got %v", expectedInfo.Name(), expectedInfo.Size(), actualInfo.Size())
 	}
 
-	if expectedInfo.Size() != actualInfo.Size() {
-		return fmt.Errorf("%v: expected size %v, got %v", expectedInfo.Name(), expectedInfo.Size(), actualInfo.Size())
-	}
-
-	expectedData, err := Read(expected, resourcePath)
+	expectedData, err := expected.Read()
 	if err != nil {
-		return fmt.Errorf("%v: can't read from %v: %v", resourcePath, expected, err)
+		return fmt.Errorf("%v: can't read from %v: %v", resourcePath, xBundle, err)
 	}
-	actualData, err := Read(actual, resourcePath)
+	actualData, err := actual.Read()
 	if err != nil {
-		return fmt.Errorf("%v: can't read from %v: %v", resourcePath, actual, err)
+		return fmt.Errorf("%v: can't read from %v: %v", resourcePath, aBundle, err)
 	}
 
 	if !bytes.Equal(expectedData, actualData) {
-		return fmt.Errorf("%v: expected %x (%d bytes), got %x (%d bytes)", resourcePath, md5.Sum(expectedData), len(expectedData), md5.Sum(actualData), len(actualData))
+		return fmt.Errorf("%v: xBundle %x (%d bytes), got %x (%d bytes)", resourcePath, md5.Sum(expectedData), len(expectedData), md5.Sum(actualData), len(actualData))
 	}
 
 	return nil
@@ -50,18 +51,20 @@ func verify(expectedInfo os.FileInfo, expected Resources, actual Resources, path
 
 func TestPackagedResourcesMatchesResourceDir(t *testing.T) {
 	resourcesDir := filepath.Join(util.ProjectRoot(), "resources")
-	expected := newDirResources(resourcesDir)
-	actual := defaultResources
+	xBundle := newDirResources(resourcesDir)
+	aBundle := defaultBundle
 
-	_ = expected.Walk(func(path string, expectedInfo os.FileInfo, err error) error {
+	_ = xBundle.Walk(func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			t.Error(err)
 			return nil
 		}
-		if expectedInfo.IsDir() {
+		if info.IsDir() {
 			return nil
 		}
-		err = verify(expectedInfo, expected, actual, path)
+		// TODO: something less awkward; also, validate paths
+		expected := &resource{xBundle.RelativePath(path), xBundle, info}
+		err = verify(expected, xBundle, aBundle, path)
 		if err != nil {
 			t.Error(err)
 		}
@@ -72,12 +75,16 @@ func TestPackagedResourcesMatchesResourceDir(t *testing.T) {
 func TestPackagedResourcesHasNoExtraFiles(t *testing.T) {
 	resourcesDir := filepath.Join(util.ProjectRoot(), "resources")
 	expected := newDirResources(resourcesDir)
-	actual := defaultResources
+	actual := defaultBundle
 
-	_ = actual.Walk(func(resourcePath string, rightInfo os.FileInfo, err error) error {
-		_, err = Stat(expected, resourcePath)
+	_ = actual.Walk(func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			t.Errorf("%v not found in %v, but present in %v: %v", resourcePath, expected, actual, err)
+			t.Error(err)
+			return nil
+		}
+		_, err = expected.Get(path)
+		if err != nil {
+			t.Errorf("%v not found in %v, but present in %v: %v", path, expected, actual, err)
 		}
 		return nil
 	})
