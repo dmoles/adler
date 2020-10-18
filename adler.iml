@@ -5,6 +5,7 @@
       <option name="customFlags">
         <array>
           <option value="mage" />
+          <option value="mage" />
         </array>
       </option>
     </buildTags>

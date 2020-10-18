@@ -4,9 +4,11 @@ Adler is a minimalist Markdown wiki viewer.
 
 ## Building
 
-Out of the box, Adler builds with `go build` / `go install`. A `magefile`
-is provided to support compiling SCSS and embedding static assets; run
-`mage -l` for the list of tasks.
+Out of the box, Adler builds with `go build` / `go install`.
+
+A [`magefile`](https://magefile.org) is provided to support compiling SCSS
+and embedding static assets; run `mage -l` for the list of tasks. Note that
+the first `mage` invocation may take some time as [golibsass](https://github.com/bep/golibsass) 
 
 ## Usage
 
@@ -17,7 +19,7 @@ adler <root-dir> [-p <port>]
 E.g., to serve from Markdown files in `/Users/irene/suda.wiki` on port 8282
 (default is 8181):
 
-```
+```sh
 adler /Users/irene/suda.wiki -p 8282
 ```
 

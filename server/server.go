@@ -53,14 +53,18 @@ func (s *server) Start() error {
 // Private functions
 
 const cssPathPrefix = "/css/{css:.+}"
+const fontsPathPrefix = "/fonts/{fonts:.+}"
 const faviconPathPattern = "/{favicon:[^/]+\\.(?:ico|png|jpg)}"
 const markdownPathPattern = "/{markdown:.+\\.md}"
 
 func (s *server) newRouter() *mux.Router {
 	// TODO: support single-page version
 	r := mux.NewRouter()
-	r.PathPrefix(cssPathPrefix).HandlerFunc(css)
-	r.HandleFunc(faviconPathPattern, favicon)
+
+	// TODO: can we unify on either PathPrefix or HandleFunc & DRY?
+	r.PathPrefix(cssPathPrefix).HandlerFunc(resourceHandler("/css", "css"))
+	r.PathPrefix(fontsPathPrefix).HandlerFunc(resourceHandler("/fonts", "fonts"))
+	r.HandleFunc(faviconPathPattern, resourceHandler("/images/favicons", "favicon"))
 
 	markdown := markdownHandler(s.rootDir)
 	r.HandleFunc(markdownPathPattern, markdown)
@@ -70,13 +74,6 @@ func (s *server) newRouter() *mux.Router {
 	r.MatcherFunc(s.isFile).HandlerFunc(raw)
 	return r
 }
-
-// ------------------------------
-// Handler methods
-
-// TODO: use SCSS
-var css = resourceHandler("/css", "css")
-var favicon = resourceHandler("/images/favicons", "favicon")
 
 // ------------------------------
 // Utility methods

@@ -3,8 +3,9 @@ package resources
 import (
 	"bytes"
 	"crypto/md5"
-	fmt "fmt"
+	"fmt"
 	"github.com/dmoles/adler/server/util"
+	"github.com/get-woke/go-gitignore"
 	"os"
 	"path/filepath"
 	"testing"
@@ -12,6 +13,26 @@ import (
 
 // ------------------------------------------------------------
 // Helper functions
+
+var gitIgnore = func() *ignore.GitIgnore {
+	path := filepath.Join(util.ProjectRoot(), ".gitignore")
+	gi, err := ignore.CompileIgnoreFile(path)
+	if err != nil {
+		panic(err)
+	}
+	return gi
+}()
+
+func ignored(path string) bool {
+	if filepath.IsAbs(path) {
+		relativePath, err := filepath.Rel(util.ProjectRoot(), path)
+		if err != nil {
+			panic(err)
+		}
+		path = relativePath
+	}
+	return gitIgnore.MatchesPath(path)
+}
 
 func verify(expected Resource, xBundle Bundle, aBundle Bundle, path string) error {
 	resourcePath := xBundle.RelativePath(path)
@@ -59,7 +80,7 @@ func TestPackagedResourcesMatchesResourceDir(t *testing.T) {
 			t.Error(err)
 			return nil
 		}
-		if info.IsDir() {
+		if info.IsDir() || ignored(path) {
 			return nil
 		}
 		// TODO: something less awkward; also, validate paths
