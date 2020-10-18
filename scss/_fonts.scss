@@ -9,12 +9,17 @@ $font-family-code: 'Courier Prime', 'Courier', monospace;
 $font-weight-body: normal; // = 400
 $font-weight-bold: bold; // = 700
 
-$font-size-body: 1.2rem;
-$font-size-body-print: 12pt;
-$font-size-sub: smaller;
-$font-size-small-caps: 1rem;
-$font-size-blockquote: smaller;
-$font-size-footer: .8rem;
+$font-size-body: 1rem;
+$font-size-smaller: (5 * $font-size-body / 6);
+
+$font-size-sub: $font-size-smaller;
+$font-size-small-caps: $font-size-smaller;
+$font-size-blockquote: (6 * $font-size-body / 7);
+$font-size-footer: $font-size-smaller;
+$font-size-nav: $font-size-smaller;
+
+$font-size-root-screen: medium;
+$font-size-root-print: 12pt;
 
 $line-height-body: 1.33333;
 $line-height-blockquote: 1.16667;

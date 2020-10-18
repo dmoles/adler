@@ -1,9 +1,22 @@
-$color-bg: #fffef8;
-$color-fg: #000000;
-$color-fg-alt: #202b49;
-$color-fg-link: #17293a;
-$color-fg-header: #7a88a3;
-$color-fg-blockquote: #272525;
+$bluebird: #318b97;
+$jasper-blue: #7a88a3;
+$aircraft-blue: #202b49;
+$oxford-blue: #17293a;
 
-$color-table-border: #d8d8d9;
-$color-table-border-alt: #7c7e7f;
+$penguin: #fff9e3;
+$cafe-cream: #ffe9b5;
+$biarritz: #f8d462;
+
+$parrot: #035a5c;
+
+$black: #000000;
+
+$color-bg: $penguin;
+$color-fg: $black;
+$color-fg-alt: $oxford-blue;
+$color-fg-link: $aircraft-blue;
+$color-fg-header: $oxford-blue;
+$color-fg-blockquote: $parrot;
+
+$color-table-border: $bluebird;
+$color-table-border-alt: $parrot;

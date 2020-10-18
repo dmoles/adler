@@ -7,6 +7,10 @@
 @import 'screen';
 @import 'print';
 
+html {
+  font-size: $font-size-root-screen;
+}
+
 body {
   display: grid;
   margin: $margin-body;
@@ -32,8 +36,10 @@ aside {
   grid-column: 1;
 
   nav {
+    font-family: $font-family-header;
+
     ul {
-      font-size: 75%;
+      font-size: $font-size-nav;
     }
   }
 }

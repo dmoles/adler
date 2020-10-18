@@ -4,14 +4,13 @@
   html {
     // TODO: does this help? (w/browser-provided header/footer)
     font-family: $font-family-body;
-    font-size: $font-size-body-print;
+    font-size: $font-size-root-print;
     font-weight: $font-weight-body;
   }
 
   body {
     padding-right: 1in;
     padding-left: 1in;
-    font-size: $font-size-body-print;
   }
 
   header {
