@@ -48,7 +48,6 @@ func (r *resource) Open() (http.File, error) {
 	return r.bundle.Open(r.path)
 }
 
-// TODO: consider caching data
 func (r *resource) Read() ([]byte, error) {
 	f, err := r.Open()
 	if err != nil {
@@ -58,7 +57,6 @@ func (r *resource) Read() ([]byte, error) {
 	return ioutil.ReadAll(f)
 }
 
-// TODO: consider caching data
 func (r *resource) Copy(w io.Writer) (int64, error) {
 	f, err := r.Open()
 	if err != nil {

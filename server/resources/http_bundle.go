@@ -35,7 +35,6 @@ func (r *httpBundle) RelativePath(absPath string) string {
 	return strings.TrimPrefix(absPath, "/")
 }
 
-// TODO: cache these?
 func (r *httpBundle) Get(resourcePath string) (Resource, error) {
 	f, err := r.Open(resourcePath)
 	if err != nil {
