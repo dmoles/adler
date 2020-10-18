@@ -39,8 +39,18 @@ type Assets mg.Namespace
 func (Assets) Embed() error {
 	mg.Deps(Assets.Compile)
 
+	includes := strings.Join([]string{
+		"*.css",
+		"*.ico",
+		"*.md",
+		"*.png",
+		"*.tmpl",
+		"*.woff",
+		"*.woff2",
+	}, ",")
+
 	var statik = ensureCommand("statik", "statik not found; did you run go get github.com/rakyll/statik?")
-	cmd := exec.Command(statik, "-Z", "-src", "resources", "-ns", projectName)
+	cmd := exec.Command(statik, "-Z", "-src", "resources", "-include", includes, "-ns", projectName)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
