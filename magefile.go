@@ -82,7 +82,7 @@ func (Assets) Compile() error {
 
 	println("Initializing transpiler")
 	transpiler, _ := libsass.New(libsass.Options{
-		IncludePaths: []string { scssDir },
+		IncludePaths: []string{scssDir},
 		OutputStyle:  libsass.ExpandedStyle,
 	})
 
@@ -148,14 +148,12 @@ type closeable interface {
 	Close() error
 }
 
-func closeQuietly(cl closeable) func() {
-	return func() {
-		if cl != nil {
-			err := cl.Close()
-			if err != nil {
-				msg := fmt.Sprintf("Error closing %v: %v\n", cl, err)
-				os.Stderr.WriteString(msg)
-			}
+func closeQuietly(cl closeable) {
+	if cl != nil {
+		err := cl.Close()
+		if err != nil {
+			msg := fmt.Sprintf("Error closing %v: %v\n", cl, err)
+			os.Stderr.WriteString(msg)
 		}
 	}
 }

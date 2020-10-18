@@ -126,14 +126,13 @@ type Closeable interface {
 	Close() error
 }
 
-func CloseQuietly(cl Closeable) func() {
-	return func() {
-		if cl != nil {
-			err := cl.Close()
-			if err != nil {
-				msg := fmt.Sprintf("Error closing %v: %v\n", cl, err)
-				log.Println(msg)
-			}
+func CloseQuietly(cl Closeable) {
+	if cl != nil {
+		err := cl.Close()
+		if err != nil {
+			msg := fmt.Sprintf("Error closing %v: %v\n", cl, err)
+			log.Println(msg)
 		}
 	}
+
 }
