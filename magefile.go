@@ -4,19 +4,26 @@ package main
 
 import (
 	"bytes"
+	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
-	"github.com/magefile/mage/mg" // mg contains helpful utility functions, like Deps
+	"github.com/bep/golibsass/libsass"
+	"github.com/magefile/mage/mg"
 )
 
 // ------------------------------------------------------------
 // Constants and const-like variables
 
 const projectName = "adler"
+const mainScssPath = "scss/main.scss"
 
 var statik = ensureCommand("statik", "statik not found; did you run go get github.com/rakyll/statik?")
+var sassLint = ensureCommand("sass-lint", "sass-lint not found; did you run npm install -g sass-lint?")
 
 // ------------------------------------------------------------
 // Targets
@@ -35,8 +42,75 @@ func (Assets) Embed() error {
 	return cmd.Run()
 }
 
+func (Assets) Validate() error {
+	cmd := exec.Command(sassLint, "-v", "--max-warnings", "0", "-c", "scss/.sass-lint.yml", "scss/main.scss")
+	cmd.Stdout = os.Stdout
+	if mg.Verbose() {
+		cmd.Stderr = os.Stderr
+	}
+
+	println(strings.Join(cmd.Args, " "))
+
+	return cmd.Run()
+}
+
+func (Assets) Compile() error {
+	println("Reading SCSS from " + mainScssPath)
+	mainScss, err := readFileAsString(mainScssPath)
+	if err != nil {
+		return err
+	}
+
+	scssDir := filepath.Dir(mainScssPath)
+	println("Scanning " + scssDir + " for includes")
+
+	includes, err := filepath.Glob(scssDir + "/_*.scss")
+	if err != nil {
+		return err
+	}
+	msg := fmt.Sprintf("Found includes: %v", strings.Join(includes, ", "))
+	println(msg)
+
+	println("Initializing transpiler")
+	transpiler, _ := libsass.New(libsass.Options{
+		IncludePaths: includes,
+		OutputStyle:  libsass.ExpandedStyle,
+	})
+
+	println("Transpiling")
+	result, err := transpiler.Execute(mainScss)
+	if err != nil {
+		return err
+	}
+
+	outputDir := "resources/css"
+	println("Ensuring output directory: " + outputDir)
+	err = os.MkdirAll(outputDir, 0755)
+	if err != nil {
+		return err
+	}
+
+	outputFile := filepath.Join(outputDir, "main.css")
+	println("Writing output file: " + outputFile)
+	return ioutil.WriteFile(outputFile, []byte(result.CSS), 0644)
+}
+
 // ------------------------------------------------------------
 // Helper functions
+
+func readFileAsString(path string) (string, error) {
+	f, err := os.Open(path)
+	defer closeQuietly(f)
+	if err != nil {
+		return "", err
+	}
+
+	var sb strings.Builder
+	if _, err := io.Copy(&sb, f); err != nil {
+		return "", err
+	}
+	return sb.String(), nil
+}
 
 func ensureCommand(cmdName, failureMsg string) string {
 	result, err := which(cmdName)
@@ -61,3 +135,18 @@ func which(command string) (string, error) {
 	return strings.TrimSpace(result), nil
 }
 
+type closeable interface {
+	Close() error
+}
+
+func closeQuietly(cl closeable) func() {
+	return func() {
+		if cl != nil {
+			err := cl.Close()
+			if err != nil {
+				msg := fmt.Sprintf("Error closing %v: %v\n", cl, err)
+				os.Stderr.WriteString(msg)
+			}
+		}
+	}
+}

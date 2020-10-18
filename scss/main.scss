@@ -1,3 +1,5 @@
+@import 'reset';
+
 @import 'layout';
 @import 'colors';
 @import 'fonts';
@@ -49,6 +51,10 @@ main {
       page-break-after: always;
     }
   }
+}
+
+p.foo {
+  a.bar { align-content: baz; }
 }
 
 header {
