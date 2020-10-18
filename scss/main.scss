@@ -73,6 +73,10 @@ footer {
   grid-column-end: 3;
   grid-column-start: 1;
 
+  a {
+    font-weight: $font-weight-bold;
+  }
+
   p {
     font-size: $font-size-footer;
   }
@@ -271,10 +275,12 @@ table {
 }
 
 img {
+  $adler-icon-size: 3 * $font-size-footer / 4;
+
   &.adler-icon {
-    width: $margin-body;
-    height: $margin-body;
-    vertical-align: text-top;
+    width: $adler-icon-size;
+    height: $adler-icon-size;
+    vertical-align: baseline;
   }
 }
 

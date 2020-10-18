@@ -17,7 +17,6 @@ import (
 	"github.com/magefile/mage/mg"
 )
 
-// TODO: clean up output
 // TODO: use github.com/magefile/mage/target to skip unnecessary steps
 
 // ------------------------------------------------------------
@@ -32,6 +31,54 @@ var gitIgnore = compileGitIgnore()
 // ------------------------------------------------------------
 // Targets
 
+// builds an executable, but does not install it (depends on: test)
+func Build() error {
+	mg.Deps(Assets.Embed)
+
+	cmd := exec.Command("go", "build")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	println("Building")
+	if mg.Verbose() {
+		println(strings.Join(cmd.Args, " "))
+	}
+
+	return cmd.Run()
+}
+
+// builds and installs the executable (depends on: test)
+func Install() error {
+	mg.Deps(Test)
+
+	cmd := exec.Command("go", "install")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	println("Installing")
+	if mg.Verbose() {
+		println(strings.Join(cmd.Args, " "))
+	}
+
+	return cmd.Run()
+}
+
+// runs all tests (depends on: assets:embed)
+func Test() error {
+	mg.Deps(Assets.Embed)
+
+	cmd := exec.Command("go", "test", "./...")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	println("Running tests")
+	if mg.Verbose() {
+		println(strings.Join(cmd.Args, " "))
+	}
+
+	return cmd.Run()
+}
+
 //goland:noinspection GoUnusedExportedType
 type Assets mg.Namespace
 
@@ -45,6 +92,7 @@ func (Assets) Embed() error {
 		"*.md",
 		"*.png",
 		"*.tmpl",
+		"*.webmanifest",
 		"*.woff",
 		"*.woff2",
 	}, ",")
@@ -54,7 +102,10 @@ func (Assets) Embed() error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	println(strings.Join(cmd.Args, " "))
+	println("Embedding static assets")
+	if mg.Verbose() {
+		println(strings.Join(cmd.Args, " "))
+	}
 
 	return cmd.Run()
 }
@@ -86,34 +137,46 @@ func (Assets) Validate() error {
 func (Assets) Compile() error {
 	mg.Deps(Assets.Validate)
 
-	println("Reading SCSS from " + mainScssPath)
+	outputDir := "resources/css"
+	outputPath := filepath.Join(outputDir, "main.css")
+
+	libsassOptions := libsass.Options{
+		IncludePaths: []string{scssDir},
+		OutputStyle:  libsass.ExpandedStyle,
+	}
+
+	println(fmt.Sprintf("Transpiling %v to %v", mainScssPath, outputPath))
+	if mg.Verbose() {
+		msg := fmt.Sprintf("libsass options: %#v", libsassOptions)
+		println(msg)
+	}
+
+	if mg.Verbose() {
+		println("Reading " + mainScssPath)
+	}
 	mainScss, err := readFileAsString(mainScssPath)
 	if err != nil {
 		return err
 	}
 
-	println("Initializing transpiler")
-	transpiler, _ := libsass.New(libsass.Options{
-		IncludePaths: []string{scssDir},
-		OutputStyle:  libsass.ExpandedStyle,
-	})
-
-	println("Transpiling")
+	transpiler, _ := libsass.New(libsassOptions)
 	result, err := transpiler.Execute(mainScss)
 	if err != nil {
 		return err
 	}
 
-	outputDir := "resources/css"
-	println("Ensuring output directory: " + outputDir)
+	if mg.Verbose() {
+		println("Ensuring output directory " + outputDir)
+	}
 	err = os.MkdirAll(outputDir, 0755)
 	if err != nil {
 		return err
 	}
 
-	outputFile := filepath.Join(outputDir, "main.css")
-	println("Writing output file: " + outputFile)
-	return ioutil.WriteFile(outputFile, []byte(result.CSS), 0644)
+	if mg.Verbose() {
+		println("Writing " + outputPath)
+	}
+	return ioutil.WriteFile(outputPath, []byte(result.CSS), 0644)
 }
 
 // ------------------------------------------------------------

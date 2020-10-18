@@ -345,6 +345,10 @@ footer {
   grid-column-start: 1;
 }
 
+footer a {
+  font-weight: bold;
+}
+
 footer p {
   font-size: 0.8333333333rem;
 }
@@ -532,9 +536,9 @@ table thead tr:not(:last-child) th {
 }
 
 img.adler-icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: text-top;
+  width: 0.625rem;
+  height: 0.625rem;
+  vertical-align: baseline;
 }
 
 pre {

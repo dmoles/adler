@@ -54,7 +54,7 @@ func (s *server) Start() error {
 
 const cssPathPrefix = "/css/{css:.+}"
 const fontsPathPrefix = "/fonts/{fonts:.+}"
-const faviconPathPattern = "/{favicon:[^/]+\\.(?:ico|png|jpg)}"
+const faviconPathPattern = "/{favicon:[^/]+\\.(?:ico|png|jpg|webmanifest)}"
 const markdownPathPattern = "/{markdown:.+\\.md}"
 
 func (s *server) newRouter() *mux.Router {
