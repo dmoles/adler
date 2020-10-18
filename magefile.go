@@ -16,6 +16,9 @@ import (
 	"github.com/magefile/mage/mg"
 )
 
+// TODO: clean up output
+// TODO: use github.com/magefile/mage/target to skip unnecessary steps
+
 // ------------------------------------------------------------
 // Constants and const-like variables
 
