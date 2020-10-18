@@ -11,16 +11,41 @@ import (
 	"github.com/magefile/mage/mg" // mg contains helpful utility functions, like Deps
 )
 
+// ------------------------------------------------------------
+// Constants and const-like variables
+
 const projectName = "adler"
 
-var statik = func() string {
-	result, err := which("statik")
+var statik = ensureCommand("statik", "statik not found; did you run go get github.com/rakyll/statik?")
+
+// ------------------------------------------------------------
+// Targets
+
+//goland:noinspection GoUnusedExportedType
+type Assets mg.Namespace
+
+// Embeds static assets
+func (Assets) Embed() error {
+	cmd := exec.Command(statik, "-Z", "-src", "resources", "-ns", projectName)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	println(strings.Join(cmd.Args, " "))
+
+	return cmd.Run()
+}
+
+// ------------------------------------------------------------
+// Helper functions
+
+func ensureCommand(cmdName, failureMsg string) string {
+	result, err := which(cmdName)
 	if err != nil {
-		os.Stderr.WriteString("statik not installed; did you run go get github.com/rakyll/statik?")
+		os.Stderr.WriteString(failureMsg)
 		os.Exit(1)
 	}
 	return result
-}()
+}
 
 func which(command string) (string, error) {
 	var stdout bytes.Buffer
@@ -36,18 +61,3 @@ func which(command string) (string, error) {
 	return strings.TrimSpace(result), nil
 }
 
-// ------------------------------------------------------------
-// Targets
-
-//goland:noinspection GoUnusedExportedType
-type Assets mg.Namespace
-
-// Embeds static assets
-func (Assets) Embed() error {
-	// statik -src=resources
-	cmd := exec.Command(statik, "-Z", "-src", "resources", "-ns", projectName)
-
-	println(strings.Join(cmd.Args, " "))
-
-	return cmd.Run()
-}
