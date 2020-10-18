@@ -14,6 +14,9 @@ rules:
   single-line-per-selector:
     - 0
 
+  no-mergeable-selectors:
+    - 1
+
   # TODO: figure out rationale for this one
   no-qualifying-elements:
     - 1
@@ -21,9 +24,12 @@ rules:
 
   # TODO: figure out why nesting classes doesn't work
   force-element-nesting:
-    - 0
+    - 1
 
   # TODO: figure out why nesting pseudoclasses doesn't work
   force-pseudo-nesting:
-    - 0
+    - 1
+
+  force-attribute-nesting:
+    - 1
 
