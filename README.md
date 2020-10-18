@@ -1,5 +1,7 @@
 # Adler
 
+[![Build Status](https://travis-ci.org/dmoles/adler.svg?branch=main)](https://travis-ci.org/dmoles/adler)
+
 Adler is a minimalist Markdown wiki viewer.
 
 ## Building
