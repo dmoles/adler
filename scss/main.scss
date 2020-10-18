@@ -282,9 +282,11 @@ pre {
   margin-top: $margin-body;
   margin-bottom: $margin-body;
   line-height: $line-height-code;
+  color: $color-code;
   font-family: $font-family-code;
 }
 
 code {
+  color: $color-code;
   font-family: $font-family-code;
 }

@@ -541,9 +541,11 @@ pre {
   margin-top: 1em;
   margin-bottom: 1em;
   line-height: 1em;
+  color: #035a5c;
   font-family: "Courier Prime", "Courier", monospace;
 }
 
 code {
+  color: #035a5c;
   font-family: "Courier Prime", "Courier", monospace;
 }

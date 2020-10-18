@@ -1,7 +1,9 @@
 # Fonts
 
-’Charis SIL’ copyright © 1999-2014 [SIL International](http://www.sil.org/)
+‘Charis SIL’ copyright © 1999-2014 [SIL International](http://www.sil.org/)
 under the reserved font names ‘Charis’ and ‘SIL’.
+
+‘Courier Prime’ copyright © 2015 [The Courier Prime Project Authors](https://github.com/quoteunquoteapps/CourierPrime).
 
 ‘Montserrat’ copyright © 2011 [The Montserrat Project Authors](https://github.com/JulietaUla/Montserrat)
 
