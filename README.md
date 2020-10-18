@@ -4,17 +4,9 @@ Adler is a minimalist Markdown wiki viewer.
 
 ## Building
 
-1. install `pkger`
-
-```
-go get github.com/markbates/pkger/cmd/pkger
-```
-
-2. recompile resources
-
-```
-pkger -include /resources
-```
+Out of the box, Adler builds with `go build` / `go install`. A `magefile`
+is provided to support compiling SCSS and embedding static assets; run
+`mage -l` for the list of tasks.
 
 ## Usage
 

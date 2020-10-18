@@ -34,7 +34,7 @@ var sassLint = ensureCommand("sass-lint", "sass-lint not found; did you run npm 
 //goland:noinspection GoUnusedExportedType
 type Assets mg.Namespace
 
-// Embeds static assets
+// Embeds static assets (requires statik: https://github.com/rakyll/statik)
 func (Assets) Embed() error {
 	mg.Deps(Assets.Compile)
 
@@ -47,7 +47,7 @@ func (Assets) Embed() error {
 	return cmd.Run()
 }
 
-// Validates SCSS
+// Validates SCSS (requires sass-lint: https://www.npmjs.com/package/sass-lint)
 func (Assets) Validate() error {
 	cmd := exec.Command(sassLint, "-v", "--max-warnings", "0", "-c", "scss/.sass-lint.yml", mainScssPath)
 	cmd.Stdout = os.Stdout
@@ -71,14 +71,6 @@ func (Assets) Compile() error {
 	}
 
 	scssDir := filepath.Dir(mainScssPath)
-	//println("Scanning " + scssDir + " for includes")
-	//
-	//includes, err := filepath.Glob(scssDir + "/_*.scss")
-	//if err != nil {
-	//	return err
-	//}
-	//msg := fmt.Sprintf("Found includes: %v", strings.Join(includes, ", "))
-	//println(msg)
 
 	println("Initializing transpiler")
 	transpiler, _ := libsass.New(libsass.Options{
