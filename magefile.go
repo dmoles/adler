@@ -33,6 +33,8 @@ type Assets mg.Namespace
 
 // Embeds static assets
 func (Assets) Embed() error {
+	mg.Deps(Assets.Compile)
+
 	cmd := exec.Command(statik, "-Z", "-src", "resources", "-ns", projectName)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -42,8 +44,9 @@ func (Assets) Embed() error {
 	return cmd.Run()
 }
 
+// Validates SCSS
 func (Assets) Validate() error {
-	cmd := exec.Command(sassLint, "-v", "--max-warnings", "0", "-c", "scss/.sass-lint.yml", "scss/main.scss")
+	cmd := exec.Command(sassLint, "-v", "--max-warnings", "0", "-c", "scss/.sass-lint.yml", mainScssPath)
 	cmd.Stdout = os.Stdout
 	if mg.Verbose() {
 		cmd.Stderr = os.Stderr
@@ -54,7 +57,10 @@ func (Assets) Validate() error {
 	return cmd.Run()
 }
 
+// Compiles SCSS
 func (Assets) Compile() error {
+	mg.Deps(Assets.Validate)
+
 	println("Reading SCSS from " + mainScssPath)
 	mainScss, err := readFileAsString(mainScssPath)
 	if err != nil {
@@ -62,18 +68,18 @@ func (Assets) Compile() error {
 	}
 
 	scssDir := filepath.Dir(mainScssPath)
-	println("Scanning " + scssDir + " for includes")
-
-	includes, err := filepath.Glob(scssDir + "/_*.scss")
-	if err != nil {
-		return err
-	}
-	msg := fmt.Sprintf("Found includes: %v", strings.Join(includes, ", "))
-	println(msg)
+	//println("Scanning " + scssDir + " for includes")
+	//
+	//includes, err := filepath.Glob(scssDir + "/_*.scss")
+	//if err != nil {
+	//	return err
+	//}
+	//msg := fmt.Sprintf("Found includes: %v", strings.Join(includes, ", "))
+	//println(msg)
 
 	println("Initializing transpiler")
 	transpiler, _ := libsass.New(libsass.Options{
-		IncludePaths: includes,
+		IncludePaths: []string { scssDir },
 		OutputStyle:  libsass.ExpandedStyle,
 	})
 
