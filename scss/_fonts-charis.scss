@@ -1,0 +1,29 @@
+// Charis SIL Regular
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 400;
+  src: url('/fonts/CharisSIL-R.woff');
+}
+
+// Charis SIL Italic
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 400;
+  font-style: italic;
+  src: url('/fonts/CharisSIL-I.woff');
+}
+
+// Charis SIL Bold
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 700;
+  src: url('/fonts/CharisSIL-B.woff');
+}
+
+// Charis SIL Bold Italic
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 700;
+  font-style: italic;
+  src: url('/fonts/CharisSIL-BI.woff');
+}

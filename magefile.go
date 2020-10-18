@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/bep/golibsass/libsass"
+	"github.com/get-woke/go-gitignore"
 	"github.com/magefile/mage/mg"
 )
 
@@ -25,8 +26,8 @@ import (
 const projectName = "adler"
 const mainScssPath = "scss/main.scss"
 
-var statik = ensureCommand("statik", "statik not found; did you run go get github.com/rakyll/statik?")
-var sassLint = ensureCommand("sass-lint", "sass-lint not found; did you run npm install -g sass-lint?")
+var scssDir = filepath.Dir(mainScssPath)
+var gitIgnore = compileGitIgnore()
 
 // ------------------------------------------------------------
 // Targets
@@ -34,11 +35,22 @@ var sassLint = ensureCommand("sass-lint", "sass-lint not found; did you run npm 
 //goland:noinspection GoUnusedExportedType
 type Assets mg.Namespace
 
-// Embeds static assets (requires statik: https://github.com/rakyll/statik)
+// embeds static assets (depends on: assets:compile; requires statik: https://github.com/rakyll/statik)
 func (Assets) Embed() error {
 	mg.Deps(Assets.Compile)
 
-	cmd := exec.Command(statik, "-Z", "-src", "resources", "-ns", projectName)
+	includes := strings.Join([]string{
+		"*.css",
+		"*.ico",
+		"*.md",
+		"*.png",
+		"*.tmpl",
+		"*.woff",
+		"*.woff2",
+	}, ",")
+
+	var statik = ensureCommand("statik", "statik not found; did you run go get github.com/rakyll/statik?")
+	cmd := exec.Command(statik, "-Z", "-src", "resources", "-include", includes, "-ns", projectName)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
@@ -47,20 +59,30 @@ func (Assets) Embed() error {
 	return cmd.Run()
 }
 
-// Validates SCSS (requires sass-lint: https://www.npmjs.com/package/sass-lint)
+// validates SCSS (requires sass-lint: https://www.npmjs.com/package/sass-lint)
 func (Assets) Validate() error {
-	cmd := exec.Command(sassLint, "-v", "--max-warnings", "0", "-c", "scss/.sass-lint.yml", mainScssPath)
-	cmd.Stdout = os.Stdout
-	if mg.Verbose() {
-		cmd.Stderr = os.Stderr
+	var errors []error
+
+	//goland:noinspection GoUnhandledErrorResult
+	filepath.Walk(scssDir, func(path string, info os.FileInfo, err error) error {
+		if filepath.Ext(path) == ".scss" && !info.IsDir() && !gitIgnore.MatchesPath(path) {
+			if err := sassLint(path); err != nil {
+				errors = append(errors, err)
+			}
+		}
+		return nil
+	})
+
+	if len(errors) > 0 {
+		for _, err := range errors {
+			warn(err.Error())
+		}
+		return errors[len(errors)-1]
 	}
-
-	println(strings.Join(cmd.Args, " "))
-
-	return cmd.Run()
+	return nil
 }
 
-// Compiles SCSS
+// compiles SCSS (depends on: assets:validate)
 func (Assets) Compile() error {
 	mg.Deps(Assets.Validate)
 
@@ -69,8 +91,6 @@ func (Assets) Compile() error {
 	if err != nil {
 		return err
 	}
-
-	scssDir := filepath.Dir(mainScssPath)
 
 	println("Initializing transpiler")
 	transpiler, _ := libsass.New(libsass.Options{
@@ -99,6 +119,17 @@ func (Assets) Compile() error {
 // ------------------------------------------------------------
 // Helper functions
 
+func sassLint(scssFile string) error {
+	var sassLint = ensureCommand("sass-lint", "sass-lint not found; did you run npm install -g sass-lint?")
+	cmd := exec.Command(sassLint, "-v", "--max-warnings", "0", "-c", "scss/.sass-lint.yml", scssFile)
+	cmd.Stdout = os.Stdout
+	if mg.Verbose() {
+		cmd.Stderr = os.Stderr
+		println(strings.Join(cmd.Args, " "))
+	}
+	return cmd.Run()
+}
+
 func readFileAsString(path string) (string, error) {
 	f, err := os.Open(path)
 	defer closeQuietly(f)
@@ -116,7 +147,7 @@ func readFileAsString(path string) (string, error) {
 func ensureCommand(cmdName, failureMsg string) string {
 	result, err := which(cmdName)
 	if err != nil {
-		os.Stderr.WriteString(failureMsg)
+		warn(failureMsg)
 		os.Exit(1)
 	}
 	return result
@@ -136,6 +167,18 @@ func which(command string) (string, error) {
 	return strings.TrimSpace(result), nil
 }
 
+func warn(msg string) {
+	_, _ = fmt.Fprintln(os.Stderr, msg)
+}
+
+func compileGitIgnore() *ignore.GitIgnore {
+	gi, err := ignore.CompileIgnoreFile(".gitignore")
+	if err != nil {
+		panic(err)
+	}
+	return gi
+}
+
 type closeable interface {
 	Close() error
 }
@@ -144,8 +187,8 @@ func closeQuietly(cl closeable) {
 	if cl != nil {
 		err := cl.Close()
 		if err != nil {
-			msg := fmt.Sprintf("Error closing %v: %v\n", cl, err)
-			os.Stderr.WriteString(msg)
+			msg := fmt.Sprintf("Error closing %v: %v", cl, err)
+			warn(msg)
 		}
 	}
 }

@@ -1,17 +1,11 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,700;1,300;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,700;1,300;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,700;1,300;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;700&display=swap");
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-  border: 0;
-  font: inherit;
-  font-size: 100%;
   margin: 0;
+  border: 0;
   padding: 0;
   vertical-align: baseline;
+  font: inherit;
+  font-size: 100%;
 }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -39,23 +33,241 @@ table {
   border-spacing: 0;
 }
 
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 400;
+  src: url("/fonts/CharisSIL-R.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/CharisSIL-I.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 700;
+  src: url("/fonts/CharisSIL-B.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/CharisSIL-BI.woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 300;
+  font-style: normal;
+  src: url("/fonts/Montserrat-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 300;
+  font-style: italic;
+  src: url("/fonts/Montserrat-LightItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/Montserrat-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/Montserrat-Italic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/Montserrat-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/Montserrat-BoldItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 900;
+  font-style: normal;
+  src: url("/fonts/Montserrat-Black.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 900;
+  font-style: italic;
+  src: url("/fonts/Montserrat-BlackItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/CourierPrime-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/CourierPrime-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/CourierPrime-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/CourierPrime-BoldItalic.woff2") format("woff2");
+}
+
 @media screen {
   main {
     grid-column: 2;
   }
 }
 
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 400;
+  src: url("/fonts/CharisSIL-R.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/CharisSIL-I.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 700;
+  src: url("/fonts/CharisSIL-B.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/CharisSIL-BI.woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 300;
+  font-style: normal;
+  src: url("/fonts/Montserrat-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 300;
+  font-style: italic;
+  src: url("/fonts/Montserrat-LightItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/Montserrat-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/Montserrat-Italic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/Montserrat-Bold.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/Montserrat-BoldItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 900;
+  font-style: normal;
+  src: url("/fonts/Montserrat-Black.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 900;
+  font-style: italic;
+  src: url("/fonts/Montserrat-BlackItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/CourierPrime-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/CourierPrime-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/CourierPrime-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/CourierPrime-BoldItalic.woff2") format("woff2");
+}
+
 @media print {
   html {
-    /* TODO: does this help? (w/browser-provided header/footer) */
+    font-family: "CharisSILW", serif;
     font-size: 12pt;
-    font-family: "IBM Plex Sans", sans-serif;
-    font-weight: 300;
+    font-weight: normal;
   }
   body {
     padding-right: 1in;
     padding-left: 1in;
-    font-size: 12pt;
   }
   header {
     display: none;
@@ -64,7 +276,7 @@ table {
     display: none;
   }
   main {
-    grid-column: 1/3;
+    grid-column: 1 / 3;
   }
   @page {
     margin-top: 1in;
@@ -72,34 +284,42 @@ table {
   }
 }
 
+html {
+  font-size: medium;
+}
+
 body {
   display: grid;
   margin: 1em;
-  background-color: #fffef8;
+  background-color: #fff9e3;
   width: available;
   height: 100%;
   min-height: min-content;
   line-height: 1.33333;
   color: #000000;
-  font-family: "IBM Plex Sans", sans-serif;
-  font-size: 1.2rem;
-  font-weight: 300;
+  font-family: "CharisSILW", serif;
+  font-size: 1rem;
+  font-weight: normal;
   grid-template-columns: 15em minmax(0, 1fr);
 }
 
 aside {
   margin-right: 0.5em;
-  border-right: 1px dotted #202b49;
+  border-right: 1px dotted #17293a;
   padding-right: 0.5em;
   grid-column: 1;
 }
 
+aside nav {
+  font-family: "Montserrat", sans-serif;
+}
+
 aside nav ul {
-  font-size: 75%;
+  font-size: 0.8333333333rem;
 }
 
 main a {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 main.full {
@@ -118,28 +338,28 @@ header {
 
 footer {
   margin-top: 1em;
-  border-top: 1px solid #202b49;
+  border-top: 1px solid #17293a;
   padding-top: 1em;
-  color: #202b49;
+  color: #17293a;
   grid-column-end: 3;
   grid-column-start: 1;
 }
 
 footer p {
-  font-size: 0.8rem;
+  font-size: 0.8333333333rem;
 }
 
 a {
   text-decoration: none;
-  color: #17293a;
+  color: #202b49;
 }
 
 a:visited {
-  color: #17293a;
+  color: #202b49;
 }
 
 a:hover {
-  text-decoration-color: #202b49;
+  text-decoration-color: #17293a;
   text-decoration-line: underline;
 }
 
@@ -148,49 +368,49 @@ em {
 }
 
 strong {
-  font-weight: 700;
+  font-weight: bold;
 }
 
 sub {
   vertical-align: sub;
-  font-size: smaller;
+  font-size: 0.8333333333rem;
 }
 
 h1, h2, h3, h4, h5 {
   margin-top: 1.5em;
   margin-bottom: 0.75em;
-  border-bottom: 1px solid #7a88a3;
-  color: #202b49;
+  border-bottom: 1px solid #17293a;
+  color: #17293a;
   font-family: "Montserrat", sans-serif;
 }
 
 h1 {
   text-transform: uppercase;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 h2 {
   text-transform: uppercase;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.8333333333rem;
+  font-weight: bold;
 }
 
 h3 {
   text-transform: uppercase;
-  font-size: 1rem;
-  font-weight: 300;
+  font-size: 0.8333333333rem;
+  font-weight: normal;
 }
 
 h4 {
-  font-size: 1rem;
-  font-weight: 300;
+  font-size: 0.8333333333rem;
+  font-weight: normal;
 }
 
 h5 {
   border-bottom-style: none;
-  font-size: 1rem;
-  font-weight: 300;
+  font-size: 0.8333333333rem;
+  font-weight: normal;
   font-style: italic;
 }
 
@@ -203,8 +423,8 @@ blockquote {
   margin-right: 5em;
   margin-left: 1em;
   line-height: 1.16667;
-  color: #272525;
-  font-size: smaller;
+  color: #035a5c;
+  font-size: 0.8571428571rem;
 }
 
 blockquote p {
@@ -226,7 +446,7 @@ blockquote p > cite {
 }
 
 blockquote p > cite a {
-  font-weight: 300;
+  font-weight: normal;
 }
 
 blockquote p > cite::before {
@@ -266,7 +486,7 @@ dl {
 
 dt {
   display: block;
-  font-weight: 700;
+  font-weight: bold;
   grid-column: 1;
 }
 
@@ -287,7 +507,7 @@ table thead th {
   padding: 0.25em;
   vertical-align: top;
   text-align: left;
-  font-weight: 700;
+  font-weight: bold;
 }
 
 table thead th:first-child {
@@ -304,11 +524,11 @@ table thead td:first-child {
 }
 
 table thead tr:last-child th {
-  border-bottom: 1px solid #7c7e7f;
+  border-bottom: 1px solid #035a5c;
 }
 
 table thead tr:not(:last-child) th {
-  border-bottom: 1px solid #d8d8d9;
+  border-bottom: 1px solid #318b97;
 }
 
 img.adler-icon {
@@ -321,9 +541,11 @@ pre {
   margin-top: 1em;
   margin-bottom: 1em;
   line-height: 1em;
-  font-family: Hasklig, "Fira Code", monospace;
+  color: #035a5c;
+  font-family: "Courier Prime", "Courier", monospace;
 }
 
 code {
-  font-family: Hasklig, "Fira Code", monospace;
+  color: #035a5c;
+  font-family: "Courier Prime", "Courier", monospace;
 }

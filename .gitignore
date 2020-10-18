@@ -1,7 +1,11 @@
 ############################################################
 #### Custom ignores
 
+# Temp source generated during magefile compilation
 mage_output_file.go
+
+# Symlink to stop IDEA/GoLand complaining about CSS paths
+/fonts
 
 ############################################################
 #### Generated ignores
