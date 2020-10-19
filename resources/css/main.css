@@ -390,19 +390,19 @@ h1, h2, h3, h4, h5 {
 
 h1 {
   text-transform: uppercase;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
 h2 {
   text-transform: uppercase;
-  font-size: 0.8333333333rem;
+  font-size: 1rem;
   font-weight: bold;
 }
 
 h3 {
   text-transform: uppercase;
-  font-size: 0.8333333333rem;
+  font-size: 1rem;
   font-weight: normal;
 }
 
@@ -459,7 +459,7 @@ blockquote p > cite::before {
 
 ul {
   margin-bottom: 1em;
-  margin-left: 1em;
+  margin-left: 0.25em;
   padding-left: 1em;
   list-style-position: outside;
   list-style-type: square;
@@ -467,18 +467,15 @@ ul {
 
 ol {
   margin-bottom: 1em;
-  margin-left: 1em;
+  margin-left: 0.25em;
   padding-left: 1em;
   list-style-position: outside;
   list-style-type: decimal;
 }
 
 li {
-  padding-left: 0.25em;
-}
-
-li blockquote {
   margin-left: 0;
+  padding-left: 0;
 }
 
 dl {
@@ -508,7 +505,7 @@ table {
 table thead th {
   margin-top: 1em;
   margin-bottom: 1em;
-  padding: 0.25em;
+  padding: 0.25em 0.25em 0.25em 0;
   vertical-align: top;
   text-align: left;
   font-weight: bold;

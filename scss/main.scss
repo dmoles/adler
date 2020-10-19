@@ -119,30 +119,30 @@ h1, h2, h3, h4, h5 {
 
 h1 {
   text-transform: uppercase;
-  font-size: $font-size-body;
+  font-size: $font-size-larger;
   font-weight: $font-weight-bold;
 }
 
 h2 {
   text-transform: uppercase;
-  font-size: $font-size-small-caps;
+  font-size: $font-size-body;
   font-weight: $font-weight-bold;
 }
 
 h3 {
   text-transform: uppercase;
-  font-size: $font-size-small-caps;
+  font-size: $font-size-body;
   font-weight: $font-weight-body;
 }
 
 h4 {
-  font-size: $font-size-small-caps;
+  font-size: $font-size-smaller;
   font-weight: $font-weight-body;
 }
 
 h5 {
   border-bottom-style: none;
-  font-size: $font-size-small-caps;
+  font-size: $font-size-smaller;
   font-weight: $font-weight-body;
   font-style: italic;
 }
@@ -187,29 +187,29 @@ blockquote {
 }
 
 
+$list-margin-bottom: $margin-body;
+$list-margin-left: .25em;
+$list-padding-left: 1em;
+
 ul {
-  margin-bottom: $margin-body;
-  margin-left: $margin-body;
-  padding-left: $margin-body;
+  margin-bottom: $list-margin-bottom;
+  margin-left: $list-margin-left;
+  padding-left: $list-padding-left;
   list-style-position: outside;
   list-style-type: square;
 }
 
 ol {
-  margin-bottom: $margin-body;
-  margin-left: $margin-body;
-  padding-left: $margin-body;
+  margin-bottom: $list-margin-bottom;
+  margin-left: $list-margin-left;
+  padding-left: $list-padding-left;
   list-style-position: outside;
   list-style-type: decimal;
 }
 
 li {
-  padding-left: $margin-narrow;
-
-  blockquote {
-    margin-left: 0;
-  }
-
+  margin-left: 0;
+  padding-left: 0;
 }
 
 dl {
@@ -239,7 +239,7 @@ table {
     th {
       margin-top: $margin-body;
       margin-bottom: $margin-body;
-      padding: $margin-narrow;
+      padding: $margin-narrow $margin-narrow $margin-narrow 0;
       vertical-align: top;
       text-align: left;
       font-weight: $font-weight-bold;
