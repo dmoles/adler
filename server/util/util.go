@@ -95,9 +95,21 @@ func ResolveFile(urlFilePath string, rootDir string) (string, error) {
 
 // TODO: use http.DetectContentType() instead?
 func ContentType(urlPath string) string {
+	if path.Base(urlPath) == "site.webmanifest" {
+		return "application/manifest+json; charset=utf-8"
+	}
 	ext := path.Ext(urlPath)
 	if ext == ".md" || ext == "" {
-		return "text/html; charset=utf-8"
+		return mime.TypeByExtension(".html")
+	}
+	if ext == ".ico" {
+		return "image/x-icon"
+	}
+	if ext == ".woff" {
+		return "font/woff"
+	}
+	if ext == ".woff2" {
+		return "font/woff2"
 	}
 	ct := mime.TypeByExtension(ext)
 	if ct == "" {

@@ -2,11 +2,15 @@ package server
 
 import (
 	"fmt"
+	"github.com/dmoles/adler/server/markdown"
+	"github.com/dmoles/adler/server/templates"
 	"github.com/dmoles/adler/server/util"
 	"github.com/gorilla/mux"
 	"gopkg.in/tylerb/graceful.v1"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -52,31 +56,98 @@ func (s *server) Start() error {
 // ------------------------------
 // Private functions
 
-const cssPathPrefix = "/css/{css:.+}"
-const fontsPathPrefix = "/fonts/{fonts:.+}"
-const faviconPathPattern = "/{favicon:[^/]+\\.(?:ico|png|jpg|webmanifest)}"
-const markdownPathPattern = "/{markdown:.+\\.md}"
+const cssPathPrefix = "/css/{path:.+}"
+const fontsPathPrefix = "/fonts/{path:.+}"
+const faviconPathPattern = "/{path:[^/]+\\.(?:ico|png|jpg|webmanifest)}"
+const markdownPathPattern = "/{path:.+\\.md}"
 
 func (s *server) newRouter() *mux.Router {
 	// TODO: support single-page version
 	r := mux.NewRouter()
 
 	// TODO: can we unify on either PathPrefix or HandleFunc & DRY?
-	r.PathPrefix(cssPathPrefix).HandlerFunc(resourceHandler("/css", "css"))
-	r.PathPrefix(fontsPathPrefix).HandlerFunc(resourceHandler("/fonts", "fonts"))
-	r.HandleFunc(faviconPathPattern, resourceHandler("/images/favicons", "favicon"))
+	r.PathPrefix(cssPathPrefix).HandlerFunc(resourceHandler("/css"))
+	r.PathPrefix(fontsPathPrefix).HandlerFunc(resourceHandler("/fonts"))
+	r.HandleFunc(faviconPathPattern, resourceHandler("/images/favicons"))
 
-	markdown := markdownHandler(s.rootDir)
-	r.HandleFunc(markdownPathPattern, markdown)
-	r.MatcherFunc(s.isDirectory).HandlerFunc(markdown)
+	r.HandleFunc(markdownPathPattern, s.handleMarkdown)
+	r.MatcherFunc(s.isDirectory).HandlerFunc(s.handleMarkdown)
 
-	raw := rawHandler(s.rootDir)
-	r.MatcherFunc(s.isFile).HandlerFunc(raw)
+	r.MatcherFunc(s.isFile).HandlerFunc(s.handleRaw)
 	return r
 }
 
 // ------------------------------
+// Handlers
+
+func (s *server) handleRaw(w http.ResponseWriter, r *http.Request) {
+	urlPath := r.URL.Path
+	log.Printf("raw(): %v", urlPath)
+	filePath, err := util.ResolveFile(urlPath, s.rootDir)
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+	// TODO: just stream, we already checked for existence
+	data, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+	util.WriteData(w, urlPath, data)
+}
+
+func (s *server) handleMarkdown(w http.ResponseWriter, r *http.Request) {
+	urlPath := r.URL.Path
+
+	resolvedPath, err := util.ResolvePath(urlPath, s.rootDir)
+	if err != nil {
+		log.Printf("Error resolving path %v: %v", urlPath, err)
+		http.NotFound(w, r)
+		return
+	}
+
+	title, err := markdown.GetTitleFromFile(resolvedPath)
+	if err != nil {
+		log.Printf("Error determining title from path: %v: %v", resolvedPath, err)
+		http.NotFound(w, r)
+		return
+	}
+
+	rootIndexHtml, err := markdown.DirToHtml(s.rootDir, s.rootDir)
+	if err != nil {
+		log.Printf("Error generating directory index for %v: %v", s.rootDir, err)
+		http.NotFound(w, r)
+		return
+	}
+
+	bodyHtml, err := markdown.GetBodyHTML(resolvedPath, s.rootDir)
+
+	pageData := templates.PageData{
+		Title: title,
+		TOC:   string(rootIndexHtml),
+		Body:  string(bodyHtml),
+	}
+
+	var sb strings.Builder
+	err = templates.Page().Execute(&sb, pageData)
+	if err != nil {
+		log.Printf("Error executing template for %v: %v", urlPath, err)
+		http.NotFound(w, r)
+		return
+	}
+
+	data := []byte(sb.String())
+	util.WriteData(w, urlPath, data)
+}
+
+// ------------------------------
 // Utility methods
+
+func (s *server) inRootDir(urlPath string) bool {
+	_, err := util.ResolveFile(urlPath, s.rootDir)
+	return err == nil
+}
 
 func (s *server) isDirectory(r *http.Request, rm *mux.RouteMatch) bool {
 	_, err := util.ResolveDirectory(r.URL.Path, s.rootDir)
