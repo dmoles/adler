@@ -10,7 +10,15 @@ import (
 	"strings"
 )
 
-func resourceHandler(dir string) func(http.ResponseWriter, *http.Request) {
+type handlerFunc func(http.ResponseWriter, *http.Request)
+
+var resourceHandlers = map[string]handlerFunc{
+	"/css/{path:.+}": makeHandler("/css"),
+	"/fonts/{path:.+}": makeHandler("/fonts"),
+	"/{path:[^/]+\\.(?:ico|png|jpg|webmanifest)}": makeHandler("/images/favicons"),
+}
+
+func makeHandler(dir string) handlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		relativePath := vars["path"]
