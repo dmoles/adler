@@ -10,7 +10,8 @@ Out of the box, Adler builds with `go build` / `go install`.
 
 A [`magefile`](https://magefile.org) is provided to support compiling SCSS
 and embedding static assets; run `mage -l` for the list of tasks. Note that
-the first `mage` invocation may take some time as [golibsass](https://github.com/bep/golibsass) 
+the first `mage` invocation may take some time as [golibsass](https://github.com/bep/golibsass)
+builds `libsass` from (C++) source.
 
 ## Usage
 
