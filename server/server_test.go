@@ -19,7 +19,7 @@ func testdataDir() string {
 }
 
 func newServer(t *testing.T) Server {
-	s, err := New(invalidPort, testdataDir())
+	s, err := New(invalidPort, testdataDir(), "")
 	if err != nil {
 		t.Fatal(err)
 		return nil

@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -18,20 +19,37 @@ type Server interface {
 	Start() error
 }
 
-func Start(port int, rootDir string) error {
-	s, err := New(port, rootDir)
+func Start(port int, rootDir string, cssDir string) error {
+	s, err := New(port, rootDir, cssDir)
 	if err != nil {
 		return err
 	}
 	return s.Start()
 }
 
-func New(port int, rootDir string) (Server, error) {
+func New(port int, rootDir string, cssDir string) (Server, error) {
 	rootDirAbs, err := util.ToAbsoluteDirectory(rootDir)
 	if err != nil {
 		return nil, err
 	}
-	return &server{port: port, rootDir: rootDirAbs}, nil
+
+	newServer := &server{port: port, rootDir: rootDirAbs}
+
+	if cssDir != "" {
+		cssDirAbs, err := util.ToAbsoluteDirectory(cssDir)
+		if err != nil {
+			return nil, err
+		}
+		main_css := filepath.Join(cssDirAbs, "main.css")
+		main_scss := filepath.Join(cssDirAbs, "main.scss")
+		if util.IsFile(main_css) != util.IsFile(main_scss) {
+			newServer.cssDir = cssDirAbs
+		} else {
+			return nil, fmt.Errorf("CSS directory %v must contain exactly one of: main.css, main.scss", cssDirAbs)
+		}
+	}
+
+	return newServer, nil
 }
 
 // ------------------------------------------------------------
@@ -43,6 +61,7 @@ type server struct {
 	port    int
 	rootDir string
 	router  *mux.Router
+	cssDir  string
 }
 
 func (s *server) Start() error {
