@@ -9,7 +9,7 @@ import (
 // Exported symbols
 
 type Handler interface {
-	register(r *mux.Router)
+	Register(r *mux.Router)
 }
 
 // ------------------------------

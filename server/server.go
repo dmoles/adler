@@ -113,9 +113,10 @@ func (s *server) handleRaw(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) handleMarkdown(w http.ResponseWriter, r *http.Request) {
-	urlPath := r.URL.Path
+	rootDir := s.rootDir
 
-	resolvedPath, err := util.ResolvePath(urlPath, s.rootDir)
+	urlPath := r.URL.Path
+	resolvedPath, err := util.ResolvePath(urlPath, rootDir)
 	if err != nil {
 		log.Printf("Error resolving path %v: %v", urlPath, err)
 		http.NotFound(w, r)
@@ -129,14 +130,14 @@ func (s *server) handleMarkdown(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rootIndexHtml, err := markdown.DirToHtml(s.rootDir, s.rootDir)
+	rootIndexHtml, err := markdown.DirToHtml(rootDir, rootDir)
 	if err != nil {
-		log.Printf("Error generating directory index for %v: %v", s.rootDir, err)
+		log.Printf("Error generating directory index for %v: %v", rootDir, err)
 		http.NotFound(w, r)
 		return
 	}
 
-	bodyHtml, err := markdown.GetBodyHTML(resolvedPath, s.rootDir)
+	bodyHtml, err := markdown.GetBodyHTML(resolvedPath, rootDir)
 
 	pageData := templates.PageData{
 		Title: title,
