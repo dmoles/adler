@@ -27,7 +27,7 @@ type resourceHandler struct {
 	dir string
 }
 
-func (h *resourceHandler) register(r *mux.Router) {
+func (h *resourceHandler) Register(r *mux.Router) {
 	r.HandleFunc(h.pathTemplate, h.handle)
 }
 
