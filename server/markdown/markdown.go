@@ -25,26 +25,39 @@ func GetBodyHTML(resolvedPath string, rootDir string) ([]byte, error) {
 		if util.IsFile(readmePath) {
 			resolvedPath = readmePath
 		} else {
-			return DirToHtml(resolvedPath, rootDir)
+			return DirToIndexHtml(resolvedPath, rootDir)
 		}
 	}
-	return FileToHtml(resolvedPath), nil
+	return FileToHtml(resolvedPath)
 }
 
-func FileToHtml(filePath string) []byte {
+const readmeMd = "README.md"
+
+func DirToHTML(resolvedPath string, rootDir string)  ([]byte, error) {
+	readmePath := filepath.Join(resolvedPath, readmeMd)
+	if util.IsFile(readmePath) {
+		return FileToHtml(readmePath)
+	} else {
+		return DirToIndexHtml(resolvedPath, rootDir)
+	}
+}
+
+func FileToHtml(filePath string) ([]byte, error) {
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		log.Printf("Error reading file %v: %v", filePath, err)
+		return nil, err
 	}
 
 	html, err := toHtml(data)
 	if err != nil {
 		log.Printf("Error parsing file %v: %v", filePath, err)
+		return nil, err
 	}
-	return html
+	return html, nil
 }
 
-func DirToHtml(dirPath string, rootDir string) ([]byte, error) {
+func DirToIndexHtml(dirPath string, rootDir string) ([]byte, error) {
 	dirIndex, err := NewDirIndex(dirPath)
 	if err != nil {
 		return nil, err
@@ -70,7 +83,7 @@ func GetTitle(in io.Reader) string {
 
 func GetTitleFromFile(path string) (string, error) {
 	if util.IsDirectory(path) {
-		return asTitle(path), nil
+		return AsTitle(path), nil
 	}
 	in, err := os.Open(path)
 	defer util.CloseQuietly(in)
@@ -81,10 +94,10 @@ func GetTitleFromFile(path string) (string, error) {
 	if title != "" {
 		return title, nil
 	}
-	return asTitle(path), nil
+	return AsTitle(path), nil
 }
 
-func asTitle(filePath string) string {
+func AsTitle(filePath string) string {
 	title := filepath.Base(filePath)
 	title = strings.TrimSuffix(title, ".md")
 	return strings.Title(title)

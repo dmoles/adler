@@ -130,7 +130,7 @@ func (s *server) handleMarkdown(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rootIndexHtml, err := markdown.DirToHtml(rootDir, rootDir)
+	rootIndexHtml, err := markdown.DirToIndexHtml(rootDir, rootDir)
 	if err != nil {
 		log.Printf("Error generating directory index for %v: %v", rootDir, err)
 		http.NotFound(w, r)
@@ -159,11 +159,6 @@ func (s *server) handleMarkdown(w http.ResponseWriter, r *http.Request) {
 
 // ------------------------------
 // Utility methods
-
-func (s *server) inRootDir(urlPath string) bool {
-	_, err := util.ResolveFile(urlPath, s.rootDir)
-	return err == nil
-}
 
 func (s *server) isDirectory(r *http.Request, rm *mux.RouteMatch) bool {
 	_, err := util.ResolveDirectory(r.URL.Path, s.rootDir)
