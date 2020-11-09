@@ -19,21 +19,9 @@ var md = goldmark.New(
 	goldmark.WithExtensions(extension.GFM),
 )
 
-func GetBodyHTML(resolvedPath string, rootDir string) ([]byte, error) {
-	if util.IsDirectory(resolvedPath) {
-		readmePath := filepath.Join(resolvedPath, "README.md")
-		if util.IsFile(readmePath) {
-			resolvedPath = readmePath
-		} else {
-			return DirToIndexHtml(resolvedPath, rootDir)
-		}
-	}
-	return FileToHtml(resolvedPath)
-}
-
 const readmeMd = "README.md"
 
-func DirToHTML(resolvedPath string, rootDir string)  ([]byte, error) {
+func DirToHTML(resolvedPath string, rootDir string) ([]byte, error) {
 	readmePath := filepath.Join(resolvedPath, readmeMd)
 	if util.IsFile(readmePath) {
 		return FileToHtml(readmePath)
@@ -85,6 +73,16 @@ func GetTitleFromFile(path string) (string, error) {
 	if util.IsDirectory(path) {
 		return AsTitle(path), nil
 	}
+	return ExtractTitle(path)
+}
+
+func AsTitle(path string) string {
+	title := filepath.Base(path)
+	title = strings.TrimSuffix(title, ".md")
+	return strings.Title(title)
+}
+
+func ExtractTitle(path string) (string, error) {
 	in, err := os.Open(path)
 	defer util.CloseQuietly(in)
 	if err != nil {
@@ -95,12 +93,6 @@ func GetTitleFromFile(path string) (string, error) {
 		return title, nil
 	}
 	return AsTitle(path), nil
-}
-
-func AsTitle(filePath string) string {
-	title := filepath.Base(filePath)
-	title = strings.TrimSuffix(title, ".md")
-	return strings.Title(title)
 }
 
 // ------------------------------------------------------------

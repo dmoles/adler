@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"github.com/gorilla/mux"
-	"net/http"
 )
 
 // ------------------------------
@@ -12,10 +11,13 @@ type Handler interface {
 	Register(r *mux.Router)
 }
 
-// ------------------------------
-// Unexported symbols
-
-type handler interface {
-	Handler
-	handle(w http.ResponseWriter, r *http.Request)
+func All(rootDir string) []Handler {
+	return []Handler{
+		CSSResource(),
+		FontResource(),
+		FaviconResource(),
+		MarkdownFile(rootDir),
+		DirectoryIndex(rootDir),
+		Raw(rootDir),
+	}
 }
