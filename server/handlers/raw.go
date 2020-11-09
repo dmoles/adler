@@ -8,6 +8,10 @@ import (
 	"net/http"
 )
 
+func Raw(rootDir string) Handler {
+	return &rawHandler{rootDir: rootDir}
+}
+
 type rawHandler struct {
 	rootDir string
 }
@@ -33,7 +37,7 @@ func (h *rawHandler) writeRaw(w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
 	log.Printf("writeRaw(): %v", urlPath)
 
-	resolvedPath, err := util.ResolvePath(urlPath, h.rootDir)
+	resolvedPath, err := util.ResolveRelative(urlPath, h.rootDir)
 	if err != nil {
 		return err
 	}

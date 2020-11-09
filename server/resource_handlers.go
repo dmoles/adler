@@ -13,7 +13,7 @@ import (
 type handlerFunc func(http.ResponseWriter, *http.Request)
 
 var resourceHandlers = map[string]handlerFunc{
-	"/css/{path:.+}": makeHandler("/css"),
+	"/css/{path:.+}":   makeHandler("/css"),
 	"/fonts/{path:.+}": makeHandler("/fonts"),
 	"/{path:[^/]+\\.(?:ico|png|jpg|webmanifest)}": makeHandler("/images/favicons"),
 }

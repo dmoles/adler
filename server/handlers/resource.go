@@ -10,6 +10,7 @@ import (
 	"strings"
 )
 
+// TODO: split into local/resource, then wrap
 func CSSResource() Handler {
 	return &resourceHandler{"/css/{path:.+}", "/css"}
 }
@@ -24,7 +25,7 @@ func FaviconResource() Handler {
 
 type resourceHandler struct {
 	pathTemplate string
-	dir string
+	dir          string
 }
 
 func (h *resourceHandler) Register(r *mux.Router) {
