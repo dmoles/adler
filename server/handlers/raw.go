@@ -21,7 +21,6 @@ func (h *rawHandler) Register(r *mux.Router) {
 }
 
 func (h *rawHandler) isFile(r *http.Request, _ *mux.RouteMatch) bool {
-	// TODO: DRY util.ResolveFile
 	_, err := util.ResolveFile(r.URL.Path, h.rootDir)
 	return err == nil
 }

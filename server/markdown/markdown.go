@@ -104,7 +104,6 @@ func stringToHtml(s string) ([]byte, error) {
 	return toHtml([]byte(s))
 }
 
-// TODO: accept a Writer
 func toHtml(markdown []byte) ([]byte, error) {
 	var buf bytes.Buffer
 	if err := md.Convert(markdown, &buf); err != nil {

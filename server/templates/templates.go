@@ -33,7 +33,6 @@ type PageData struct {
 // ------------------------------------------------------------
 // Unexported
 
-// TODO: cache these, we're not going to have many of them
 func load(name string) *template.Template {
 	tmplPath := path.Join("/templates", name)
 	resource, err := resources.Get(tmplPath)
