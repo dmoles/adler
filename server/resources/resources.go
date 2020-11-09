@@ -15,8 +15,6 @@ func Get(resourcePath string) (Resource, error) {
 // ------------------------------------------------------------
 // Unexported
 
-// TODO: in makefile: statik -src=resources
-
 var defaultBundle Bundle = statikFSBundle("adler")
 
 func statikFSBundle(namespace string) *httpBundle {
