@@ -119,20 +119,19 @@ func ContentType(urlPath string) string {
 	return ct
 }
 
-func ContentLength(data []byte) string {
-	return strconv.Itoa(len(data))
-}
-
-func WriteData(w http.ResponseWriter, urlPath string, data []byte) {
+func WriteData(w http.ResponseWriter, urlPath string, data []byte) error {
+	size := len(data)
 	w.Header().Add("Content-Type", ContentType(urlPath))
-	w.Header().Add("Content-Length", ContentLength(data))
+	w.Header().Add("Content-Length", strconv.Itoa(size))
+
 	n, err := w.Write(data)
-	if err != nil {
-		log.Printf("Error serving %#v: %v", urlPath, err)
+	if n != size {
+		if err == nil {
+			return fmt.Errorf("wrote wrong number of bytes for %#v: expected %d, was %d", urlPath, size, n)
+		}
+		return fmt.Errorf("wrote wrong number of bytes for %#v: expected %d, was %d (%w)", urlPath, size, n, err)
 	}
-	if n != len(data) {
-		log.Printf("Wrote wrong number of bytes for %#v: expected %d, was %d", urlPath, len(data), n)
-	}
+	return err
 }
 
 type Closeable interface {

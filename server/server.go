@@ -74,7 +74,7 @@ func (s *server) Start() error {
 func (s *server) newRouter() *mux.Router {
 	// TODO: support single-page version
 	r := mux.NewRouter()
-	for _, h := range handlers.All(s.rootDir) {
+	for _, h := range handlers.All(s.rootDir, s.cssDir) {
 		h.Register(r)
 	}
 	return r
