@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
+	"strconv"
 	"strings"
 )
 
@@ -18,9 +20,20 @@ type Resource interface {
 	Open() (http.File, error)
 	Read() ([]byte, error)
 	Copy(w io.Writer) (int64, error)
+	Write(w http.ResponseWriter, urlPath string) error
 	AsString() (string, error)
 	Size() int64
 	ContentType() string
+}
+
+func Resolve(resourceDir string, relativePath string) (Resource, error) {
+	relativePathClean := path.Clean(relativePath)
+	if relativePath == "" || strings.Contains(relativePath, "..") {
+		return nil, fmt.Errorf("invalid resource path: %v", relativePath)
+	}
+
+	resolvedPath := path.Join(resourceDir, relativePathClean)
+	return Get(resolvedPath)
 }
 
 // ------------------------------------------------------------
@@ -64,6 +77,21 @@ func (r *resource) Copy(w io.Writer) (int64, error) {
 	}
 	defer util.CloseQuietly(f)
 	return io.Copy(w, f)
+}
+
+func (r *resource) Write(w http.ResponseWriter, urlPath string) error {
+	size := r.Size()
+	w.Header().Add("Content-Type", r.ContentType())
+	w.Header().Add("Content-Length", strconv.FormatInt(size, 10))
+
+	n, err := r.Copy(w)
+	if n != size {
+		if err == nil {
+			return fmt.Errorf("wrote wrong number of bytes for %#v: expected %d, was %d", urlPath, size, n)
+		}
+		return fmt.Errorf("wrote wrong number of bytes for %#v: expected %d, was %d (%w)", urlPath, size, n, err)
+	}
+	return err
 }
 
 func (r *resource) AsString() (string, error) {

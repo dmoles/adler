@@ -26,22 +26,29 @@ func (h *rawHandler) isFile(r *http.Request, _ *mux.RouteMatch) bool {
 }
 
 func (h *rawHandler) handle(w http.ResponseWriter, r *http.Request) {
-	err := h.writeRaw(w, r)
+	err := writeRaw(h.resolvePath, w, r)
 	if err != nil {
 		http.NotFound(w, r)
 	}
 }
 
-func (h *rawHandler) writeRaw(w http.ResponseWriter, r *http.Request) error {
+func (h *rawHandler) resolvePath(r *http.Request) (string, error) {
+	urlPath := r.URL.Path
+	resolvedPath, err := util.ResolveRelative(urlPath, h.rootDir)
+	if err != nil {
+		return "", err
+	}
+
+	return util.ToAbsoluteFile(resolvedPath)
+}
+
+type pathResolver func(r *http.Request) (string, error)
+
+func writeRaw(resolvePath pathResolver, w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
 	log.Printf("writeRaw(): %v", urlPath)
 
-	resolvedPath, err := util.ResolveRelative(urlPath, h.rootDir)
-	if err != nil {
-		return err
-	}
-
-	filePath, err := util.ToAbsoluteFile(resolvedPath)
+	filePath, err := resolvePath(r)
 	if err != nil {
 		return err
 	}
@@ -51,7 +58,9 @@ func (h *rawHandler) writeRaw(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	util.WriteData(w, urlPath, data)
-
+	// If this fails, we've already started writing the response, so it's too
+	// late to return a 404 or whatever; just log it and move on
+	err = util.WriteData(w, urlPath, data)
+	log.Print(err)
 	return nil
 }

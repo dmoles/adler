@@ -5,15 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-	"path"
-	"strconv"
-	"strings"
 )
-
-// TODO: split into local/resource, then wrap
-func CSSResource() Handler {
-	return &resourceHandler{"/css/{path:.+}", "/css"}
-}
 
 func FontResource() Handler {
 	return &resourceHandler{"/fonts/{path:.+}", "/fonts"}
@@ -33,32 +25,25 @@ func (h *resourceHandler) Register(r *mux.Router) {
 }
 
 func (h *resourceHandler) handle(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	relativePath := vars["path"]
-	if relativePath == "" || strings.Contains(relativePath, "..") {
+	if err := writeResource(h.dir, w, r); err != nil {
 		http.NotFound(w, r)
 		return
 	}
-	relativePathClean := path.Clean(relativePath)
-	resourcePath := path.Join(h.dir, relativePathClean)
+}
 
-	resource, err := resources.Get(resourcePath)
+func writeResource(resourceDir string, w http.ResponseWriter, r *http.Request) error {
+	urlPath := r.URL.Path
+	log.Printf("writeResource(): %v", urlPath)
+
+	relativePath := mux.Vars(r)["path"]
+	resource, err := resources.Resolve(resourceDir, relativePath)
 	if err != nil {
-		http.NotFound(w, r)
-		return
+		return err
 	}
 
-	contentType := resource.ContentType()
-	w.Header().Add("Content-Type", contentType)
-
-	size := resource.Size()
-	w.Header().Add("Content-Length", strconv.FormatInt(size, 10))
-
-	n, err := resource.Copy(w)
-	if err != nil {
-		log.Printf("Error serving %#v: %v", resourcePath, err)
-	}
-	if n != size {
-		log.Printf("Wrote wrong number of bytes for %#v: expected %d, was %d", resourcePath, size, n)
-	}
+	// If this fails, we've already started writing the response, so it's too
+	// late to return a 404 or whatever; just log it and move on
+	err = resource.Write(w, urlPath)
+	log.Print(err)
+	return nil
 }
