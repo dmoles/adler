@@ -24,6 +24,13 @@ func Start(port int, rootDir string, cssDir string) error {
 }
 
 func New(port int, rootDir string, cssDir string) (Server, error) {
+	return newServer(port, rootDir, cssDir)
+}
+
+// ------------------------------------------------------------
+// Unexported
+
+func newServer(port int, rootDir string, cssDir string) (*server, error) {
 	rootDirAbs, err := util.ToAbsoluteDirectory(rootDir)
 	if err != nil {
 		return nil, err
@@ -47,9 +54,6 @@ func New(port int, rootDir string, cssDir string) (Server, error) {
 
 	return newServer, nil
 }
-
-// ------------------------------------------------------------
-// Unexported
 
 const finishRequestTimeout = 5 * time.Second
 
