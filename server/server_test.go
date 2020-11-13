@@ -35,18 +35,22 @@ func get(t *testing.T, url string) *http.Request {
 	return req
 }
 
-func setUp(t *testing.T) (expectFunc, *httptest.ResponseRecorder, *mux.Router) {
-	expect := NewWithT(t).Expect
-	recorder := httptest.NewRecorder()
+func setUp(t *testing.T) (expect expectFunc, recorder *httptest.ResponseRecorder, router *mux.Router) {
+	return setUpWithCSS(t, "")
+}
 
-	s, err := New(invalidPort, testdataDir(), "")
+func setUpWithCSS(t *testing.T, cssDir string) (expect expectFunc, recorder *httptest.ResponseRecorder, router *mux.Router) {
+	serverP, err := newServer(invalidPort, testdataDir(), cssDir)
 	if err != nil {
 		t.Fatal(err)
-		return nil, nil, nil
+		return
 	}
-	router := s.(*server).newRouter()
 
-	return expect, recorder, router
+	router = serverP.newRouter()
+	expect = NewWithT(t).Expect
+	recorder = httptest.NewRecorder()
+
+	return
 }
 
 // ------------------------------
@@ -140,6 +144,38 @@ func TestCSSResource(t *testing.T) {
 
 	body := recorder.Body.String()
 	expect(body).To(HavePrefix("@charset \"UTF-8\";"))
+}
+
+func TestCSSOverride(t *testing.T) {
+	// Setup
+
+	cssDir, err := ioutil.TempDir("", "server_test_css_*")
+	if err == nil {
+		defer util.RemoveAllQuietly(cssDir)
+	} else {
+		t.Error(err)
+	}
+
+	cssData := "body { background-color: #808000; }"
+	cssPath := filepath.Join(cssDir, "main.css")
+	err = ioutil.WriteFile(cssPath, []byte(cssData), 0600)
+	if err != nil {
+		t.Error(err)
+	}
+
+	expect, recorder, router := setUpWithCSS(t, cssDir)
+
+	// Test serving local CSS
+	router.ServeHTTP(recorder, get(t, "/css/main.css"))
+	expect(recorder.Code).To(Equal(http.StatusOK))
+
+	result := recorder.Result()
+	contentTypes := result.Header["Content-Type"]
+	expect(contentTypes).To(HaveLen(1))
+	expect(contentTypes[0]).To(Equal("text/css; charset=utf-8"))
+
+	body := recorder.Body.String()
+	expect(body).To(Equal(cssData))
 }
 
 func TestFavicon(t *testing.T) {
