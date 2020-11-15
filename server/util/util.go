@@ -58,7 +58,7 @@ func ToAbsoluteFile(filePath string) (string, error) {
 
 // TODO: recreate a Resolver object and move these to it
 
-func ResolveUrlPath(urlPath string, rootDir string) (string, error) {
+func resolveUrlPath(urlPath string, rootDir string) (string, error) {
 	decodedPath, err := url.PathUnescape(urlPath)
 	if err != nil {
 		return "", errors.InvalidPath(urlPath)
@@ -73,7 +73,7 @@ func ResolveUrlPath(urlPath string, rootDir string) (string, error) {
 }
 
 func UrlPathToDirectory(urlDirPath string, rootDir string) (string, error) {
-	resolved, err := ResolveUrlPath(urlDirPath, rootDir)
+	resolved, err := resolveUrlPath(urlDirPath, rootDir)
 	if err != nil {
 		return "", err
 	}
@@ -81,7 +81,7 @@ func UrlPathToDirectory(urlDirPath string, rootDir string) (string, error) {
 }
 
 func UrlPathToFile(urlFilePath string, rootDir string) (string, error) {
-	resolved, err := ResolveUrlPath(urlFilePath, rootDir)
+	resolved, err := resolveUrlPath(urlFilePath, rootDir)
 	if err != nil {
 		return "", err
 	}

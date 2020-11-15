@@ -43,12 +43,12 @@ func (h *localCSSHandler) serveCss(w http.ResponseWriter, r *http.Request) error
 	log.Printf("serveCss(): %v", urlPath)
 	relativePath := mux.Vars(r)["path"]
 
-	filePath, err := util.ResolveUrlPath(relativePath, h.cssDir)
+	filePath, err := util.UrlPathToFile(relativePath, h.cssDir)
 	if err == nil {
 		return writeRaw(filePath, w, r)
 	}
 	scssUrlPath := strings.TrimSuffix(relativePath, ".css") + ".scss"
-	scssFilePath, err := util.ResolveUrlPath(scssUrlPath, h.cssDir)
+	scssFilePath, err := util.UrlPathToFile(scssUrlPath, h.cssDir)
 	if err == nil {
 		return h.serveScss(scssFilePath, w, r)
 	}
