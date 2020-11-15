@@ -35,7 +35,7 @@ func (h *fileHandler) writeFile(w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
 	log.Printf("write(): %v", urlPath)
 
-	resolvedPath, err := util.ResolveFile(urlPath, h.rootDir)
+	resolvedPath, err := util.UrlPathToFile(urlPath, h.rootDir)
 	if err != nil {
 		return err
 	}

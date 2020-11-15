@@ -5,7 +5,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -194,17 +193,11 @@ func sassLint(scssFile string) error {
 }
 
 func readFileAsString(path string) (string, error) {
-	f, err := os.Open(path)
-	defer closeQuietly(f)
+	buf, err := ioutil.ReadFile(path)
 	if err != nil {
 		return "", err
 	}
-
-	var sb strings.Builder
-	if _, err := io.Copy(&sb, f); err != nil {
-		return "", err
-	}
-	return sb.String(), nil
+	return string(buf), nil
 }
 
 func ensureCommand(cmdName, failureMsg string) string {
@@ -240,18 +233,4 @@ func compileGitIgnore() *ignore.GitIgnore {
 		panic(err)
 	}
 	return gi
-}
-
-type closeable interface {
-	Close() error
-}
-
-func closeQuietly(cl closeable) {
-	if cl != nil {
-		err := cl.Close()
-		if err != nil {
-			msg := fmt.Sprintf("Error closing %v: %v", cl, err)
-			warn(msg)
-		}
-	}
 }

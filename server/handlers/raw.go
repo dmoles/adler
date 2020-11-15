@@ -21,37 +21,32 @@ func (h *rawHandler) Register(r *mux.Router) {
 }
 
 func (h *rawHandler) isFile(r *http.Request, _ *mux.RouteMatch) bool {
-	_, err := util.ResolveFile(r.URL.Path, h.rootDir)
+	_, err := util.UrlPathToFile(r.URL.Path, h.rootDir)
 	return err == nil
 }
 
 func (h *rawHandler) handle(w http.ResponseWriter, r *http.Request) {
-	err := writeRaw(h.resolvePath, w, r)
+	err := h.serveRaw(w, r)
 	if err != nil {
 		http.NotFound(w, r)
 	}
 }
 
-func (h *rawHandler) resolvePath(r *http.Request) (string, error) {
+func (h *rawHandler) serveRaw(w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
-	resolvedPath, err := util.ResolveRelative(urlPath, h.rootDir)
-	if err != nil {
-		return "", err
-	}
+	log.Printf("serveRaw(): %v", urlPath)
 
-	return util.ToAbsoluteFile(resolvedPath)
-}
-
-type pathResolver func(r *http.Request) (string, error)
-
-func writeRaw(resolvePath pathResolver, w http.ResponseWriter, r *http.Request) error {
-	urlPath := r.URL.Path
-	log.Printf("writeRaw(): %v", urlPath)
-
-	filePath, err := resolvePath(r)
+	filePath, err := util.UrlPathToFile(urlPath, h.rootDir)
 	if err != nil {
 		return err
 	}
+
+	return writeRaw(filePath, w, r)
+}
+
+func writeRaw(filePath string, w http.ResponseWriter, r *http.Request) error {
+	urlPath := r.URL.Path
+	log.Printf("writeRaw(%#v): %v", filePath, urlPath)
 
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {

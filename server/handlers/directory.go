@@ -23,7 +23,7 @@ func (h *directoryHandler) Register(r *mux.Router) {
 }
 
 func (h *directoryHandler) isDirectory(r *http.Request, _ *mux.RouteMatch) bool {
-	_, err := util.ResolveDirectory(r.URL.Path, h.rootDir)
+	_, err := util.UrlPathToDirectory(r.URL.Path, h.rootDir)
 	return err == nil
 }
 
@@ -40,7 +40,7 @@ func (h *directoryHandler) writeDirectory(w http.ResponseWriter, r *http.Request
 
 	rootDir := h.rootDir
 
-	resolvedPath, err := util.ResolveDirectory(urlPath, rootDir)
+	resolvedPath, err := util.UrlPathToDirectory(urlPath, rootDir)
 	if err != nil {
 		return err
 	}
