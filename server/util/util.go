@@ -58,7 +58,7 @@ func ToAbsoluteFile(filePath string) (string, error) {
 
 // TODO: recreate a Resolver object and move these to it
 
-func ResolveRelative(urlPath string, rootDir string) (string, error) {
+func ResolveUrlPath(urlPath string, rootDir string) (string, error) {
 	decodedPath, err := url.PathUnescape(urlPath)
 	if err != nil {
 		return "", errors.InvalidPath(urlPath)
@@ -69,25 +69,19 @@ func ResolveRelative(urlPath string, rootDir string) (string, error) {
 			return "", errors.InvalidPath(urlPath)
 		}
 	}
-	joinedPath := filepath.Join(rootDir, decodedPath)
-	_, err = os.Stat(joinedPath)
-	if err != nil {
-		log.Printf("can't stat %#v: %v", joinedPath, err)
-		return "", errors.NotFound(joinedPath)
-	}
-	return joinedPath, nil
+	return filepath.Join(rootDir, decodedPath), nil
 }
 
-func ResolveDirectory(urlDirPath string, rootDir string) (string, error) {
-	resolved, err := ResolveRelative(urlDirPath, rootDir)
+func UrlPathToDirectory(urlDirPath string, rootDir string) (string, error) {
+	resolved, err := ResolveUrlPath(urlDirPath, rootDir)
 	if err != nil {
 		return "", err
 	}
 	return ToAbsoluteDirectory(resolved)
 }
 
-func ResolveFile(urlFilePath string, rootDir string) (string, error) {
-	resolved, err := ResolveRelative(urlFilePath, rootDir)
+func UrlPathToFile(urlFilePath string, rootDir string) (string, error) {
+	resolved, err := ResolveUrlPath(urlFilePath, rootDir)
 	if err != nil {
 		return "", err
 	}
