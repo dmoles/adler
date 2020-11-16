@@ -33,7 +33,7 @@ func (h *localCSSHandler) Register(r *mux.Router) {
 
 func (h *localCSSHandler) handle(w http.ResponseWriter, r *http.Request) {
 	if err := h.serveCss(w, r); err != nil {
-		log.Printf("no CSS or SCSS file found for URL path %v: %v", r.URL.Path, err)
+		log.Printf("can't serve CSS/SCSS for URL path %v: %v", r.URL.Path, err)
 		http.NotFound(w, r)
 	}
 }
@@ -72,7 +72,7 @@ func (h *localCSSHandler) transpiler() (libsass.Transpiler, error) {
 
 func (h *localCSSHandler) serveScss(scssFilePath string, w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
-	log.Printf("serveScss(#%v): %v", scssFilePath, urlPath)
+	log.Printf("serveScss(%#v): %v", scssFilePath, urlPath)
 
 	buf, err := ioutil.ReadFile(scssFilePath)
 	if err != nil {
@@ -94,6 +94,8 @@ func (h *localCSSHandler) serveScss(scssFilePath string, w http.ResponseWriter, 
 	// If this fails, we've already started writing the response, so it's too
 	// late to return a 404 or whatever; just log it and move on
 	err = util.WriteData(w, urlPath, cssData)
-	log.Print(err)
+	if err != nil {
+		log.Print(err)
+	}
 	return nil
 }

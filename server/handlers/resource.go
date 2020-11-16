@@ -44,6 +44,8 @@ func writeResource(resourceDir string, w http.ResponseWriter, r *http.Request) e
 	// If this fails, we've already started writing the response, so it's too
 	// late to return a 404 or whatever; just log it and move on
 	err = resource.Write(w, urlPath)
-	log.Print(err)
+	if err != nil {
+		log.Print(err)
+	}
 	return nil
 }

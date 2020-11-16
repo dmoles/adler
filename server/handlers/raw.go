@@ -56,6 +56,8 @@ func writeRaw(filePath string, w http.ResponseWriter, r *http.Request) error {
 	// If this fails, we've already started writing the response, so it's too
 	// late to return a 404 or whatever; just log it and move on
 	err = util.WriteData(w, urlPath, data)
-	log.Print(err)
+	if err != nil {
+		log.Print(err)
+	}
 	return nil
 }
