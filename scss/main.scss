@@ -36,10 +36,10 @@ aside {
   grid-column: 1;
 
   nav {
-    font-family: $font-family-header;
-
     ul {
+      font-family: $font-family-body;
       font-size: $font-size-nav;
+      font-weight: $font-weight-bold;
     }
   }
 }

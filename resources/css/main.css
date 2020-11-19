@@ -310,12 +310,10 @@ aside {
   grid-column: 1;
 }
 
-aside nav {
-  font-family: "Montserrat", sans-serif;
-}
-
 aside nav ul {
+  font-family: "CharisSILW", serif;
   font-size: 0.8333333333rem;
+  font-weight: bold;
 }
 
 main a {
