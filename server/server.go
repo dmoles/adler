@@ -66,6 +66,9 @@ type server struct {
 
 func (s *server) Start() error {
 	log.Printf("Serving from %s on port %d", s.rootDir, s.port)
+	if s.cssDir != "" {
+		log.Printf("Using CSS directory %v", s.cssDir)
+	}
 	router := s.newRouter()
 
 	addr := fmt.Sprintf(":%d", s.port)
