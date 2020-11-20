@@ -73,15 +73,22 @@ func Test() error {
 	mg.Deps(Assets.Embed)
 
 	cmd := exec.Command("go", "test", "./...")
-	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	println("Running tests")
 	if mg.Verbose() {
 		println(strings.Join(cmd.Args, " "))
+		cmd.Stdout = os.Stdout
+		return cmd.Run()
 	}
 
-	return cmd.Run()
+	var sb strings.Builder
+	cmd.Stdout = &sb
+	err := cmd.Run()
+	if err != nil {
+		print(sb.String())
+	}
+	return err
 }
 
 //goland:noinspection GoUnusedExportedType
@@ -92,7 +99,7 @@ func (Assets) Embed() error {
 	mg.Deps(Assets.Compile)
 
 	if !anyNewerThan(resourceDir, statikData) {
-		println("Assets are up to date")
+		println("Assets are up to date") // TODO: more consistent output
 		return nil
 	}
 
@@ -148,7 +155,7 @@ func (Assets) Compile() error {
 	mg.Deps(Assets.Validate)
 
 	if !anyNewerThan(resourceDir, mainCss) {
-		println("CSS is up to date")
+		println("CSS is up to date") // TODO: more consistent output
 		return nil
 	}
 
