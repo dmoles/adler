@@ -11,8 +11,22 @@ import (
 	"time"
 )
 
+// ------------------------------------------------------------
+// Exported
+
 type Server interface {
 	Start() error
+}
+
+func (s *server) Start() error {
+	log.Printf("Serving from %s on port %d", s.rootDir, s.port)
+	if s.cssDir != "" {
+		log.Printf("Using CSS directory %v", s.cssDir)
+	}
+	router := s.newRouter()
+
+	addr := fmt.Sprintf(":%d", s.port)
+	return graceful.RunWithErr(addr, finishRequestTimeout, router)
 }
 
 func Start(port int, rootDir string, cssDir string) error {
@@ -29,6 +43,27 @@ func New(port int, rootDir string, cssDir string) (Server, error) {
 
 // ------------------------------------------------------------
 // Unexported
+
+const finishRequestTimeout = 5 * time.Second
+
+type server struct {
+	port    int
+	rootDir string
+	router  *mux.Router
+	cssDir  string
+}
+
+func (s *server) newRouter() *mux.Router {
+	// TODO: support single-page version
+	r := mux.NewRouter()
+	for _, h := range handlers.All(s.rootDir, s.cssDir) {
+		h.Register(r)
+	}
+	return r
+}
+
+// ------------------------------
+// Unexported functions
 
 func newServer(port int, rootDir string, cssDir string) (*server, error) {
 	rootDirAbs, err := util.ToAbsoluteDirectory(rootDir)
@@ -53,36 +88,4 @@ func newServer(port int, rootDir string, cssDir string) (*server, error) {
 	}
 
 	return newServer, nil
-}
-
-const finishRequestTimeout = 5 * time.Second
-
-type server struct {
-	port    int
-	rootDir string
-	router  *mux.Router
-	cssDir  string
-}
-
-func (s *server) Start() error {
-	log.Printf("Serving from %s on port %d", s.rootDir, s.port)
-	if s.cssDir != "" {
-		log.Printf("Using CSS directory %v", s.cssDir)
-	}
-	router := s.newRouter()
-
-	addr := fmt.Sprintf(":%d", s.port)
-	return graceful.RunWithErr(addr, finishRequestTimeout, router)
-}
-
-// ------------------------------
-// Private functions
-
-func (s *server) newRouter() *mux.Router {
-	// TODO: support single-page version
-	r := mux.NewRouter()
-	for _, h := range handlers.All(s.rootDir, s.cssDir) {
-		h.Register(r)
-	}
-	return r
 }

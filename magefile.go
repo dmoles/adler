@@ -5,12 +5,11 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io"
+	"github.com/dmoles/adler/mageutils/paths"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
@@ -133,7 +132,7 @@ func (Assets) Validate() error {
 
 	//goland:noinspection GoUnhandledErrorResult
 	filepath.Walk(scssDir, func(path string, info os.FileInfo, err error) error {
-		if filepath.Ext(path) == ".scss" && !info.IsDir() && !gitIgnore.MatchesPath(path) {
+		if filepath.Ext(path) == ".scss" && !info.IsDir() && !ignored(path) {
 			if err := sassLint(path); err != nil {
 				errors = append(errors, err)
 			}
@@ -148,6 +147,10 @@ func (Assets) Validate() error {
 		return errors[len(errors)-1]
 	}
 	return nil
+}
+
+func ignored(path string) bool {
+	return gitIgnore.MatchesPath(path)
 }
 
 // compiles SCSS (depends on: assets:validate)
@@ -206,83 +209,15 @@ func (Assets) Compile() error {
 var timeZero = time.Time{}
 
 func anyNewerThan(sourceDir string, targetFile string) bool {
-	targetModTime, err := effectiveModTime(targetFile)
+	p, err := paths.New(targetFile)
 	if err != nil {
 		return true
 	}
-	if mg.Verbose() {
-		fmt.Printf("%v modified %v\n", targetFile, targetModTime)
-	}
-
-	err = filepath.Walk(sourceDir, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() {
-			return nil
-		}
-		modTime, err := effectiveModTime(path)
-		if err != nil {
-			return err
-		}
-		if modTime.After(targetModTime) {
-			if mg.Verbose() {
-				fmt.Printf("%v modified %v\n", path, modTime)
-			}
-			return io.EOF
-		}
-		return nil
-	})
-	if err == nil {
-		return false
-	}
-	if err == io.EOF {
+	newEnough, err := p.AsNewAs(sourceDir)
+	if err != nil {
 		return true
 	}
-	panic(err)
-}
-
-func effectiveModTime(path string) (time.Time, error) {
-	if !tracked(path) || changed(path) {
-		return modTime(path)
-	}
-	return commitTime(path)
-}
-
-func tracked(path string) bool {
-	cmd := exec.Command("git", "ls-files", "--error-unmatch", path)
-	return cmd.Run() == nil
-}
-
-func changed(path string) bool {
-	cmd := exec.Command("git", "diff", "--quiet", path)
-	return cmd.Run() != nil
-}
-
-func modTime(path string) (time.Time, error) {
-	info, err := os.Stat(path)
-	if err != nil {
-		return timeZero, err
-	}
-	return info.ModTime(), nil
-}
-
-func commitTime(path string) (time.Time, error) {
-	ts, err := commitTimestamp(path)
-	if err != nil {
-		return timeZero, err
-	}
-	return time.Unix(ts, 0), nil
-}
-
-func commitTimestamp(path string) (int64, error) {
-	cmd := exec.Command("git", "log", "-1", "--format=%ct", path)
-	tsBytes, err := cmd.Output()
-	if err != nil {
-		return 0, err
-	}
-	tsStr := strings.TrimSpace(string(tsBytes))
-	if len(tsStr) == 0 {
-		return 0, err
-	}
-	return strconv.ParseInt(tsStr, 10, 64)
+	return !(*newEnough)
 }
 
 func sassLint(scssFile string) error {
