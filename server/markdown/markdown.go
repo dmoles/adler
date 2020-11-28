@@ -6,6 +6,7 @@ import (
 	"github.com/dmoles/adler/server/util"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer/html"
 	"io"
 	"io/ioutil"
 	"log"
@@ -17,6 +18,7 @@ import (
 
 var md = goldmark.New(
 	goldmark.WithExtensions(extension.GFM),
+	goldmark.WithRendererOptions(html.WithUnsafe()),
 )
 
 const readmeMd = "README.md"
