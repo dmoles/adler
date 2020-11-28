@@ -1,27 +1,28 @@
 // +build mage
 
-package repo
+package main
 
 import (
-	"github.com/dmoles/adler/mageutils"
+	"github.com/dmoles/adler/server/util"
 	ignore "github.com/get-woke/go-gitignore"
 	"github.com/go-git/go-git/v5"
 	"time"
 )
 
-// ------------------------------------------------------------
-// Exported
+var repo *git.Repository
+var wt *git.Worktree
+var gi *ignore.GitIgnore
 
-func Status(path string) git.StatusCode {
-	status, err := status()
+func gitStatus(path string) git.StatusCode {
+	s, err := wtStatus()
 	if err != nil {
 		return git.Untracked
 	}
-	fs := status.File(path)
+	fs := s.File(path)
 	return fs.Worktree
 }
 
-func CommitTime(path string) (*time.Time, error) {
+func gitCommitTime(path string) (*time.Time, error) {
 	repo, err := repository()
 	if err != nil {
 		return nil, err
@@ -42,7 +43,7 @@ func CommitTime(path string) (*time.Time, error) {
 	return &commitTime, nil
 }
 
-func Ignored(path string) (*bool, error) {
+func gitIgnored(path string) (*bool, error) {
 	gitIgnore, err := gitIgnore()
 	if err != nil {
 		return nil, err
@@ -51,16 +52,9 @@ func Ignored(path string) (*bool, error) {
 	return &ignored, nil
 }
 
-// ------------------------------------------------------------
-// Unexported
-
-var repo *git.Repository
-var wt *git.Worktree
-var gi *ignore.GitIgnore
-
 func repository() (*git.Repository, error) {
 	if repo == nil {
-		projectRoot := mageutils.ProjectRoot()
+		projectRoot := util.ProjectRoot()
 		r, err := git.PlainOpen(projectRoot)
 		if err != nil {
 			return nil, err
@@ -85,7 +79,7 @@ func worktree() (*git.Worktree, error) {
 	return wt, nil
 }
 
-func status() (git.Status, error) {
+func wtStatus() (git.Status, error) {
 	wt, err := worktree()
 	if err != nil {
 		return nil, err

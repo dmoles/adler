@@ -5,7 +5,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/dmoles/adler/mageutils/paths"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -14,7 +13,6 @@ import (
 	"time"
 
 	"github.com/bep/golibsass/libsass"
-	"github.com/get-woke/go-gitignore"
 	"github.com/magefile/mage/mg"
 )
 
@@ -30,7 +28,6 @@ const resourceDir = "resources"
 const statikData = "statik/statik.go"
 
 var scssDir = filepath.Dir(mainScss)
-var gitIgnore = compileGitIgnore()
 
 // ------------------------------------------------------------
 // Targets
@@ -150,7 +147,11 @@ func (Assets) Validate() error {
 }
 
 func ignored(path string) bool {
-	return gitIgnore.MatchesPath(path)
+	gi, err := gitIgnore();
+	if err != nil {
+		panic(err)
+	}
+	return gi.MatchesPath(path)
 }
 
 // compiles SCSS (depends on: assets:validate)
@@ -209,7 +210,7 @@ func (Assets) Compile() error {
 var timeZero = time.Time{}
 
 func anyNewerThan(sourceDir string, targetFile string) bool {
-	p, err := paths.New(targetFile)
+	p, err := newPath(targetFile)
 	if err != nil {
 		return true
 	}
@@ -264,12 +265,4 @@ func which(command string) (string, error) {
 
 func warn(msg string) {
 	_, _ = fmt.Fprintln(os.Stderr, msg)
-}
-
-func compileGitIgnore() *ignore.GitIgnore {
-	gi, err := ignore.CompileIgnoreFile(".gitignore")
-	if err != nil {
-		panic(err)
-	}
-	return gi
 }

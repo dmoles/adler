@@ -1,10 +1,9 @@
 // +build mage
 
-package paths
+package main
 
 import (
-	"github.com/dmoles/adler/mageutils"
-	"github.com/dmoles/adler/mageutils/repo"
+	"github.com/dmoles/adler/server/util"
 	"github.com/go-git/go-git/v5"
 	"io"
 	"os"
@@ -12,17 +11,7 @@ import (
 	"time"
 )
 
-// ------------------------------------------------------------
-// Exported
-
-type Path interface {
-	Path() string
-	ModTime() (*time.Time, error)
-	AsNewAs(path string) (*bool, error)
-	Ignored() (*bool, error)
-}
-
-func New(relPath string) (Path, error) {
+func newPath(relPath string) (*path, error) {
 	dir, err := isDir(relPath)
 	if err != nil {
 		return nil, err
@@ -37,9 +26,6 @@ func New(relPath string) (Path, error) {
 	return &path{relPath, repoPath}, nil
 }
 
-// ------------------------------------------------------------
-// Unexported
-
 type path struct {
 	path     string
 	repoPath string
@@ -50,7 +36,7 @@ func (p *path) Path() string {
 }
 
 func (p *path) ModTime() (*time.Time, error) {
-	if status := repo.Status(p.repoPath); status == git.Unmodified {
+	if status := gitStatus(p.repoPath); status == git.Unmodified {
 		return p.gitModTime()
 	}
 	return p.fileModTime()
@@ -72,11 +58,11 @@ func (p *path) AsNewAs(path string) (*bool, error) {
 }
 
 func (p *path) Ignored() (*bool, error) {
-	return repo.Ignored(p.repoPath)
+	return gitIgnored(p.repoPath)
 }
 
 func (p *path) asNewAs(path string) (*bool, error) {
-	p2, err := New(path)
+	p2, err := newPath(path)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +97,7 @@ func (p *path) asNewAsAny(dirPath string) (*bool, error) {
 	return nil, err
 }
 
-func (p *path) compareTo(p2 Path) (*int, error) {
+func (p *path) compareTo(p2 *path) (*int, error) {
 	mt1, err := p.ModTime()
 	if err != nil {
 		return nil, err
@@ -139,7 +125,7 @@ func (p *path) fileModTime() (*time.Time, error) {
 }
 
 func (p *path) gitModTime() (*time.Time, error) {
-	return repo.CommitTime(p.repoPath)
+	return gitCommitTime(p.repoPath)
 }
 
 // ------------------------------
@@ -157,7 +143,7 @@ func toRepoPath(path string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	rpath, err := filepath.Rel(mageutils.ProjectRoot(), absPath)
+	rpath, err := filepath.Rel(util.ProjectRoot(), absPath)
 	if err != nil {
 		return "", err
 	}
