@@ -8,10 +8,10 @@ html {
 
 body {
   margin: $margin;
+  background-color: $color-bg;
   min-height: 100vh;
   line-height: $line-height-body;
   color: $color-fg;
-  background-color: $color-bg;
   font-family: $font-family-body;
   font-size: $font-size-body;
   font-weight: $font-weight-regular;
@@ -64,8 +64,8 @@ li {
 
 h1 {
   margin-bottom: $margin;
-  font-size: $font-size-xlarge;
   text-transform: uppercase;
+  font-size: $font-size-xlarge;
 }
 
 h3, h4, h5 {
@@ -194,6 +194,10 @@ aside {
     ul {
       line-height: $line-height-tighter;
       font-size: $font-size-smaller;
+
+      li {
+        line-height: $line-height-tighter;
+      }
     }
   }
 }
