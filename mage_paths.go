@@ -3,8 +3,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/dmoles/adler/server/util"
 	"github.com/go-git/go-git/v5"
+	"github.com/magefile/mage/mg"
 	"io"
 	"os"
 	"path/filepath"
@@ -36,10 +38,22 @@ func (p *path) Path() string {
 }
 
 func (p *path) ModTime() (*time.Time, error) {
-	if status := gitStatus(p.repoPath); status == git.Unmodified {
+	if status := p.gitStatus(); status == git.Unmodified {
 		return p.gitModTime()
 	}
 	return p.fileModTime()
+}
+
+func (p *path) gitStatus() git.StatusCode {
+	return gitStatus(p.repoPath)
+}
+
+func (p *path) ModTimeString() string {
+	t, err := p.ModTime()
+	if err != nil {
+		return err.Error()
+	}
+	return t.Format(time.RFC3339Nano)
 }
 
 func (p *path) AsNewAs(path string) (*bool, error) {
@@ -66,11 +80,29 @@ func (p *path) asNewAs(path string) (*bool, error) {
 	if err != nil {
 		return nil, err
 	}
-	order, err := p.compareTo(p2)
+	order, err := p.compareByModTime(p2)
 	if err != nil {
 		return nil, err
 	}
-	result := *order >= 0
+	o := *order
+	result := o >= 0
+
+	if mg.Verbose() {
+		var op string
+		switch {
+		case o < 0:
+			op = "<"
+		case o > 0:
+			op = ">"
+		default:
+			op = "="
+		}
+		s1 := string([]byte { byte(p.gitStatus()) })
+		s2 := string([]byte { byte(p2.gitStatus()) })
+		msg := fmt.Sprintf("%s (%v: %s) %s %s (%v: %s)", p.repoPath, s1, p.ModTimeString(), op, p2.repoPath, s2, p2.ModTimeString())
+		println(msg)
+	}
+
 	return &result, nil
 }
 
@@ -97,7 +129,7 @@ func (p *path) asNewAsAny(dirPath string) (*bool, error) {
 	return nil, err
 }
 
-func (p *path) compareTo(p2 *path) (*int, error) {
+func (p *path) compareByModTime(p2 *path) (*int, error) {
 	mt1, err := p.ModTime()
 	if err != nil {
 		return nil, err
@@ -127,9 +159,6 @@ func (p *path) fileModTime() (*time.Time, error) {
 func (p *path) gitModTime() (*time.Time, error) {
 	return gitCommitTime(p.repoPath)
 }
-
-// ------------------------------
-// Unexported functions
 
 func toAbsPath(path string) (string, error) {
 	if filepath.IsAbs(path) {

@@ -158,7 +158,7 @@ func ignored(path string) bool {
 func (Assets) Compile() error {
 	mg.Deps(Assets.Validate)
 
-	if !anyNewerThan(resourceDir, mainCss) {
+	if !anyNewerThan(scssDir, mainCss) {
 		println("CSS is up to date") // TODO: more consistent output
 		return nil
 	}
