@@ -1,4 +1,3 @@
-@charset "UTF-8";
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
   margin: 0;
   border: 0;
@@ -60,59 +59,45 @@ table {
 }
 
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'Libre Franklin';
   font-weight: 300;
   font-style: normal;
-  src: url("/fonts/Montserrat-Light.woff") format("woff");
+  src: url("/fonts/LibreFranklin-Light.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'Libre Franklin';
   font-weight: 300;
   font-style: italic;
-  src: url("/fonts/Montserrat-LightItalic.woff") format("woff");
+  src: url("/fonts/LibreFranklin-LightItalic.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'Libre Franklin';
   font-weight: 400;
   font-style: normal;
-  src: url("/fonts/Montserrat-Regular.woff") format("woff");
+  src: url("/fonts/LibreFranklin-Regular.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'Libre Franklin';
   font-weight: 400;
   font-style: italic;
-  src: url("/fonts/Montserrat-Italic.woff") format("woff");
+  src: url("/fonts/LibreFranklin-Italic.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'Libre Franklin';
   font-weight: 700;
   font-style: normal;
-  src: url("/fonts/Montserrat-Bold.woff") format("woff");
+  src: url("/fonts/LibreFranklin-Bold.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'Libre Franklin';
   font-weight: 700;
   font-style: italic;
-  src: url("/fonts/Montserrat-BoldItalic.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 900;
-  font-style: normal;
-  src: url("/fonts/Montserrat-Black.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 900;
-  font-style: italic;
-  src: url("/fonts/Montserrat-BlackItalic.woff") format("woff");
+  src: url("/fonts/LibreFranklin-BoldItalic.woff2") format("woff2");
 }
 
 @font-face {
@@ -141,228 +126,37 @@ table {
   font-weight: 700;
   font-style: italic;
   src: url("/fonts/CourierPrime-BoldItalic.woff2") format("woff2");
-}
-
-@media screen {
-  main {
-    grid-column: 2;
-  }
-}
-
-@font-face {
-  font-family: CharisSILW;
-  font-weight: 400;
-  src: url("/fonts/CharisSIL-R.woff");
-}
-
-@font-face {
-  font-family: CharisSILW;
-  font-weight: 400;
-  font-style: italic;
-  src: url("/fonts/CharisSIL-I.woff");
-}
-
-@font-face {
-  font-family: CharisSILW;
-  font-weight: 700;
-  src: url("/fonts/CharisSIL-B.woff");
-}
-
-@font-face {
-  font-family: CharisSILW;
-  font-weight: 700;
-  font-style: italic;
-  src: url("/fonts/CharisSIL-BI.woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 300;
-  font-style: normal;
-  src: url("/fonts/Montserrat-Light.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 300;
-  font-style: italic;
-  src: url("/fonts/Montserrat-LightItalic.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 400;
-  font-style: normal;
-  src: url("/fonts/Montserrat-Regular.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 400;
-  font-style: italic;
-  src: url("/fonts/Montserrat-Italic.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 700;
-  font-style: normal;
-  src: url("/fonts/Montserrat-Bold.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 700;
-  font-style: italic;
-  src: url("/fonts/Montserrat-BoldItalic.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 900;
-  font-style: normal;
-  src: url("/fonts/Montserrat-Black.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Montserrat';
-  font-weight: 900;
-  font-style: italic;
-  src: url("/fonts/Montserrat-BlackItalic.woff") format("woff");
-}
-
-@font-face {
-  font-family: 'Courier Prime';
-  font-weight: 400;
-  font-style: normal;
-  src: url("/fonts/CourierPrime-Regular.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: 'Courier Prime';
-  font-weight: 400;
-  font-style: italic;
-  src: url("/fonts/CourierPrime-Italic.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: 'Courier Prime';
-  font-weight: 700;
-  font-style: normal;
-  src: url("/fonts/CourierPrime-Bold.woff2") format("woff2");
-}
-
-@font-face {
-  font-family: 'Courier Prime';
-  font-weight: 700;
-  font-style: italic;
-  src: url("/fonts/CourierPrime-BoldItalic.woff2") format("woff2");
-}
-
-@media print {
-  html {
-    font-family: "CharisSILW", serif;
-    font-size: 12pt;
-    font-weight: normal;
-  }
-  body {
-    padding-right: 1in;
-    padding-left: 1in;
-  }
-  header {
-    display: none;
-  }
-  aside {
-    display: none;
-  }
-  main {
-    grid-column: 1 / 3;
-  }
-  @page {
-    margin-top: 1in;
-    margin-bottom: 1.5in;
-  }
 }
 
 html {
-  font-size: medium;
+  height: 100%;
+  text-size-adjust: none;
 }
 
 body {
-  display: grid;
-  margin: 1em;
-  background-color: #fff9e3;
-  width: available;
-  height: 100%;
-  min-height: min-content;
-  line-height: 1.33333;
-  color: #000000;
+  margin: 24px;
+  background-color: #fffcf0;
+  min-height: 100vh;
+  line-height: 24px;
+  color: #1a160f;
   font-family: "CharisSILW", serif;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: normal;
-  grid-template-columns: 15em minmax(0, 1fr);
 }
 
-aside {
-  margin-right: 0.5em;
-  border-right: 1px dotted #17293a;
-  padding-right: 0.5em;
-  grid-column: 1;
-}
-
-aside nav ul {
-  font-family: "CharisSILW", serif;
-  font-size: 0.8333333333rem;
+h1, h2, h3, h4, h5 {
+  font-family: "Libre Franklin", sans-serif;
   font-weight: bold;
-}
-
-main a {
-  font-weight: bold;
-}
-
-main.full {
-  grid-column: 1 / 3;
-}
-
-main.full article {
-  clear: both;
-  page-break-after: always;
-}
-
-header {
-  grid-column-end: 3;
-  grid-column-start: 1;
-}
-
-footer {
-  margin-top: 1em;
-  border-top: 1px solid #17293a;
-  padding-top: 1em;
-  color: #17293a;
-  grid-column-end: 3;
-  grid-column-start: 1;
-}
-
-footer a {
-  font-weight: bold;
-}
-
-footer p {
-  font-size: 0.8333333333rem;
 }
 
 a {
   text-decoration: none;
   color: #202b49;
-}
-
-a:visited {
-  color: #202b49;
+  font-weight: bold;
 }
 
 a:hover {
-  text-decoration-color: #17293a;
-  text-decoration-line: underline;
+  text-decoration: underline;
 }
 
 em {
@@ -373,178 +167,201 @@ strong {
   font-weight: bold;
 }
 
-sub {
-  vertical-align: sub;
-  font-size: 0.8333333333rem;
+del {
+  text-decoration-line: line-through;
+  text-decoration-color: #342d1f;
+  text-decoration-thickness: 3px;
 }
 
-h1, h2, h3, h4, h5 {
-  margin-top: 1.5em;
-  margin-bottom: 0.75em;
-  border-bottom: 1px solid #17293a;
-  color: #17293a;
-  font-family: "Montserrat", sans-serif;
+ul {
+  list-style: square outside;
+}
+
+ol {
+  list-style: decimal outside;
+}
+
+li {
+  margin-left: 24px;
+  line-height: 24px;
 }
 
 h1 {
+  margin-bottom: 24px;
   text-transform: uppercase;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 25.6px;
+}
+
+h3, h4, h5 {
+  margin-top: 12px;
 }
 
 h2 {
-  text-transform: uppercase;
-  font-size: 1rem;
-  font-weight: bold;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #17293a;
+  color: #17293a;
+  font-size: 19.2px;
 }
 
 h3 {
   text-transform: uppercase;
-  font-size: 1rem;
-  font-weight: normal;
+  color: #17293a;
+  font-size: 13.3333333333px;
 }
 
 h4 {
-  font-size: 0.8333333333rem;
-  font-weight: normal;
+  color: #17293a;
+  font-size: 13.3333333333px;
+  font-weight: 300;
 }
 
 h5 {
-  border-bottom-style: none;
-  font-size: 0.8333333333rem;
-  font-weight: normal;
+  color: #1a160f;
+  font-size: 13.3333333333px;
+  font-weight: 300;
   font-style: italic;
 }
 
-p {
-  margin-bottom: 0.75em;
+img.adler-icon {
+  display: inline-block;
+  margin-top: 5.5px;
+  margin-right: 5.5px;
+  width: 13px;
+  height: 13px;
 }
 
-blockquote {
-  margin-top: 0.75em;
-  margin-right: 5em;
-  margin-left: 1em;
-  line-height: 1.16667;
-  color: #035a5c;
-  font-size: 0.8571428571rem;
-}
-
-blockquote p {
-  margin-bottom: 3px;
-}
-
-blockquote p:last-of-type {
-  margin-bottom: 1em;
-}
-
-blockquote p + p {
-  text-indent: 1em;
-}
-
-blockquote p > cite {
-  display: block;
-  margin-top: 0.75em;
-  margin-left: -1em;
-}
-
-blockquote p > cite a {
-  font-weight: normal;
-}
-
-blockquote p > cite::before {
-  content: '—';
-}
-
-ul {
-  margin-bottom: 1em;
-  margin-left: 0.25em;
-  padding-left: 1em;
-  list-style-position: outside;
-  list-style-type: square;
-}
-
-ol {
-  margin-bottom: 1em;
-  margin-left: 0.25em;
-  padding-left: 1em;
-  list-style-position: outside;
-  list-style-type: decimal;
-}
-
-li {
-  margin-left: 0;
-  padding-left: 0;
-}
-
-dl {
-  display: grid;
-  margin-top: 1em;
-  grid-gap: 0.5em;
-  grid-template-columns: max-content 1fr;
-}
-
-dt {
-  display: block;
-  font-weight: bold;
-  grid-column: 1;
-}
-
-dd {
-  display: block;
-  grid-column: 2;
+hr {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  border: 0;
+  border-top: 5px double #1a160f;
 }
 
 table {
-  margin-bottom: 0.75em;
-  table-layout: auto;
+  margin-top: 24px;
+  table-layout: fixed;
   border-collapse: collapse;
 }
 
+table th, table td {
+  padding-top: 6px;
+  padding-right: 6px;
+  padding-left: 6px;
+  font-size: 13.3333333333px;
+}
+
 table thead th {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  padding: 0.25em 0.25em 0.25em 0;
-  vertical-align: top;
-  text-align: left;
-  font-weight: bold;
+  border-bottom: 1px solid #342d1f;
+  text-align: start;
+  text-transform: uppercase;
+  font-family: "Libre Franklin", sans-serif;
+  font-size: 13.3333333333px;
 }
 
-table thead th:first-child {
-  text-align: right;
-}
-
-table thead td {
-  padding: 0.25em;
-  vertical-align: top;
-}
-
-table thead td:first-child {
-  text-align: right;
-}
-
-table thead tr:last-child th {
-  border-bottom: 1px solid #035a5c;
-}
-
-table thead tr:not(:last-child) th {
-  border-bottom: 1px solid #318b97;
-}
-
-img.adler-icon {
-  width: 0.625rem;
-  height: 0.625rem;
-  vertical-align: baseline;
-}
-
-pre {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  line-height: 1em;
+code, pre {
+  margin-top: 24px;
+  line-height: 1.1em;
   color: #035a5c;
   font-family: "Courier Prime", "Courier", monospace;
 }
 
-code {
-  color: #035a5c;
-  font-family: "Courier Prime", "Courier", monospace;
+blockquote {
+  margin-top: 12px;
+  margin-left: 24px;
+  line-height: 21.3333333333px;
+  color: #342d1f;
+  font-size: 13.7142857143px;
+}
+
+blockquote p {
+  font-family: "CharisSILW", serif;
+}
+
+header nav h5 {
+  font-size: 16px;
+  font-style: normal;
+}
+
+header nav h5::before {
+  display: inline-block;
+  margin-top: auto;
+  margin-right: 5.5px;
+  background-image: url("/apple-touch-icon.png");
+  background-size: 13px, 13px;
+  width: 13px;
+  height: 13px;
+  content: ' ';
+}
+
+aside nav {
+  margin-top: 24px;
+  font-family: "CharisSILW", serif;
+}
+
+aside nav h1 {
+  margin-bottom: 12px;
+  font-size: 19.2px;
+}
+
+aside nav ul {
+  line-height: 16px;
+  font-size: 13.3333333333px;
+}
+
+aside nav ul li {
+  line-height: 16px;
+}
+
+main p {
+  margin-top: 12px;
+}
+
+main ul, main ol {
+  margin-top: 12px;
+}
+
+main ul ul, main ul ol, main ol ul, main ol ol {
+  margin-top: 0;
+}
+
+main li p:first-of-type {
+  margin-top: 0;
+}
+
+main > img {
+  display: block;
+  margin-top: 24px;
+}
+
+footer {
+  margin-bottom: 24px;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-rows: max-content auto;
+}
+
+body header {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+body aside {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+body main {
+  margin-right: 24px;
+  margin-left: 48px;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+body footer {
+  margin-top: 24px;
+  grid-column: 1 / span 2;
 }
