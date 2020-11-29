@@ -145,7 +145,7 @@ func TestCSSResource(t *testing.T) {
 	expect(contentTypes[0]).To(Equal("text/css; charset=utf-8"))
 
 	body := recorder.Body.String()
-	expect(body).To(HavePrefix("@charset \"UTF-8\";"))
+	expect(body).To(HavePrefix("html, body, div, span"))
 }
 
 func TestCSSOverride(t *testing.T) {
