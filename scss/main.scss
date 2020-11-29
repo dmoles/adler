@@ -11,20 +11,22 @@ body {
   min-height: 100vh;
   line-height: $line-height-body;
   color: $color-fg;
-  font-family: $font-family-serif;
+  background-color: $color-bg;
+  font-family: $font-family-body;
   font-size: $font-size-body;
   font-weight: $font-weight-regular;
 }
 
 // sass-lint:disable-block single-line-per-selector
 h1, h2, h3, h4, h5 {
-  font-family: $font-family-sans;
+  font-family: $font-family-headers;
   font-weight: $font-weight-bold;
 }
 
 a {
   text-decoration: none;
-  color: $color-fg-link;
+  color: $color-link;
+  font-weight: $font-weight-bold;
 
   &:hover {
     text-decoration: underline;
@@ -63,6 +65,7 @@ li {
 h1 {
   margin-bottom: $margin;
   font-size: $font-size-xlarge;
+  text-transform: uppercase;
 }
 
 h3, h4, h5 {
@@ -72,18 +75,19 @@ h3, h4, h5 {
 h2 {
   margin-top: $margin;
   margin-bottom: $margin / 2;
-  border-bottom: 1px solid $color-fg-alt;
+  border-bottom: 1px solid $color-header;
+  color: $color-header;
   font-size: $font-size-larger;
 }
 
 h3 {
   text-transform: uppercase;
-  color: $color-fg-alt;
+  color: $color-header;
   font-size: $font-size-smaller;
 }
 
 h4 {
-  color: $color-fg-alt;
+  color: $color-header;
   font-size: $font-size-smaller;
   font-weight: $font-weight-light;
 }
@@ -109,7 +113,7 @@ hr {
   margin-top: $margin;
   margin-bottom: $margin;
   border: 0;
-  border-top: 5px double $color-fg-alt;
+  border-top: 5px double $color-hr;
 }
 
 table {
@@ -143,11 +147,15 @@ code, pre {
 }
 
 blockquote {
-  margin-top: $margin;
+  margin-top: $margin / 2;
   margin-left: $margin;
   line-height: $line-height-blockquote;
-  color: $color-fg-blockquote;
+  color: $color-blockquote;
   font-size: $font-size-blockquote;
+
+  p {
+    font-family: $font-family-blockquote;
+  }
 }
 
 // ////////////////////////////////////////////////////////////
@@ -156,9 +164,12 @@ blockquote {
 header {
   nav {
     h5 {
+      font-size: $font-size-body;
+      font-style: normal;
+
       &::before {
         display: inline-block;
-        margin-top: ($margin - $icon-size) / 2;
+        margin-top: auto;
         margin-right: ($margin - $icon-size) / 2;
         background-image: url('/apple-touch-icon.png');
         background-size: $icon-size, $icon-size;
@@ -173,8 +184,7 @@ header {
 aside {
   nav {
     margin-top: $margin;
-    font-family: $font-family-serif;
-    font-weight: $font-weight-bold;
+    font-family: $font-family-nav;
 
     h1 {
       margin-bottom: $margin / 2;
@@ -191,10 +201,6 @@ aside {
 main {
   p {
     margin-top: $margin / 2;
-  }
-
-  a {
-    font-weight: $font-weight-bold;
   }
 
   ul, ol {
@@ -258,6 +264,7 @@ body {
     grid-column: 1 / span 2;
   }
 }
+
 // sass-lint:enable no-mergeable-selectors
 
 // ////////////////////////////////////////////////////////////

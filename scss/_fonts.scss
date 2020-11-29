@@ -1,16 +1,16 @@
 @import 'fonts-charis';
-@import 'fonts-montserrat';
+@import 'fonts-libre-franklin';
 @import 'fonts-courier-prime';
 
 $font-family-serif: 'CharisSILW', serif;
-$font-family-sans: 'Montserrat', sans-serif;
+$font-family-sans: 'Libre Franklin', sans-serif;
 $font-family-code: 'Courier Prime', 'Courier', monospace;
 
 $font-weight-light: 300;
 $font-weight-regular: normal; // = 400
 $font-weight-bold: bold; // = 700
 
-$font-size-default: 15px;
+$font-size-default: 16px;
 $font-size-body: $font-size-default;
 $font-size-smaller: (5 * $font-size-body / 6);
 $font-size-xsmall: (2 * $font-size-body / 3);
@@ -32,3 +32,13 @@ $line-height-blockquote: 4 / 3 * $font-size-default;
 $line-height-code: 1.1em;
 
 $icon-size: floor($font-size-smaller);
+
+$font-family-body: $font-family-serif;
+$font-family-headers: $font-family-sans;
+$font-family-nav: $font-family-serif;
+$font-family-blockquote: $font-family-serif;
+
+//$font-family-body: $font-family-sans;
+//$font-family-headers: $font-family-serif;
+//$font-family-nav: $font-family-sans;
+//$font-family-blockquote: $font-family-serif;

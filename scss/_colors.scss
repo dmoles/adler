@@ -11,15 +11,21 @@ $parrot: #035a5c;
 
 $black: #000000;
 
-$c-dark: #2c3540;
-$c-mid: #394759;
+$sepia-dark: #1a160f;
+$sepia-mid: #342d1f;
+$pale-penguin: #fffcf0;
 
-$color-bg: #ffffff;
-$color-fg: #000000;
-$color-fg-alt: $c-dark;
-$color-fg-link: $color-fg-alt;
-$color-fg-blockquote: $color-fg-alt;
-$color-code: $color-fg-alt;
+$color-bg: $pale-penguin;
+$color-fg: $sepia-dark;
 
-$color-table-border: $c-mid;
-$color-strikethrough: $color-fg-alt;
+$color-link: $aircraft-blue;
+$color-blockquote: $sepia-mid;
+
+$color-header: $oxford-blue;
+
+$color-code: $parrot;
+
+$color-table-border: $sepia-mid;
+$color-strikethrough: $sepia-mid;
+
+$color-hr: $sepia-dark;
