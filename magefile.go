@@ -94,7 +94,7 @@ type Assets mg.Namespace
 func (Assets) Embed() error {
 	mg.Deps(Assets.Compile)
 
-	if !anyNewerThan(resourceDir, statikData) {
+	if asNewAsAll(statikData, resourceDir) {
 		println("Assets are up to date") // TODO: more consistent output
 		return nil
 	}
@@ -158,7 +158,7 @@ func ignored(path string) bool {
 func (Assets) Compile() error {
 	mg.Deps(Assets.Validate)
 
-	if !anyNewerThan(scssDir, mainCss) {
+	if asNewAsAll(mainCss, scssDir) {
 		println("CSS is up to date") // TODO: more consistent output
 		return nil
 	}
@@ -209,16 +209,23 @@ func (Assets) Compile() error {
 
 var timeZero = time.Time{}
 
-func anyNewerThan(sourceDir string, targetFile string) bool {
+func asNewAsAll(targetFile string, sourceDir string) bool {
+	if mg.Verbose() {
+		msg := fmt.Sprintf("Comparing %s, %s", targetFile, sourceDir)
+		println(msg)
+	}
+
 	p, err := newPath(targetFile)
 	if err != nil {
-		return true
+		warn(err.Error())
+		return false
 	}
-	newEnough, err := p.AsNewAs(sourceDir)
+	newEnough, err := p.asNewAsAny(sourceDir)
 	if err != nil {
-		return true
+		warn(err.Error())
+		return false
 	}
-	return !(*newEnough)
+	return *newEnough
 }
 
 func sassLint(scssFile string) error {

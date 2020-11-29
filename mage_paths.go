@@ -112,11 +112,19 @@ func (p *path) asNewAsAny(dirPath string) (*bool, error) {
 		if info.IsDir() {
 			return nil
 		}
-		// TODO: ignored?
+		ignored, err := gitIgnored(path)
+		if err != nil {
+			return err
+		}
+		if *ignored {
+			return nil
+		}
+
 		r, err := p.asNewAs(path)
 		if err != nil {
 			return err
 		}
+		// TODO: is this really correct?
 		result = result && *r
 		if !result {
 			return io.EOF
