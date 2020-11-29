@@ -2,16 +2,20 @@
 @import 'fonts-montserrat';
 @import 'fonts-courier-prime';
 
-$font-family-body: 'CharisSILW', serif;
-$font-family-header: 'Montserrat', sans-serif;
+$font-family-serif: 'CharisSILW', serif;
+$font-family-sans: 'Montserrat', sans-serif;
 $font-family-code: 'Courier Prime', 'Courier', monospace;
 
-$font-weight-body: normal; // = 400
+$font-weight-light: 300;
+$font-weight-regular: normal; // = 400
 $font-weight-bold: bold; // = 700
 
-$font-size-body: 1rem;
+$font-size-default: 15px;
+$font-size-body: $font-size-default;
 $font-size-smaller: (5 * $font-size-body / 6);
+$font-size-xsmall: (2 * $font-size-body / 3);
 $font-size-larger: (6 * $font-size-body / 5);
+$font-size-xlarge: (8 * $font-size-body / 5);
 
 $font-size-sub: $font-size-smaller;
 $font-size-small-caps: $font-size-smaller;
@@ -22,6 +26,9 @@ $font-size-nav: $font-size-smaller;
 $font-size-root-screen: medium;
 $font-size-root-print: 12pt;
 
-$line-height-body: 1.33333;
-$line-height-blockquote: 1.16667;
-$line-height-code: 1em;
+$line-height-body: 1.5 * $font-size-default;
+$line-height-tighter: $font-size-default;
+$line-height-blockquote: 4 / 3 * $font-size-default;
+$line-height-code: 1.1em;
+
+$icon-size: floor($font-size-smaller);

@@ -11,13 +11,15 @@ $parrot: #035a5c;
 
 $black: #000000;
 
-$color-bg: $penguin; // if changing this, also edit site.webmanifest
-$color-fg: $black;
-$color-fg-alt: $oxford-blue;
-$color-fg-link: $aircraft-blue;
-$color-fg-header: $oxford-blue;
-$color-fg-blockquote: $parrot;
-$color-code: $parrot;
+$c-dark: #2c3540;
+$c-mid: #394759;
 
-$color-table-border: $bluebird;
-$color-table-border-alt: $parrot;
+$color-bg: #ffffff;
+$color-fg: #000000;
+$color-fg-alt: $c-dark;
+$color-fg-link: $color-fg-alt;
+$color-fg-blockquote: $color-fg-alt;
+$color-code: $color-fg-alt;
+
+$color-table-border: $c-mid;
+$color-strikethrough: $color-fg-alt;

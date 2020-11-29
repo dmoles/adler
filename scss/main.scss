@@ -1,98 +1,33 @@
 @import 'reset';
-
-@import 'layout';
-@import 'colors';
-@import 'fonts';
-
-@import 'screen';
-@import 'print';
+@import 'globals';
 
 html {
-  font-size: $font-size-root-screen;
+  height: 100%;
+  text-size-adjust: none;
 }
 
 body {
-  display: grid;
-  margin: $margin-body;
-  background-color: $color-bg;
-  width: available;
-  height: 100%;
-  min-height: min-content;
+  margin: $margin;
+  min-height: 100vh;
   line-height: $line-height-body;
   color: $color-fg;
-
-  font-family: $font-family-body;
+  font-family: $font-family-serif;
   font-size: $font-size-body;
-  font-weight: $font-weight-body;
-
-  grid-template-columns: 15 * $margin-body minmax(0, 1fr);
+  font-weight: $font-weight-regular;
 }
 
-aside {
-  margin-right: $margin-body / 2;
-  border-right: 1px dotted $color-fg-alt;
-  padding-right: $margin-body / 2;
-
-  grid-column: 1;
-
-  nav {
-    ul {
-      font-family: $font-family-body;
-      font-size: $font-size-nav;
-      font-weight: $font-weight-bold;
-    }
-  }
-}
-
-main {
-  a {
-    font-weight: $font-weight-bold;
-  }
-
-  &.full {
-    grid-column: 1 / 3;
-
-    article {
-      clear: both;
-      page-break-after: always;
-    }
-  }
-}
-
-header {
-  grid-column-end: 3;
-  grid-column-start: 1;
-}
-
-footer {
-  margin-top: $margin-body;
-  border-top: 1px solid $color-fg-alt;
-  padding-top: $margin-body;
-  color: $color-fg-alt;
-
-  grid-column-end: 3;
-  grid-column-start: 1;
-
-  a {
-    font-weight: $font-weight-bold;
-  }
-
-  p {
-    font-size: $font-size-footer;
-  }
+// sass-lint:disable-block single-line-per-selector
+h1, h2, h3, h4, h5 {
+  font-family: $font-family-sans;
+  font-weight: $font-weight-bold;
 }
 
 a {
   text-decoration: none;
   color: $color-fg-link;
 
-  &:visited {
-    color: $color-fg-link;
-  }
-
   &:hover {
-    text-decoration-color: $color-fg-alt;
-    text-decoration-line: underline;
+    text-decoration: underline;
   }
 }
 
@@ -101,198 +36,247 @@ em {
 }
 
 strong {
-  font-weight: $font-weight-bold;
+  font-weight: bold;
 }
 
-sub {
-  vertical-align: sub;
-  font-size: $font-size-sub;
+del {
+  text-decoration-line: line-through;
+  text-decoration-color: $color-strikethrough;
+  // sass-lint:disable no-misspelled-properties
+  text-decoration-thickness: 3px;
+  // sass-lint:enable no-misspelled-properties
 }
 
-h1, h2, h3, h4, h5 {
-  margin-top: $margin-header-top;
-  margin-bottom: $margin-paragraph-bottom;
-  border-bottom: 1px solid $color-fg-header;
-  color: $color-fg-alt;
-  font-family: $font-family-header;
+ul {
+  list-style: square outside;
+}
+
+ol {
+  list-style: decimal outside;
+}
+
+li {
+  margin-left: $margin;
+  line-height: $margin;
 }
 
 h1 {
-  text-transform: uppercase;
-  font-size: $font-size-larger;
-  font-weight: $font-weight-bold;
+  margin-bottom: $margin;
+  font-size: $font-size-xlarge;
+}
+
+h3, h4, h5 {
+  margin-top: $margin / 2;
 }
 
 h2 {
-  text-transform: uppercase;
-  font-size: $font-size-body;
-  font-weight: $font-weight-bold;
+  margin-top: $margin;
+  margin-bottom: $margin / 2;
+  border-bottom: 1px solid $color-fg-alt;
+  font-size: $font-size-larger;
 }
 
 h3 {
   text-transform: uppercase;
-  font-size: $font-size-body;
-  font-weight: $font-weight-body;
+  color: $color-fg-alt;
+  font-size: $font-size-smaller;
 }
 
 h4 {
+  color: $color-fg-alt;
   font-size: $font-size-smaller;
-  font-weight: $font-weight-body;
+  font-weight: $font-weight-light;
 }
 
 h5 {
-  border-bottom-style: none;
+  color: $color-fg;
   font-size: $font-size-smaller;
-  font-weight: $font-weight-body;
+  font-weight: $font-weight-light;
   font-style: italic;
 }
 
-p {
-  margin-bottom: $margin-paragraph-bottom;
-}
-
-blockquote {
-  margin-top: $margin-paragraph-bottom;
-  margin-right: 5 * $margin-body;
-  margin-left: $margin-body;
-  line-height: $line-height-blockquote;
-  color: $color-fg-blockquote;
-  font-size: $font-size-blockquote;
-
-  p {
-    margin-bottom: $margin-paragraph-bottom-blockquote;
-
-    &:last-of-type {
-      margin-bottom: $margin-body;
-    }
-
-    & + p {
-      text-indent: $margin-body;
-    }
-
-    & > cite {
-      display: block;
-      margin-top: $margin-paragraph-bottom;
-      margin-left: -$margin-body;
-
-      a {
-        font-weight: $font-weight-body;
-      }
-
-      &::before {
-        content: '—';
-      }
-    }
+img {
+  &.adler-icon {
+    display: inline-block;
+    margin-top: ($margin - $icon-size) / 2;
+    margin-right: ($margin - $icon-size) / 2;
+    width: $icon-size;
+    height: $icon-size;
   }
 }
 
-
-$list-margin-bottom: $margin-body;
-$list-margin-left: .25em;
-$list-padding-left: 1em;
-
-ul {
-  margin-bottom: $list-margin-bottom;
-  margin-left: $list-margin-left;
-  padding-left: $list-padding-left;
-  list-style-position: outside;
-  list-style-type: square;
-}
-
-ol {
-  margin-bottom: $list-margin-bottom;
-  margin-left: $list-margin-left;
-  padding-left: $list-padding-left;
-  list-style-position: outside;
-  list-style-type: decimal;
-}
-
-li {
-  margin-left: 0;
-  padding-left: 0;
-}
-
-dl {
-  display: grid;
-  margin-top: $margin-body;
-  grid-gap: $margin-body / 2;
-  grid-template-columns: max-content 1fr;
-}
-
-dt {
-  display: block;
-  font-weight: $font-weight-bold;
-  grid-column: 1;
-}
-
-dd {
-  display: block;
-  grid-column: 2;
+hr {
+  margin-top: $margin;
+  margin-bottom: $margin;
+  border: 0;
+  border-top: 5px double $color-fg-alt;
 }
 
 table {
-  margin-bottom: $margin-paragraph-bottom;
-  table-layout: auto;
+  margin-top: $margin;
+  table-layout: fixed;
   border-collapse: collapse;
+
+  th, td {
+    padding-top: $margin / 4;
+    padding-right: $margin / 4;
+    padding-left: $margin / 4;
+    font-size: $font-size-smaller;
+  }
 
   thead {
     th {
-      margin-top: $margin-body;
-      margin-bottom: $margin-body;
-      padding: $margin-narrow $margin-narrow $margin-narrow 0;
-      vertical-align: top;
-      text-align: left;
-      font-weight: $font-weight-bold;
-
-      &:first-child {
-        text-align: right;
-      }
-    }
-
-    td {
-      padding: $margin-narrow;
-      vertical-align: top;
-
-      &:first-child {
-        text-align: right;
-      }
-    }
-
-    tr {
-      &:last-child {
-        th {
-          border-bottom: 1px solid $color-table-border-alt;
-        }
-      }
-
-      &:not(:last-child) {
-        th {
-          border-bottom: 1px solid $color-table-border;
-        }
-      }
+      border-bottom: 1px solid $color-table-border;
+      text-align: start;
+      text-transform: uppercase;
+      font-family: $font-family-sans;
+      font-size: $font-size-small-caps;
     }
   }
 }
 
-img {
-  $adler-icon-size: 3 * $font-size-footer / 4;
-
-  &.adler-icon {
-    width: $adler-icon-size;
-    height: $adler-icon-size;
-    vertical-align: baseline;
-  }
-}
-
-pre {
-  margin-top: $margin-body;
-  margin-bottom: $margin-body;
+code, pre {
+  margin-top: $margin;
   line-height: $line-height-code;
   color: $color-code;
   font-family: $font-family-code;
 }
 
-code {
-  color: $color-code;
-  font-family: $font-family-code;
+blockquote {
+  margin-top: $margin;
+  margin-left: $margin;
+  line-height: $line-height-blockquote;
+  color: $color-fg-blockquote;
+  font-size: $font-size-blockquote;
 }
+
+// ////////////////////////////////////////////////////////////
+// Layout
+
+header {
+  nav {
+    h5 {
+      &::before {
+        display: inline-block;
+        margin-top: ($margin - $icon-size) / 2;
+        margin-right: ($margin - $icon-size) / 2;
+        background-image: url('/apple-touch-icon.png');
+        background-size: $icon-size, $icon-size;
+        width: $icon-size;
+        height: $icon-size;
+        content: ' ';
+      }
+    }
+  }
+}
+
+aside {
+  nav {
+    margin-top: $margin;
+    font-family: $font-family-serif;
+    font-weight: $font-weight-bold;
+
+    h1 {
+      margin-bottom: $margin / 2;
+      font-size: $font-size-larger;
+    }
+
+    ul {
+      line-height: $line-height-tighter;
+      font-size: $font-size-smaller;
+    }
+  }
+}
+
+main {
+  p {
+    margin-top: $margin / 2;
+  }
+
+  a {
+    font-weight: $font-weight-bold;
+  }
+
+  ul, ol {
+    margin-top: $margin / 2;
+
+    ul, ol {
+      margin-top: 0;
+    }
+  }
+
+  li {
+    p {
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
+
+  > img {
+    display: block;
+    margin-top: $margin;
+  }
+}
+
+footer {
+  margin-bottom: $margin;
+}
+
+// ////////////////////////////////////////////////////////////
+// Desktop
+
+// TODO: add media query after mobile view implemented
+//@media (min-width: $min-desktop-width) {
+//}
+
+// sass-lint:disable no-mergeable-selectors
+body {
+  display: grid;
+  grid-template-columns: 15 * $font-size-body minmax(0, 1fr);
+  grid-template-rows: max-content auto;
+
+  header {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  aside {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  main {
+    margin-right: $margin;
+    margin-left: 2 * $margin;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  footer {
+    margin-top: $margin;
+    grid-column: 1 / span 2;
+  }
+}
+// sass-lint:enable no-mergeable-selectors
+
+// ////////////////////////////////////////////////////////////
+// Mobile
+
+// TODO: implement mobile view with aside as hamburger menu
+
+//@media (max-width: $min-desktop-width) {
+//}
+
+//body {
+//  display: flex;
+//  flex-direction: column;
+//
+//  header {
+//    flex-basis: 100%;
+//  }
+//
+//  main {
+//    flex-basis: 100%;
+//  }
+//}

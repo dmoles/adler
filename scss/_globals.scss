@@ -1,0 +1,11 @@
+@import 'colors';
+@import 'fonts';
+
+$margin: $line-height-body;
+$padding: $margin;
+
+$max-mobile-width: 672px;
+$min-desktop-width: $max-mobile-width;
+
+$header-height: 50px;
+$header-border-height: ($margin / 2);
