@@ -156,6 +156,12 @@ blockquote {
   p {
     font-family: $font-family-blockquote;
   }
+
+  cite {
+    &::before {
+      content: '—\2009';
+    }
+  }
 }
 
 // ////////////////////////////////////////////////////////////
