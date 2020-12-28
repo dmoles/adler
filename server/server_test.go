@@ -131,6 +131,7 @@ func TestReadme(t *testing.T) {
 	expect(main).NotTo(BeEmpty())
 	expect(main).To(ContainSubstring("<h1>Testing</h1>"))
 	expect(main).To(ContainSubstring("<p>Testing 123</p>"))
+	expect(main).NotTo(ContainSubstring("<li><a href=\"/README.md\">Testing</a></li>"))
 }
 
 func TestCSSResource(t *testing.T) {
@@ -145,7 +146,7 @@ func TestCSSResource(t *testing.T) {
 	expect(contentTypes[0]).To(Equal("text/css; charset=utf-8"))
 
 	body := recorder.Body.String()
-	expect(body).To(HavePrefix("html, body, div, span"))
+	expect(body).To(MatchRegexp("^@charset \"UTF-8\";\\s+html, body, div, span"))
 }
 
 func TestCSSOverride(t *testing.T) {

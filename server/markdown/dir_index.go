@@ -99,7 +99,7 @@ func getPathsByTitle(dirPath string) (map[string]string, error) {
 	pathsByTitle := map[string]string{}
 	for _, info := range files {
 		filename := info.Name()
-		if strings.HasPrefix(filename, ".") {
+		if filename == readmeMd || strings.HasPrefix(filename, ".") {
 			continue
 		}
 		if !(info.IsDir() || strings.HasSuffix(filename, ".md")) {
