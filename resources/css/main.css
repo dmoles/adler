@@ -135,11 +135,10 @@ html {
 }
 
 body {
-  margin: 12px;
-  background-color: #fffcf0;
+  background-color: #e4f0f2;
   min-height: 100vh;
   line-height: 24px;
-  color: #1a160f;
+  color: #0f161a;
   font-family: "CharisSILW", serif;
   font-size: 16px;
   font-weight: normal;
@@ -174,7 +173,7 @@ strong {
 
 del {
   text-decoration-line: line-through;
-  text-decoration-color: #342d1f;
+  text-decoration-color: #1f2c33;
   text-decoration-thickness: 3px;
 }
 
@@ -184,6 +183,24 @@ ul {
 
 ol {
   list-style: decimal outside;
+}
+
+dl {
+  display: grid;
+  margin-top: 24px;
+  grid-gap: 12px;
+  grid-template-columns: max-content 1fr;
+}
+
+dl dt {
+  display: block;
+  font-weight: bold;
+  grid-column: 1;
+}
+
+dl dd {
+  display: block;
+  grid-column: 2;
 }
 
 li {
@@ -222,7 +239,7 @@ h4 {
 }
 
 h5 {
-  color: #1a160f;
+  color: #0f161a;
   font-size: 13.3333333333px;
   font-weight: 300;
   font-style: italic;
@@ -230,8 +247,7 @@ h5 {
 
 img.adler-icon {
   display: inline-block;
-  margin-top: 5.5px;
-  margin-right: 5.5px;
+  margin-bottom: -1px;
   width: 13px;
   height: 13px;
 }
@@ -240,7 +256,7 @@ hr {
   margin-top: 24px;
   margin-bottom: 24px;
   border: 0;
-  border-top: 5px double #1a160f;
+  border-top: 5px double #0f161a;
 }
 
 table {
@@ -257,7 +273,7 @@ table th, table td {
 }
 
 table thead th {
-  border-bottom: 1px solid #342d1f;
+  border-bottom: 1px solid #1f2c33;
   text-align: start;
   text-transform: uppercase;
   font-family: "Libre Franklin", sans-serif;
@@ -275,7 +291,7 @@ blockquote {
   margin-top: 12px;
   margin-left: 24px;
   line-height: 21.3333333333px;
-  color: #342d1f;
+  color: #1f2c33;
   font-size: 13.7142857143px;
 }
 
@@ -318,7 +334,17 @@ aside nav ul {
 }
 
 aside nav ul li {
+  margin-top: 4px;
+  margin-left: 18px;
   line-height: 16px;
+}
+
+aside nav ul li a {
+  font-weight: normal;
+}
+
+main {
+  background-color: #f7feff;
 }
 
 main p {
@@ -343,29 +369,33 @@ main > img {
 }
 
 footer {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 body {
   display: grid;
-  grid-template-columns: 128px auto;
+  grid-template-columns: fit-content(240px) auto;
   grid-template-rows: auto min-content;
 }
 
 body aside {
+  padding-top: 24px;
+  padding-right: 24px;
+  padding-left: 24px;
   grid-column: 1;
   grid-row: 1;
 }
 
 body main {
-  margin-right: 24px;
-  margin-left: 48px;
+  padding-top: 24px;
+  padding-right: 24px;
+  padding-left: 24px;
   grid-column: 2;
   grid-row: 1;
 }
 
 body footer {
-  margin-top: 24px;
-  grid-column: 1 / span 2;
+  padding-top: 24px;
+  grid-column: 2;
   grid-row: 2;
 }
