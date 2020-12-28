@@ -45,10 +45,14 @@ func (d *dirIndex) ToHtml(rootDir string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	relPath, err := filepath.Rel(rootDir, d.dirPath)
+	if err != nil {
+		return nil, err
+	}
 
 	var sb strings.Builder
 	//noinspection GoUnhandledErrorResult
-	fmt.Fprintf(&sb, "# %s\n\n", title)
+	fmt.Fprintf(&sb, "# [%s](%s)\n\n", title, relPath)
 	d.WriteMarkdown(&sb, rootDir)
 
 	return stringToHtml(sb.String())

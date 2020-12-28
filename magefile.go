@@ -27,6 +27,10 @@ const mainScss = "scss/main.scss"
 const resourceDir = "resources"
 const statikData = "statik/statik.go"
 
+// TODO: figure out how to document these
+const envSkipTests = "ADLER_SKIP_TESTS"
+const envSkipValidation = "ADLER_SKIP_VALIDATION"
+
 var scssDir = filepath.Dir(mainScss)
 
 // ------------------------------------------------------------
@@ -50,7 +54,7 @@ func Build() error {
 
 // builds and installs the executable (depends on: test)
 func Install() error {
-	mg.Deps(Test)
+	mg.Deps(Assets.Embed, Test)
 
 	cmd := exec.Command("go", "install")
 	cmd.Stdout = os.Stdout
@@ -66,6 +70,11 @@ func Install() error {
 
 // runs all tests (depends on: assets:embed)
 func Test() error {
+	if skipTests() {
+		warn("Skipping tests")
+		return nil
+	}
+
 	mg.Deps(Assets.Embed)
 
 	cmd := exec.Command("go", "test", "./...")
@@ -125,6 +134,11 @@ func (Assets) Embed() error {
 
 // validates SCSS (requires sass-lint: https://www.npmjs.com/package/sass-lint)
 func (Assets) Validate() error {
+	if skipValidation() {
+		warn("Skipping validation")
+		return nil
+	}
+
 	var errors []error
 
 	//goland:noinspection GoUnhandledErrorResult
@@ -144,14 +158,6 @@ func (Assets) Validate() error {
 		return errors[len(errors)-1]
 	}
 	return nil
-}
-
-func ignored(path string) bool {
-	gi, err := gitIgnore();
-	if err != nil {
-		panic(err)
-	}
-	return gi.MatchesPath(path)
 }
 
 // compiles SCSS (depends on: assets:validate)
@@ -205,9 +211,25 @@ func (Assets) Compile() error {
 // ------------------------------------------------------------
 // Helper functions
 
+func skipTests() bool {
+	return os.Getenv(envSkipTests) != ""
+}
+
+func skipValidation() bool {
+	return os.Getenv(envSkipValidation) != ""
+}
+
 // TODO: put all this timestamp business in a struct, or find a utility library for it (does mage have one?)
 
 var timeZero = time.Time{}
+
+func ignored(path string) bool {
+	gi, err := gitIgnore();
+	if err != nil {
+		panic(err)
+	}
+	return gi.MatchesPath(path)
+}
 
 func asNewAsAll(targetFile string, sourceDir string) bool {
 	if mg.Verbose() {
