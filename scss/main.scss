@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  margin: $margin;
+  margin: $margin / 2;
   background-color: $color-bg;
   min-height: 100vh;
   line-height: $line-height-body;
@@ -21,6 +21,10 @@ body {
 h1, h2, h3, h4, h5 {
   font-family: $font-family-headers;
   font-weight: $font-weight-bold;
+
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 a {
@@ -193,7 +197,6 @@ header {
 
 aside {
   nav {
-    margin-top: $margin;
     font-family: $font-family-nav;
 
     h1 {
@@ -253,11 +256,11 @@ footer {
 // sass-lint:disable no-mergeable-selectors
 body {
   display: grid;
-  grid-template-columns: 15 * $font-size-body minmax(0, 1fr);
+  grid-template-columns: (8 * $font-size-body) auto;
   grid-template-rows: max-content auto;
 
   header {
-    grid-column: 1;
+    grid-column: 1 / span 2;
     grid-row: 1;
   }
 
@@ -270,7 +273,7 @@ body {
     margin-right: $margin;
     margin-left: 2 * $margin;
     grid-column: 2;
-    grid-row: 1 / span 2;
+    grid-row: 2;
   }
 
   footer {
