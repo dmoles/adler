@@ -1,5 +1,6 @@
 @import 'reset';
 @import 'globals';
+@import 'print';
 
 html {
   height: 100%;
@@ -18,7 +19,7 @@ body {
 
 // sass-lint:disable-block single-line-per-selector
 h1, h2, h3, h4, h5 {
-  font-family: $font-family-headers;
+  font-family: $font-family-headings;
   font-weight: $font-weight-bold;
 
   &:first-child {
@@ -86,6 +87,7 @@ li {
 h1 {
   margin-bottom: $margin;
   font-size: $font-size-xlarge;
+  color: $color-heading;
 }
 
 h3, h4, h5 {
@@ -95,19 +97,19 @@ h3, h4, h5 {
 h2 {
   margin-top: $margin;
   margin-bottom: $margin / 2;
-  border-bottom: 1px solid $color-header;
-  color: $color-header;
+  border-bottom: 1px solid $color-heading;
+  color: $color-heading;
   font-size: $font-size-larger;
 }
 
 h3 {
   text-transform: uppercase;
-  color: $color-header;
+  color: $color-heading;
   font-size: $font-size-smaller;
 }
 
 h4 {
-  color: $color-header;
+  color: $color-heading;
   font-size: $font-size-smaller;
   font-weight: $font-weight-light;
 }
@@ -146,6 +148,7 @@ table {
     padding-right: $margin / 4;
     padding-left: $margin / 4;
     font-size: $font-size-smaller;
+    color: $color-heading;
   }
 
   thead {
@@ -271,32 +274,42 @@ footer {
 //}
 
 // sass-lint:disable no-mergeable-selectors
-body {
-  display: grid;
-  grid-template-columns: fit-content(15 * $font-size-body) auto;
-  grid-template-rows: auto min-content;
+@media screen {
+  body {
+    display: grid;
+    grid-template-columns: fit-content(15 * $font-size-body) auto;
+    grid-template-rows: auto min-content;
 
-  aside {
-    padding-top: $margin;
-    padding-right: $margin;
-    padding-left: $margin;
-    grid-column: 1;
-    grid-row: 1;
+    > header {
+      display: none;
+    }
+
+    > aside {
+      padding-top: $margin;
+      padding-right: $margin;
+      padding-left: $margin;
+      grid-column: 1;
+      grid-row: 1;
+    }
+
+    > main {
+      padding-top: $margin;
+      padding-right: $margin;
+      padding-left: $margin;
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    > footer {
+      padding-top: $margin;
+      //padding-left: $margin;
+      grid-column: 2;
+      grid-row: 2;
+    }
   }
 
-  main {
-    padding-top: $margin;
-    padding-right: $margin;
-    padding-left: $margin;
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  footer {
-    padding-top: $margin;
-    //padding-left: $margin;
-    grid-column: 2;
-    grid-row: 2;
+  .hidden-screen {
+    display: none;
   }
 }
 

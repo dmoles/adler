@@ -25,6 +25,7 @@ func Page() *template.Template {
 }
 
 type PageData struct {
+	Header string
 	Title string
 	TOC   string
 	Body  string

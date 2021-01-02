@@ -1,0 +1,57 @@
+@import 'globals';
+
+$margin-print: 0.75in;
+
+@media print {
+  body {
+    orphans: 3;
+    widows: 3;
+    // TODO: get page margins working
+    // TODO: figure out why we get an extra blank page at the end
+    margin-top: $margin-print;
+    margin-right: $margin-print;
+    margin-left: $margin-print;
+    margin-bottom: 4 * $margin-print / 3;
+
+    > aside {
+      display: none;
+    }
+
+    > main {
+      height: 100%;
+      margin-bottom: 2 * $margin-print / 3;
+    }
+
+    // TODO: get real headers and footers laying out properly
+    // TODO: get page numbers working
+    > header {
+      position: fixed;
+      top: $margin-print / 3;
+      left: $margin-print;
+
+      p {
+        font-family: $font-family-headings;
+        font-weight: $font-weight-bold;
+      }
+    }
+
+    > footer {
+      position: fixed;
+      top: $margin-print / 3;
+      right: $margin-print;
+    }
+
+    @page {
+      margin: 0;
+    }
+  }
+
+  h1, h2, h3, h4, h5 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  .hidden-print {
+    display: none;
+  }
+}

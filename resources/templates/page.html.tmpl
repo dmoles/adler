@@ -10,16 +10,22 @@
     <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
+<header>
+    <p>{{.Header}}: {{.Title}}</p>
+</header>
+<main>
+    {{.Body}}
+</main>
 <aside>
     <nav>
         {{.TOC}}
     </nav>
 </aside>
-<main>
-    {{.Body}}
-</main>
 <footer>
-    <p><img class="adler-icon" src="/apple-touch-icon.png"/> Served by <a href="https://github.com/dmoles/adler/">Adler</a>.</p>
+    <p><img class="adler-icon" src="/apple-touch-icon.png"/>
+        {{/* TODO: Make this and the image pure CSS ::before content */}}
+        <span class="hidden-print">Servedby </span><span class="hidden-screen">Printed from</span>
+        <a href="https://github.com/dmoles/adler/">Adler</a>.</p>
 </footer>
 </body>
 </html>

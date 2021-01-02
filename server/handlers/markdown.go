@@ -18,10 +18,16 @@ func (h *markdownHandlerBase) write(w http.ResponseWriter, urlPath string, title
 		return err
 	}
 
+	siteTitle, err := markdown.GetTitleFromFile(h.rootDir)
+	if err != nil {
+		return err
+	}
+
 	pageData := templates.PageData{
-		Title: title,
-		TOC:   string(rootIndexHtml),
-		Body:  string(bodyHtml),
+		Header: siteTitle,
+		Title:  title,
+		TOC:    string(rootIndexHtml),
+		Body:   string(bodyHtml),
 	}
 
 	var sb strings.Builder

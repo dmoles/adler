@@ -129,6 +129,146 @@ table {
   src: url("/fonts/CourierPrime-BoldItalic.woff2") format("woff2");
 }
 
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 400;
+  src: url("/fonts/CharisSIL-R.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/CharisSIL-I.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 700;
+  src: url("/fonts/CharisSIL-B.woff");
+}
+
+@font-face {
+  font-family: CharisSILW;
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/CharisSIL-BI.woff");
+}
+
+@font-face {
+  font-family: 'Libre Franklin';
+  font-weight: 300;
+  font-style: normal;
+  src: url("/fonts/LibreFranklin-Light.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Libre Franklin';
+  font-weight: 300;
+  font-style: italic;
+  src: url("/fonts/LibreFranklin-LightItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Libre Franklin';
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/LibreFranklin-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Libre Franklin';
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/LibreFranklin-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Libre Franklin';
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/LibreFranklin-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Libre Franklin';
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/LibreFranklin-BoldItalic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/CourierPrime-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 400;
+  font-style: italic;
+  src: url("/fonts/CourierPrime-Italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/CourierPrime-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: 'Courier Prime';
+  font-weight: 700;
+  font-style: italic;
+  src: url("/fonts/CourierPrime-BoldItalic.woff2") format("woff2");
+}
+
+@media print {
+  body {
+    orphans: 3;
+    widows: 3;
+    margin-top: 0.75in;
+    margin-right: 0.75in;
+    margin-left: 0.75in;
+    margin-bottom: 1in;
+  }
+  body > aside {
+    display: none;
+  }
+  body > main {
+    height: 100%;
+    margin-bottom: 0.5in;
+  }
+  body > header {
+    position: fixed;
+    top: 0.25in;
+    left: 0.75in;
+  }
+  body > header p {
+    font-family: "Libre Franklin", sans-serif;
+    font-weight: bold;
+  }
+  body > footer {
+    position: fixed;
+    top: 0.25in;
+    right: 0.75in;
+  }
+  @page {
+    body {
+      margin: 0;
+    }
+  }
+  h1, h2, h3, h4, h5 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  .hidden-print {
+    display: none;
+  }
+}
+
 html {
   height: 100%;
   text-size-adjust: none;
@@ -211,6 +351,7 @@ li {
 h1 {
   margin-bottom: 24px;
   font-size: 25.6px;
+  color: #17293a;
 }
 
 h3, h4, h5 {
@@ -269,6 +410,7 @@ table th, table td {
   padding-right: 6px;
   padding-left: 6px;
   font-size: 13.3333333333px;
+  color: #17293a;
 }
 
 table thead th {
@@ -371,30 +513,35 @@ footer {
   margin-bottom: 12px;
 }
 
-body {
-  display: grid;
-  grid-template-columns: fit-content(240px) auto;
-  grid-template-rows: auto min-content;
-}
-
-body aside {
-  padding-top: 24px;
-  padding-right: 24px;
-  padding-left: 24px;
-  grid-column: 1;
-  grid-row: 1;
-}
-
-body main {
-  padding-top: 24px;
-  padding-right: 24px;
-  padding-left: 24px;
-  grid-column: 2;
-  grid-row: 1;
-}
-
-body footer {
-  padding-top: 24px;
-  grid-column: 2;
-  grid-row: 2;
+@media screen {
+  body {
+    display: grid;
+    grid-template-columns: fit-content(240px) auto;
+    grid-template-rows: auto min-content;
+  }
+  body > header {
+    display: none;
+  }
+  body > aside {
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-left: 24px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+  body > main {
+    padding-top: 24px;
+    padding-right: 24px;
+    padding-left: 24px;
+    grid-column: 2;
+    grid-row: 1;
+  }
+  body > footer {
+    padding-top: 24px;
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .hidden-screen {
+    display: none;
+  }
 }
