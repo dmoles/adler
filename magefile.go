@@ -27,9 +27,10 @@ const mainScss = "scss/main.scss"
 const resourceDir = "resources"
 const statikData = "statik/statik.go"
 
-// TODO: figure out how to document these
+// TODO: figure out how to document these and/or make them CL options
 const envSkipTests = "ADLER_SKIP_TESTS"
 const envSkipValidation = "ADLER_SKIP_VALIDATION"
+const envForceEmbed = "ADLER_FORCE_EMBED"
 
 var scssDir = filepath.Dir(mainScss)
 
@@ -103,7 +104,7 @@ type Assets mg.Namespace
 func (Assets) Embed() error {
 	mg.Deps(Assets.Compile)
 
-	if asNewAsAll(statikData, resourceDir) {
+	if !forceEmbed() && asNewAsAll(statikData, resourceDir) {
 		println("Assets are up to date") // TODO: more consistent output
 		return nil
 	}
@@ -213,6 +214,10 @@ func (Assets) Compile() error {
 
 func skipTests() bool {
 	return os.Getenv(envSkipTests) != ""
+}
+
+func forceEmbed() bool {
+	return os.Getenv(envForceEmbed) != ""
 }
 
 func skipValidation() bool {

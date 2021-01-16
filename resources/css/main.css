@@ -227,19 +227,19 @@ table {
 
 @media print {
   body {
-    orphans: 3;
-    widows: 3;
     margin-top: 0.75in;
     margin-right: 0.75in;
-    margin-left: 0.75in;
     margin-bottom: 1in;
+    margin-left: 0.75in;
+    orphans: 3;
+    widows: 3;
   }
   body > aside {
     display: none;
   }
   body > main {
-    height: 100%;
     margin-bottom: 0.5in;
+    height: 100%;
   }
   body > header {
     position: fixed;
@@ -350,8 +350,8 @@ li {
 
 h1 {
   margin-bottom: 24px;
-  font-size: 25.6px;
   color: #17293a;
+  font-size: 25.6px;
 }
 
 h3, h4, h5 {
@@ -409,8 +409,8 @@ table th, table td {
   padding-top: 6px;
   padding-right: 6px;
   padding-left: 6px;
-  font-size: 13.3333333333px;
   color: #17293a;
+  font-size: 13.3333333333px;
 }
 
 table thead th {
