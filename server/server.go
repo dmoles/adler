@@ -1,12 +1,13 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"github.com/dmoles/adler/server/handlers"
 	"github.com/dmoles/adler/server/util"
 	"github.com/gorilla/mux"
-	"gopkg.in/tylerb/graceful.v1"
 	"log"
+	"net/http"
 	"path/filepath"
 	"time"
 )
@@ -26,7 +27,23 @@ func (s *server) Start() error {
 	router := s.newRouter()
 
 	addr := fmt.Sprintf(":%d", s.port)
-	return graceful.RunWithErr(addr, finishRequestTimeout, router)
+
+  srv := &http.Server {
+		Handler: router,
+		Addr: addr,
+		WriteTimeout: finishRequestTimeout,
+		ReadTimeout: finishRequestTimeout,
+	}
+	
+	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+		return err
+	}
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func Start(port int, rootDir string, cssDir string) error {
