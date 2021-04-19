@@ -1,5 +1,12 @@
 language: go
 
 go:
-  - "1.15"
-  - master
+  - tip
+  - 1.16.x
+
+script:
+  - nvm use stable
+  - npm install -g sass-lint
+  - go vet ./...
+  - go run mage.go install
+
