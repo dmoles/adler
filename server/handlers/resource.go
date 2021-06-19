@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"github.com/dmoles/adler/server/resources"
+	"github.com/dmoles/adler/resources"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"

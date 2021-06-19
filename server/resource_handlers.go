@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/dmoles/adler/server/resources"
+	resources2 "github.com/dmoles/adler/resources"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -29,7 +29,7 @@ func makeHandler(dir string) handlerFunc {
 		relativePathClean := path.Clean(relativePath)
 		resourcePath := path.Join(dir, relativePathClean)
 
-		resource, err := resources.Get(resourcePath)
+		resource, err := resources2.Get(resourcePath)
 		if err != nil {
 			http.NotFound(w, r)
 			return

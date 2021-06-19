@@ -122,6 +122,7 @@ h5 {
 }
 
 img {
+  //noinspection CssUnusedSymbol
   &.adler-icon {
     display: inline-block;
     margin-bottom: -1px;
@@ -187,7 +188,7 @@ blockquote {
   }
 }
 
-:matches(h1, h2, h3, h4, h5, h6) + blockquote {
+:is(h1, h2, h3, h4, h5, h6) + blockquote {
   margin-left: 0;
 }
 
@@ -207,6 +208,7 @@ aside {
         display: inline-block;
         margin-top: auto;
         margin-right: ($margin - $icon-size) / 2;
+        //noinspection CssUnknownTarget
         background-image: url('/apple-touch-icon.png');
         background-size: $icon-size, $icon-size;
         width: $icon-size;
@@ -308,6 +310,7 @@ footer {
     }
   }
 
+  //noinspection CssUnusedSymbol
   .hidden-screen {
     display: none;
   }

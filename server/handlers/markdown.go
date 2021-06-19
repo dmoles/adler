@@ -35,7 +35,5 @@ func (h *markdownHandlerBase) write(w http.ResponseWriter, urlPath string, title
 	if err != nil {
 		return err
 	}
-	util.WriteData(w, urlPath, []byte(sb.String()))
-
-	return nil
+	return util.WriteData(w, urlPath, []byte(sb.String()))
 }

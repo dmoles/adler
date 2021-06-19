@@ -7,7 +7,6 @@ go:
 script:
   - nvm use stable
   - npm install -g sass-lint
-  - go get github.com/rakyll/statik
   - go vet ./...
   - go run mage.go install
 

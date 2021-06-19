@@ -21,26 +21,21 @@ import (
 // ------------------------------------------------------------
 // Constants and const-like variables
 
-const projectName = "adler"
 const mainCss = "resources/css/main.css"
 const mainScss = "scss/main.scss"
-const resourceDir = "resources"
-const statikData = "statik/statik.go"
 
 // TODO: figure out how to document these and/or make them CL options
 const envSkipTests = "ADLER_SKIP_TESTS"
 const envSkipValidation = "ADLER_SKIP_VALIDATION"
-const envForceEmbed = "ADLER_FORCE_EMBED"
 
 var scssDir = filepath.Dir(mainScss)
 
 // ------------------------------------------------------------
 // Targets
 
-// builds an executable, but does not install it (depends on: test)
+// Build builds an executable, but does not install it (depends on: test)
+//goland:noinspection GoUnusedExportedFunction
 func Build() error {
-	mg.Deps(Assets.Embed)
-
 	cmd := exec.Command("go", "build")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -53,9 +48,10 @@ func Build() error {
 	return cmd.Run()
 }
 
-// builds and installs the executable (depends on: test)
+// Install builds and installs the executable (depends on: test)
+//goland:noinspection GoUnusedExportedFunction
 func Install() error {
-	mg.Deps(Assets.Embed, Test)
+	mg.Deps(Test)
 
 	cmd := exec.Command("go", "install")
 	cmd.Stdout = os.Stdout
@@ -69,14 +65,12 @@ func Install() error {
 	return cmd.Run()
 }
 
-// runs all tests (depends on: assets:embed)
+// Test runs all tests
 func Test() error {
 	if skipTests() {
 		warn("Skipping tests")
 		return nil
 	}
-
-	mg.Deps(Assets.Embed)
 
 	cmd := exec.Command("go", "test", "./...")
 	cmd.Stderr = os.Stderr
@@ -100,40 +94,7 @@ func Test() error {
 //goland:noinspection GoUnusedExportedType
 type Assets mg.Namespace
 
-// embeds static assets (depends on: assets:compile; requires statik: https://github.com/rakyll/statik)
-func (Assets) Embed() error {
-	mg.Deps(Assets.Compile)
-
-	if !forceEmbed() && asNewAsAll(statikData, resourceDir) {
-		println("Assets are up to date") // TODO: more consistent output
-		return nil
-	}
-
-	includes := strings.Join([]string{
-		"*.css",
-		"*.ico",
-		"*.md",
-		"*.png",
-		"*.tmpl",
-		"*.webmanifest",
-		"*.woff",
-		"*.woff2",
-	}, ",")
-
-	var statik = ensureCommand("statik", "statik not found; did you run go get github.com/rakyll/statik?")
-	cmd := exec.Command(statik, "-Z", "-src", resourceDir, "-include", includes, "-ns", projectName)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	println("Embedding static assets")
-	if mg.Verbose() {
-		println(strings.Join(cmd.Args, " "))
-	}
-
-	return cmd.Run()
-}
-
-// validates SCSS (requires sass-lint: https://www.npmjs.com/package/sass-lint)
+// Validate validates SCSS (requires sass-lint: https://www.npmjs.com/package/sass-lint)
 func (Assets) Validate() error {
 	if skipValidation() {
 		warn("Skipping validation")
@@ -161,7 +122,7 @@ func (Assets) Validate() error {
 	return nil
 }
 
-// compiles SCSS (depends on: assets:validate)
+// Compile compiles SCSS (depends on: assets:validate)
 func (Assets) Compile() error {
 	mg.Deps(Assets.Validate)
 
@@ -216,10 +177,6 @@ func skipTests() bool {
 	return os.Getenv(envSkipTests) != ""
 }
 
-func forceEmbed() bool {
-	return os.Getenv(envForceEmbed) != ""
-}
-
 func skipValidation() bool {
 	return os.Getenv(envSkipValidation) != ""
 }
@@ -229,7 +186,7 @@ func skipValidation() bool {
 var timeZero = time.Time{}
 
 func ignored(path string) bool {
-	gi, err := gitIgnore();
+	gi, err := gitIgnore()
 	if err != nil {
 		panic(err)
 	}

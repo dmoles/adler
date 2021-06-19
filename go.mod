@@ -10,7 +10,6 @@ require (
 	github.com/lithammer/dedent v1.1.0
 	github.com/magefile/mage v1.11.0
 	github.com/onsi/gomega v1.11.0
-	github.com/rakyll/statik v0.1.7
 	github.com/spf13/cobra v1.1.3
 	github.com/yuin/goldmark v1.3.5
 )

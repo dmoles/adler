@@ -39,12 +39,12 @@ func FileToHtml(filePath string) ([]byte, error) {
 		return nil, err
 	}
 
-	html, err := toHtml(data)
+	htmlData, err := toHtml(data)
 	if err != nil {
 		log.Printf("Error parsing file %v: %v", filePath, err)
 		return nil, err
 	}
-	return html, nil
+	return htmlData, nil
 }
 
 func DirToIndexHtml(dirPath string, rootDir string) ([]byte, error) {

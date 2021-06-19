@@ -13,6 +13,14 @@ and embedding static assets; run `mage -l` for the list of tasks. Note that
 the first `mage` invocation may take some time as [golibsass](https://github.com/bep/golibsass)
 builds `libsass` from (C++) source.
 
+With `mage` installed:
+
+- `mage -l`
+
+Without `mage` installed:
+
+- `go run mage.go -l`
+
 ## Usage
 
 ```

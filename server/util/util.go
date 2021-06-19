@@ -88,8 +88,8 @@ func UrlPathToFile(urlFilePath string, rootDir string) (string, error) {
 	return ToAbsoluteFile(resolved)
 }
 
-// TODO: use http.DetectContentType() instead?
 func ContentType(urlPath string) string {
+	// TODO: use http.DetectContentType() instead?
 	if path.Base(urlPath) == "site.webmanifest" {
 		return "application/manifest+json; charset=utf-8"
 	}

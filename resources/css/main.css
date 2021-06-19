@@ -444,7 +444,7 @@ blockquote cite::before {
   content: '—\2009';
 }
 
-:matches(h1, h2, h3, h4, h5, h6) + blockquote {
+:is(h1, h2, h3, h4, h5, h6) + blockquote {
   margin-left: 0;
 }
 
