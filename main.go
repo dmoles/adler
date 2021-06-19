@@ -14,9 +14,15 @@ func main() {
 	var cssDir string
 	var cmd = &cobra.Command{
 		Use:  "adler <rootDir>",
-		Args: cobra.ExactArgs(1),
+		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return server.Start(port, args[0], cssDir)
+			var dir string
+			if len(args) > 0 {
+				dir = args[0]
+			} else {
+				dir = "."
+			}
+			return server.Start(port, dir, cssDir)
 		},
 	}
 	cmd.Flags().IntVarP(&port, "port", "p", defaultPort, "port to listen on")
