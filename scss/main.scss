@@ -110,16 +110,16 @@ h3 {
 }
 
 h4 {
+  text-transform: uppercase;
   color: $color-heading;
   font-size: $font-size-smaller;
   font-weight: $font-weight-light;
 }
 
 h5 {
-  color: $color-fg;
+  color: $color-heading;
   font-size: $font-size-smaller;
   font-weight: $font-weight-light;
-  font-style: italic;
 }
 
 img {
@@ -142,6 +142,7 @@ hr {
 
 table {
   margin-top: $quarter-margin;
+  width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   line-height: $line-height-tighter;
@@ -192,10 +193,6 @@ blockquote {
       content: '—\2009';
     }
   }
-}
-
-:is(h1, h2, h3, h4, h5, h6) + blockquote {
-  margin-left: 0;
 }
 
 // ////////////////////////////////////////////////////////////
