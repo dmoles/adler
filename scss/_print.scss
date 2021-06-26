@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 @import 'globals';
 
 $margin-print: .75in;
@@ -8,7 +10,7 @@ $margin-print: .75in;
     // TODO: figure out why we get an extra blank page at the end
     margin-top: $margin-print;
     margin-right: $margin-print;
-    margin-bottom: 4 * $margin-print / 3;
+    margin-bottom: 4 * math.div($margin-print, 3);
     margin-left: $margin-print;
     orphans: 3;
     widows: 3;
@@ -18,7 +20,7 @@ $margin-print: .75in;
     }
 
     > main {
-      margin-bottom: 2 * $margin-print / 3;
+      margin-bottom: 2 * math.div($margin-print, 3);
       height: 100%;
     }
 
@@ -26,7 +28,7 @@ $margin-print: .75in;
     // TODO: get page numbers working
     > header {
       position: fixed;
-      top: $margin-print / 3;
+      top: math.div($margin-print, 3);
       left: $margin-print;
 
       p {
@@ -37,7 +39,7 @@ $margin-print: .75in;
 
     > footer {
       position: fixed;
-      top: $margin-print / 3;
+      top: math.div($margin-print, 3);
       right: $margin-print;
     }
 

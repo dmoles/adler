@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 @import 'reset';
 @import 'globals';
 @import 'print';
@@ -64,7 +66,7 @@ ol {
 dl {
   display: grid;
   margin-top: $margin;
-  grid-gap: $margin / 2;
+  grid-gap: math.div($margin, 2);
   grid-template-columns: max-content 1fr;
 
   dt {
@@ -91,12 +93,12 @@ h1 {
 }
 
 h3, h4, h5 {
-  margin-top: $margin / 2;
+  margin-top: math.div($margin, 2);
 }
 
 h2 {
   margin-top: $margin;
-  margin-bottom: $margin / 2;
+  margin-bottom: math.div($margin, 2);
   border-bottom: 1px solid $color-heading;
   color: $color-heading;
   font-size: $font-size-larger;
@@ -126,7 +128,7 @@ img {
   &.adler-icon {
     display: inline-block;
     margin-bottom: -1px;
-    //margin-right: ($margin - $icon-size) / 2;
+    //margin-right: ($margin - math.div($icon-size), 2);
     width: $icon-size;
     height: $icon-size;
   }
@@ -145,9 +147,9 @@ table {
   border-collapse: collapse;
 
   th, td {
-    padding-top: $margin / 4;
-    padding-right: $margin / 4;
-    padding-left: $margin / 4;
+    padding-top: math.div($margin, 4);
+    padding-right: math.div($margin, 4);
+    padding-left: math.div($margin, 4);
     color: $color-heading;
     font-size: $font-size-smaller;
   }
@@ -171,7 +173,7 @@ code, pre {
 }
 
 blockquote {
-  margin-top: $margin / 2;
+  margin-top: math.div($margin, 2);
   margin-left: $margin;
   line-height: $line-height-blockquote;
   color: $color-blockquote;
@@ -200,14 +202,14 @@ aside {
     font-family: $font-family-nav;
 
     h1 {
-      margin-bottom: $margin / 2;
+      margin-bottom: math.div($margin, 2);
       text-transform: none;
       font-size: $font-size-body;
 
       &::before {
         display: inline-block;
         margin-top: auto;
-        margin-right: ($margin - $icon-size) / 2;
+        margin-right: math.div(($margin - $icon-size), 2);
         //noinspection CssUnknownTarget
         background-image: url('/apple-touch-icon.png');
         background-size: $icon-size, $icon-size;
@@ -223,8 +225,8 @@ aside {
 
       li {
         // TODO: figure out how to get bullets closer to text
-        margin-top: ($line-height-body - $line-height-tighter) / 2;
-        margin-left: 3 * $margin / 4;
+        margin-top: math.div(($line-height-body - $line-height-tighter), 2);
+        margin-left: 3 * math.div($margin, 4);
         line-height: $line-height-tighter;
 
         a {
@@ -239,11 +241,11 @@ main {
   background-color: $color-bg-alt;
 
   p {
-    margin-top: $margin / 2;
+    margin-top: math.div($margin, 2);
   }
 
   ul, ol {
-    margin-top: $margin / 2;
+    margin-top: math.div($margin, 2);
 
     ul, ol {
       margin-top: 0;
@@ -265,7 +267,7 @@ main {
 }
 
 footer {
-  margin-bottom: $margin / 2;
+  margin-bottom: math.div($margin, 2);
 }
 
 // ////////////////////////////////////////////////////////////

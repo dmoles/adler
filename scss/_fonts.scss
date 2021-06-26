@@ -1,8 +1,10 @@
+@use 'sass:math';
+
 @import 'fonts-charis';
 @import 'fonts-libre-franklin';
 @import 'fonts-courier-prime';
 
-// TODO: consider Alegreya / Alegreya Sans (& SC variants)
+// TODO: consider math.div(Alegreya, Alegreya) Sans (& SC variants)
 
 $font-family-serif: 'CharisSILW', serif;
 $font-family-sans: 'Libre Franklin', sans-serif;
@@ -14,14 +16,14 @@ $font-weight-bold: bold; // = 700
 
 $font-size-default: 16px;
 $font-size-body: $font-size-default;
-$font-size-smaller: (5 * $font-size-body / 6);
-$font-size-xsmall: (2 * $font-size-body / 3);
-$font-size-larger: (6 * $font-size-body / 5);
-$font-size-xlarge: (8 * $font-size-body / 5);
+$font-size-smaller: (5 * math.div($font-size-body, 6));
+$font-size-xsmall: (2 * math.div($font-size-body, 3));
+$font-size-larger: (6 * math.div($font-size-body, 5));
+$font-size-xlarge: (8 * math.div($font-size-body, 5));
 
 $font-size-sub: $font-size-smaller;
 $font-size-small-caps: $font-size-smaller;
-$font-size-blockquote: (6 * $font-size-body / 7);
+$font-size-blockquote: (6 * math.div($font-size-body, 7));
 $font-size-footer: $font-size-smaller;
 $font-size-nav: $font-size-smaller;
 
@@ -30,7 +32,7 @@ $font-size-root-print: 12pt;
 
 $line-height-body: 1.5 * $font-size-default;
 $line-height-tighter: $font-size-default;
-$line-height-blockquote: 4 / 3 * $font-size-default;
+$line-height-blockquote: math.div(4, 3) * $font-size-default;
 $line-height-code: 1.1em;
 
 $icon-size: floor($font-size-smaller);

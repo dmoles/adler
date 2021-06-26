@@ -23,7 +23,6 @@ ol, ul {
 blockquote, q {
   quotes: none;
 }
-
 blockquote ::before, blockquote ::after, q ::before, q ::after {
   content: none;
 }
@@ -38,193 +37,165 @@ table {
   font-weight: 400;
   src: url("/fonts/CharisSIL-R.woff");
 }
-
 @font-face {
   font-family: CharisSILW;
   font-weight: 400;
   font-style: italic;
   src: url("/fonts/CharisSIL-I.woff");
 }
-
 @font-face {
   font-family: CharisSILW;
   font-weight: 700;
   src: url("/fonts/CharisSIL-B.woff");
 }
-
 @font-face {
   font-family: CharisSILW;
   font-weight: 700;
   font-style: italic;
   src: url("/fonts/CharisSIL-BI.woff");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 300;
   font-style: normal;
   src: url("/fonts/LibreFranklin-Light.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 300;
   font-style: italic;
   src: url("/fonts/LibreFranklin-LightItalic.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 400;
   font-style: normal;
   src: url("/fonts/LibreFranklin-Regular.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 400;
   font-style: italic;
   src: url("/fonts/LibreFranklin-Italic.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 700;
   font-style: normal;
   src: url("/fonts/LibreFranklin-Bold.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 700;
   font-style: italic;
   src: url("/fonts/LibreFranklin-BoldItalic.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Courier Prime';
+  font-family: "Courier Prime";
   font-weight: 400;
   font-style: normal;
   src: url("/fonts/CourierPrime-Regular.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Courier Prime';
+  font-family: "Courier Prime";
   font-weight: 400;
   font-style: italic;
   src: url("/fonts/CourierPrime-Italic.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Courier Prime';
+  font-family: "Courier Prime";
   font-weight: 700;
   font-style: normal;
   src: url("/fonts/CourierPrime-Bold.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Courier Prime';
+  font-family: "Courier Prime";
   font-weight: 700;
   font-style: italic;
   src: url("/fonts/CourierPrime-BoldItalic.woff2") format("woff2");
 }
-
 @font-face {
   font-family: CharisSILW;
   font-weight: 400;
   src: url("/fonts/CharisSIL-R.woff");
 }
-
 @font-face {
   font-family: CharisSILW;
   font-weight: 400;
   font-style: italic;
   src: url("/fonts/CharisSIL-I.woff");
 }
-
 @font-face {
   font-family: CharisSILW;
   font-weight: 700;
   src: url("/fonts/CharisSIL-B.woff");
 }
-
 @font-face {
   font-family: CharisSILW;
   font-weight: 700;
   font-style: italic;
   src: url("/fonts/CharisSIL-BI.woff");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 300;
   font-style: normal;
   src: url("/fonts/LibreFranklin-Light.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 300;
   font-style: italic;
   src: url("/fonts/LibreFranklin-LightItalic.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 400;
   font-style: normal;
   src: url("/fonts/LibreFranklin-Regular.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 400;
   font-style: italic;
   src: url("/fonts/LibreFranklin-Italic.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 700;
   font-style: normal;
   src: url("/fonts/LibreFranklin-Bold.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Libre Franklin';
+  font-family: "Libre Franklin";
   font-weight: 700;
   font-style: italic;
   src: url("/fonts/LibreFranklin-BoldItalic.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Courier Prime';
+  font-family: "Courier Prime";
   font-weight: 400;
   font-style: normal;
   src: url("/fonts/CourierPrime-Regular.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Courier Prime';
+  font-family: "Courier Prime";
   font-weight: 400;
   font-style: italic;
   src: url("/fonts/CourierPrime-Italic.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Courier Prime';
+  font-family: "Courier Prime";
   font-weight: 700;
   font-style: normal;
   src: url("/fonts/CourierPrime-Bold.woff2") format("woff2");
 }
-
 @font-face {
-  font-family: 'Courier Prime';
+  font-family: "Courier Prime";
   font-weight: 700;
   font-style: italic;
   src: url("/fonts/CourierPrime-BoldItalic.woff2") format("woff2");
 }
-
 @media print {
   body {
     margin-top: 0.75in;
@@ -260,15 +231,16 @@ table {
       margin: 0;
     }
   }
+
   h1, h2, h3, h4, h5 {
     page-break-after: avoid;
     page-break-inside: avoid;
   }
+
   .hidden-print {
     display: none;
   }
 }
-
 html {
   height: 100%;
   text-size-adjust: none;
@@ -288,7 +260,6 @@ h1, h2, h3, h4, h5 {
   font-family: "Libre Franklin", sans-serif;
   font-weight: bold;
 }
-
 h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child {
   margin-top: 0;
 }
@@ -298,7 +269,6 @@ a {
   color: #202b49;
   font-weight: bold;
 }
-
 a:hover {
   text-decoration: underline;
 }
@@ -331,13 +301,11 @@ dl {
   grid-gap: 12px;
   grid-template-columns: max-content 1fr;
 }
-
 dl dt {
   display: block;
   font-weight: bold;
   grid-column: 1;
 }
-
 dl dd {
   display: block;
   grid-column: 2;
@@ -404,7 +372,6 @@ table {
   table-layout: fixed;
   border-collapse: collapse;
 }
-
 table th, table td {
   padding-top: 6px;
   padding-right: 6px;
@@ -412,7 +379,6 @@ table th, table td {
   color: #17293a;
   font-size: 13.3333333333px;
 }
-
 table thead th {
   border-bottom: 1px solid #1f2c33;
   text-align: start;
@@ -435,13 +401,11 @@ blockquote {
   color: #1f2c33;
   font-size: 13.7142857143px;
 }
-
 blockquote p {
   font-family: "CharisSILW", serif;
 }
-
 blockquote cite::before {
-  content: '—\2009';
+  content: "— ";
 }
 
 :is(h1, h2, h3, h4, h5, h6) + blockquote {
@@ -451,13 +415,11 @@ blockquote cite::before {
 aside nav {
   font-family: "CharisSILW", serif;
 }
-
 aside nav h1 {
   margin-bottom: 12px;
   text-transform: none;
   font-size: 16px;
 }
-
 aside nav h1::before {
   display: inline-block;
   margin-top: auto;
@@ -466,20 +428,17 @@ aside nav h1::before {
   background-size: 13px, 13px;
   width: 13px;
   height: 13px;
-  content: ' ';
+  content: " ";
 }
-
 aside nav ul {
   line-height: 16px;
   font-size: 13.3333333333px;
 }
-
 aside nav ul li {
   margin-top: 4px;
   margin-left: 18px;
   line-height: 16px;
 }
-
 aside nav ul li a {
   font-weight: normal;
 }
@@ -487,23 +446,18 @@ aside nav ul li a {
 main {
   background-color: #f7feff;
 }
-
 main p {
   margin-top: 12px;
 }
-
 main ul, main ol {
   margin-top: 12px;
 }
-
 main ul ul, main ul ol, main ol ul, main ol ol {
   margin-top: 0;
 }
-
 main li p:first-of-type {
   margin-top: 0;
 }
-
 main > img {
   display: block;
   margin-top: 24px;
@@ -541,7 +495,10 @@ footer {
     grid-column: 2;
     grid-row: 2;
   }
+
   .hidden-screen {
     display: none;
   }
 }
+
+/*# sourceMappingURL=main.css.map */
