@@ -4,10 +4,13 @@
 @import 'fonts';
 
 $margin: $line-height-body;
-$padding: $margin;
+
+$quarter-margin: math.div($margin, 4);
+$half-margin: math.div($margin, 2);
+$three-quarter-margin: 3 * $quarter-margin;
 
 $max-mobile-width: 672px;
 $min-desktop-width: $max-mobile-width;
 
 $header-height: 50px;
-$header-border-height: math.div($margin, 2);
+$header-border-height: $half-margin;

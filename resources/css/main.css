@@ -323,12 +323,11 @@ h1 {
 }
 
 h3, h4, h5 {
-  margin-top: 12px;
+  margin-top: 18px;
 }
 
 h2 {
   margin-top: 24px;
-  margin-bottom: 12px;
   border-bottom: 1px solid #17293a;
   color: #17293a;
   font-size: 19.2px;
@@ -368,16 +367,18 @@ hr {
 }
 
 table {
-  margin-top: 24px;
+  margin-top: 6px;
   table-layout: fixed;
   border-collapse: collapse;
+  line-height: 16px;
 }
 table th, table td {
-  padding-top: 6px;
-  padding-right: 6px;
-  padding-left: 6px;
+  padding: 6px;
   color: #17293a;
   font-size: 13.3333333333px;
+}
+table tr:nth-child(even) {
+  background: #e4f0f2;
 }
 table thead th {
   border-bottom: 1px solid #1f2c33;

@@ -2,16 +2,17 @@
 
 @import 'globals';
 
-$margin-print: .75in;
+$page-margin-print: .75in;
+$page-offset-print: math.div($page-margin-print, 3);
 
 @media print {
   body {
     // TODO: get page margins working
     // TODO: figure out why we get an extra blank page at the end
-    margin-top: $margin-print;
-    margin-right: $margin-print;
-    margin-bottom: 4 * math.div($margin-print, 3);
-    margin-left: $margin-print;
+    margin-top: $page-margin-print;
+    margin-right: $page-margin-print;
+    margin-bottom: 4 * $page-offset-print;
+    margin-left: $page-margin-print;
     orphans: 3;
     widows: 3;
 
@@ -20,7 +21,7 @@ $margin-print: .75in;
     }
 
     > main {
-      margin-bottom: 2 * math.div($margin-print, 3);
+      margin-bottom: 2 * $page-offset-print;
       height: 100%;
     }
 
@@ -28,8 +29,8 @@ $margin-print: .75in;
     // TODO: get page numbers working
     > header {
       position: fixed;
-      top: math.div($margin-print, 3);
-      left: $margin-print;
+      top: $page-offset-print;
+      left: $page-margin-print;
 
       p {
         font-family: $font-family-headings;
@@ -39,8 +40,8 @@ $margin-print: .75in;
 
     > footer {
       position: fixed;
-      top: math.div($margin-print, 3);
-      right: $margin-print;
+      top: $page-offset-print;
+      right: $page-margin-print;
     }
 
     @page {

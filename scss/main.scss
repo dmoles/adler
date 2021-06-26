@@ -66,7 +66,7 @@ ol {
 dl {
   display: grid;
   margin-top: $margin;
-  grid-gap: math.div($margin, 2);
+  grid-gap: $half-margin;
   grid-template-columns: max-content 1fr;
 
   dt {
@@ -93,12 +93,11 @@ h1 {
 }
 
 h3, h4, h5 {
-  margin-top: math.div($margin, 2);
+  margin-top: $three-quarter-margin;
 }
 
 h2 {
   margin-top: $margin;
-  margin-bottom: math.div($margin, 2);
   border-bottom: 1px solid $color-heading;
   color: $color-heading;
   font-size: $font-size-larger;
@@ -142,16 +141,21 @@ hr {
 }
 
 table {
-  margin-top: $margin;
+  margin-top: $quarter-margin;
   table-layout: fixed;
   border-collapse: collapse;
+  line-height: $line-height-tighter;
 
   th, td {
-    padding-top: math.div($margin, 4);
-    padding-right: math.div($margin, 4);
-    padding-left: math.div($margin, 4);
+    padding: $quarter-margin;
     color: $color-heading;
     font-size: $font-size-smaller;
+  }
+
+  tr {
+    &:nth-child(even) {
+      background: $color-bg;
+    }
   }
 
   thead {
@@ -173,7 +177,7 @@ code, pre {
 }
 
 blockquote {
-  margin-top: math.div($margin, 2);
+  margin-top: $half-margin;
   margin-left: $margin;
   line-height: $line-height-blockquote;
   color: $color-blockquote;
@@ -202,7 +206,7 @@ aside {
     font-family: $font-family-nav;
 
     h1 {
-      margin-bottom: math.div($margin, 2);
+      margin-bottom: $half-margin;
       text-transform: none;
       font-size: $font-size-body;
 
@@ -226,7 +230,7 @@ aside {
       li {
         // TODO: figure out how to get bullets closer to text
         margin-top: math.div(($line-height-body - $line-height-tighter), 2);
-        margin-left: 3 * math.div($margin, 4);
+        margin-left: 3 * $quarter-margin;
         line-height: $line-height-tighter;
 
         a {
@@ -241,11 +245,11 @@ main {
   background-color: $color-bg-alt;
 
   p {
-    margin-top: math.div($margin, 2);
+    margin-top: $half-margin;
   }
 
   ul, ol {
-    margin-top: math.div($margin, 2);
+    margin-top: $half-margin;
 
     ul, ol {
       margin-top: 0;
@@ -269,7 +273,7 @@ main {
 }
 
 footer {
-  margin-bottom: math.div($margin, 2);
+  margin-bottom: $half-margin;
 }
 
 // ////////////////////////////////////////////////////////////
