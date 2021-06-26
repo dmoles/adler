@@ -34,7 +34,7 @@ func (h *rawHandler) handle(w http.ResponseWriter, r *http.Request) {
 
 func (h *rawHandler) serveRaw(w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
-	log.Printf("serveRaw(): %v", urlPath)
+	//log.Printf("serveRaw(): %v", urlPath)
 
 	filePath, err := util.UrlPathToFile(urlPath, h.rootDir)
 	if err != nil {
@@ -46,7 +46,7 @@ func (h *rawHandler) serveRaw(w http.ResponseWriter, r *http.Request) error {
 
 func writeRaw(filePath string, w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
-	log.Printf("writeRaw(%#v): %v", filePath, urlPath)
+	//log.Printf("writeRaw(%#v): %v", filePath, urlPath)
 
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {

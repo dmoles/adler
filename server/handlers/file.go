@@ -4,7 +4,6 @@ import (
 	"github.com/dmoles/adler/server/markdown"
 	"github.com/dmoles/adler/server/util"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 )
 
@@ -33,7 +32,7 @@ func (h *fileHandler) handle(w http.ResponseWriter, r *http.Request) {
 
 func (h *fileHandler) writeFile(w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
-	log.Printf("write(): %v", urlPath)
+	//log.Printf("write(): %v", urlPath)
 
 	resolvedPath, err := util.UrlPathToFile(urlPath, h.rootDir)
 	if err != nil {

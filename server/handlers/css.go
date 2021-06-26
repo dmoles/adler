@@ -35,8 +35,7 @@ func (h *localCSSHandler) handle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *localCSSHandler) serveCss(w http.ResponseWriter, r *http.Request) error {
-	urlPath := r.URL.Path
-	log.Printf("serveCss(): %v", urlPath)
+	//log.Printf("serveCss(): %v", r.URL.Path)
 	relativePath := mux.Vars(r)["path"]
 
 	filePath, err := util.UrlPathToFile(relativePath, h.cssDir)

@@ -33,7 +33,7 @@ func (h *resourceHandler) handle(w http.ResponseWriter, r *http.Request) {
 
 func writeResource(resourceDir string, w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
-	log.Printf("writeResource(): %v", urlPath)
+	// log.Printf("writeResource(): %v", urlPath)
 
 	relativePath := mux.Vars(r)["path"]
 	resource, err := resources.Resolve(resourceDir, relativePath)

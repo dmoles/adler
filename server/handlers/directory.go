@@ -4,7 +4,6 @@ import (
 	"github.com/dmoles/adler/server/markdown"
 	"github.com/dmoles/adler/server/util"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 )
 
@@ -36,7 +35,7 @@ func (h *directoryHandler) handle(w http.ResponseWriter, r *http.Request) {
 
 func (h *directoryHandler) writeDirectory(w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
-	log.Printf("write(): %v", urlPath)
+	//log.Printf("write(): %v", urlPath)
 
 	rootDir := h.rootDir
 
