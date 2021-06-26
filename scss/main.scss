@@ -260,9 +260,11 @@ main {
     }
   }
 
-  > img {
+  img {
     display: block;
     margin-top: $margin;
+    width: auto;
+    max-width: 100%;
   }
 }
 

@@ -458,9 +458,11 @@ main ul ul, main ul ol, main ol ul, main ol ol {
 main li p:first-of-type {
   margin-top: 0;
 }
-main > img {
+main img {
   display: block;
   margin-top: 24px;
+  width: auto;
+  max-width: 100%;
 }
 
 footer {
