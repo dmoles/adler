@@ -51,7 +51,7 @@ func Build() error {
 // Install builds and installs the executable (depends on: test)
 //goland:noinspection GoUnusedExportedFunction
 func Install() error {
-	mg.Deps(Test)
+	mg.Deps(Test, Assets.Compile)
 
 	cmd := exec.Command("go", "install")
 	cmd.Stdout = os.Stdout
