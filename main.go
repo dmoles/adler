@@ -26,7 +26,7 @@ func main() {
 		},
 	}
 	cmd.Flags().IntVarP(&port, "port", "p", defaultPort, "port to listen on")
-	cmd.Flags().StringVar(&cssDir, "css", "", "alternate CSS/SCSS directory (must contain main.css or main.scss)")
+	cmd.Flags().StringVar(&cssDir, "css", "", "alternate CSS directory (must contain main.css)")
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

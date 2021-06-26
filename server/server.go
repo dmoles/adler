@@ -28,13 +28,13 @@ func (s *server) Start() error {
 
 	addr := fmt.Sprintf(":%d", s.port)
 
-  srv := &http.Server {
-		Handler: router,
-		Addr: addr,
+	srv := &http.Server{
+		Handler:      router,
+		Addr:         addr,
 		WriteTimeout: finishRequestTimeout,
-		ReadTimeout: finishRequestTimeout,
+		ReadTimeout:  finishRequestTimeout,
 	}
-	
+
 	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 		return err
 	}

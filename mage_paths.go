@@ -97,8 +97,8 @@ func (p *path) asNewAs(path string) (*bool, error) {
 		default:
 			op = "="
 		}
-		s1 := string([]byte { byte(p.gitStatus()) })
-		s2 := string([]byte { byte(p2.gitStatus()) })
+		s1 := string([]byte{byte(p.gitStatus())})
+		s2 := string([]byte{byte(p2.gitStatus())})
 		msg := fmt.Sprintf("%s (%v: %s) %s %s (%v: %s)", p.repoPath, s1, p.ModTimeString(), op, p2.repoPath, s2, p2.ModTimeString())
 		println(msg)
 	}

@@ -3,14 +3,12 @@ package server
 import (
 	"github.com/dmoles/adler/server/util"
 	"github.com/gorilla/mux"
-	"github.com/lithammer/dedent"
 	. "github.com/onsi/gomega"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"regexp"
-	"strings"
 	"testing"
 )
 
@@ -179,48 +177,6 @@ func TestCSSOverride(t *testing.T) {
 
 	body := recorder.Body.String()
 	expect(body).To(Equal(cssData))
-}
-
-func TestSCSSOverride(t *testing.T) {
-	cssDir, err := ioutil.TempDir("", "server_test_css_*")
-	if err == nil {
-		defer util.RemoveAllQuietly(cssDir)
-	} else {
-		t.Error(err)
-	}
-
-	var scssFiles = map[string]string{
-		"_colors.scss": "$penguin: #fff9e3;\n",
-		"main.scss":    "@import 'colors'; body { main { background-color: $penguin; } }",
-	}
-	for basename, data := range scssFiles {
-		scssPath := filepath.Join(cssDir, basename)
-		err = ioutil.WriteFile(scssPath, []byte(data), 0600)
-	}
-	if err != nil {
-		t.Error(err)
-	}
-
-	expect, recorder, router := setUpWithCSS(t, cssDir)
-
-	// Test serving local CSS
-	router.ServeHTTP(recorder, get(t, "/css/main.css"))
-	expect(recorder.Code).To(Equal(http.StatusOK))
-
-	result := recorder.Result()
-	contentTypes := result.Header["Content-Type"]
-	expect(contentTypes).To(HaveLen(1))
-	expect(contentTypes[0]).To(Equal("text/css; charset=utf-8"))
-
-	expectedCss := dedent.Dedent(`
-		body main {
-		  background-color: #fff9e3;
-		}
-	`)
-	expectedCss = strings.TrimPrefix(expectedCss, "\n")
-
-	body := recorder.Body.String()
-	expect(body).To(Equal(expectedCss))
 }
 
 func TestFavicon(t *testing.T) {

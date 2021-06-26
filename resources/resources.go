@@ -24,5 +24,3 @@ var defaultResources embed.FS
 var defaultBundle = func() Bundle {
 	return &bundle{"adler", defaultResources}
 }()
-
-

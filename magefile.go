@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bep/golibsass/libsass"
 	"github.com/magefile/mage/mg"
 )
 
@@ -29,6 +28,7 @@ const envSkipTests = "ADLER_SKIP_TESTS"
 const envSkipValidation = "ADLER_SKIP_VALIDATION"
 
 var scssDir = filepath.Dir(mainScss)
+var cssDir = filepath.Dir(mainCss)
 
 // ------------------------------------------------------------
 // Targets
@@ -126,48 +126,30 @@ func (Assets) Validate() error {
 func (Assets) Compile() error {
 	mg.Deps(Assets.Validate)
 
-	if asNewAsAll(mainCss, scssDir) {
-		println("CSS is up to date") // TODO: more consistent output
-		return nil
-	}
-
-	libsassOptions := libsass.Options{
-		IncludePaths: []string{scssDir},
-		OutputStyle:  libsass.ExpandedStyle,
-	}
-
-	println(fmt.Sprintf("Transpiling %v to %v", mainScss, mainCss))
 	if mg.Verbose() {
-		msg := fmt.Sprintf("libsass options: %#v", libsassOptions)
-		println(msg)
+		println("Ensuring output directory " + cssDir)
 	}
-
-	if mg.Verbose() {
-		println("Reading " + mainScss)
-	}
-	mainScss, err := readFileAsString(mainScss)
+	err := os.MkdirAll(cssDir, 0755)
 	if err != nil {
 		return err
 	}
 
-	transpiler, _ := libsass.New(libsassOptions)
-	result, err := transpiler.Execute(mainScss)
-	if err != nil {
-		return err
+	sass := ensureCommand("sass", "sass not found; did you run brew install sass/sass/sass or npm install -g sass?")
+
+	var sassQuietArg string
+	if mg.Verbose() {
+		sassQuietArg = "--no-quiet"
+	} else {
+		sassQuietArg = "--quiet"
 	}
 
+	cmd := exec.Command(sass, sassQuietArg, "--stop-on-error", scssDir+":"+cssDir)
+	cmd.Stdout = os.Stdout
 	if mg.Verbose() {
-		println("Ensuring output directory " + ("resources/css"))
+		cmd.Stderr = os.Stderr
+		println(strings.Join(cmd.Args, " "))
 	}
-	err = os.MkdirAll("resources/css", 0755)
-	if err != nil {
-		return err
-	}
-
-	if mg.Verbose() {
-		println("Writing " + mainCss)
-	}
-	return ioutil.WriteFile(mainCss, []byte(result.CSS), 0644)
+	return cmd.Run()
 }
 
 // ------------------------------------------------------------
@@ -191,25 +173,6 @@ func ignored(path string) bool {
 		panic(err)
 	}
 	return gi.MatchesPath(path)
-}
-
-func asNewAsAll(targetFile string, sourceDir string) bool {
-	if mg.Verbose() {
-		msg := fmt.Sprintf("Comparing %s, %s", targetFile, sourceDir)
-		println(msg)
-	}
-
-	p, err := newPath(targetFile)
-	if err != nil {
-		warn(err.Error())
-		return false
-	}
-	newEnough, err := p.asNewAsAny(sourceDir)
-	if err != nil {
-		warn(err.Error())
-		return false
-	}
-	return *newEnough
 }
 
 func sassLint(scssFile string) error {
