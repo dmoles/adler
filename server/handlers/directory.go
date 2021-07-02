@@ -46,10 +46,10 @@ func (h *directoryHandler) writeDirectory(w http.ResponseWriter, r *http.Request
 
 	title := markdown.AsTitle(resolvedPath)
 
-	bodyHtml, err := markdown.DirToHTML(resolvedPath, rootDir)
+	bodyHtml, _, err := markdown.DirToHTML(resolvedPath, rootDir)
 	if err != nil {
 		return err
 	}
 
-	return h.write(w, urlPath, title, bodyHtml)
+	return h.write(w, urlPath, title, nil, nil, bodyHtml)
 }

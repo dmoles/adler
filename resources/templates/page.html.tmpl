@@ -1,8 +1,11 @@
 <html lang="en">
 <head>
     <title>{{.Title}}</title>
-    <link rel="stylesheet" href="/css/main.css">
-
+    <link rel="stylesheet" href="/css/main.css"/>
+    {{range $stylesheet := .Stylesheets}}<link rel="stylesheet" href="{{$stylesheet}}"/>
+    {{end}}
+    {{range $script := .Scripts}}<script src="{{$script}}"></script>
+    {{end}}
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">

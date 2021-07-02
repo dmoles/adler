@@ -73,9 +73,10 @@ type server struct {
 func (s *server) newRouter() *mux.Router {
 	// TODO: support single-page version
 	r := mux.NewRouter()
-	for _, h := range handlers.All(s.rootDir, s.cssDir) {
+	for _, h := range handlers.All(s.rootDir) {
 		h.Register(r)
 	}
+
 	return r
 }
 

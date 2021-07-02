@@ -340,16 +340,16 @@ h3 {
 }
 
 h4 {
+  text-transform: uppercase;
   color: #17293a;
   font-size: 13.3333333333px;
   font-weight: 300;
 }
 
 h5 {
-  color: #0f161a;
+  color: #17293a;
   font-size: 13.3333333333px;
   font-weight: 300;
-  font-style: italic;
 }
 
 img.adler-icon {
@@ -368,6 +368,7 @@ hr {
 
 table {
   margin-top: 6px;
+  width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   line-height: 16px;
@@ -407,10 +408,6 @@ blockquote p {
 }
 blockquote cite::before {
   content: "— ";
-}
-
-:is(h1, h2, h3, h4, h5, h6) + blockquote {
-  margin-left: 0;
 }
 
 aside nav {

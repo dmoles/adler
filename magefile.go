@@ -5,7 +5,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -184,14 +183,6 @@ func sassLint(scssFile string) error {
 		println(strings.Join(cmd.Args, " "))
 	}
 	return cmd.Run()
-}
-
-func readFileAsString(path string) (string, error) {
-	buf, err := ioutil.ReadFile(path)
-	if err != nil {
-		return "", err
-	}
-	return string(buf), nil
 }
 
 func ensureCommand(cmdName, failureMsg string) string {

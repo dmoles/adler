@@ -7,36 +7,35 @@ import (
 	"net/http"
 )
 
-func FontResource() Handler {
-	return &resourceHandler{"/fonts/{path:.+}", "/fonts"}
-}
-
-func FaviconResource() Handler {
-	return &resourceHandler{"/{path:[^/]+\\.(?:ico|png|jpg|webmanifest)}", "/images/favicons"}
-}
-
 type resourceHandler struct {
-	pathTemplate string
-	dir          string
+}
+
+func ResourceHandler() Handler {
+	return &resourceHandler{}
 }
 
 func (h *resourceHandler) Register(r *mux.Router) {
-	r.HandleFunc(h.pathTemplate, h.handle)
+	r.MatcherFunc(h.isResource).HandlerFunc(h.handle)
+}
+
+func (h *resourceHandler) isResource(r *http.Request, _ *mux.RouteMatch) bool {
+	urlPath := r.URL.Path
+	_, err := resources.Resolve(urlPath)
+	return err == nil
 }
 
 func (h *resourceHandler) handle(w http.ResponseWriter, r *http.Request) {
-	if err := writeResource(h.dir, w, r); err != nil {
+	if err := writeResource(w, r); err != nil {
 		http.NotFound(w, r)
 		return
 	}
 }
 
-func writeResource(resourceDir string, w http.ResponseWriter, r *http.Request) error {
+func writeResource(w http.ResponseWriter, r *http.Request) error {
 	urlPath := r.URL.Path
 	// log.Printf("writeResource(): %v", urlPath)
 
-	relativePath := mux.Vars(r)["path"]
-	resource, err := resources.Resolve(resourceDir, relativePath)
+	resource, err := resources.Resolve(urlPath)
 	if err != nil {
 		return err
 	}

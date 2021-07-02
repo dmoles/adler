@@ -5,7 +5,9 @@ import (
 	"bytes"
 	"github.com/dmoles/adler/server/util"
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
 	"io"
 	"io/ioutil"
@@ -17,13 +19,16 @@ import (
 )
 
 var md = goldmark.New(
-	goldmark.WithExtensions(extension.GFM),
+	goldmark.WithExtensions(
+		meta.Meta,
+		extension.GFM,
+		),
 	goldmark.WithRendererOptions(html.WithUnsafe()),
 )
 
 const readmeMd = "README.md"
 
-func DirToHTML(resolvedPath string, rootDir string) ([]byte, error) {
+func DirToHTML(resolvedPath string, rootDir string) ([]byte, map[string]interface{}, error) {
 	readmePath := filepath.Join(resolvedPath, readmeMd)
 	if util.IsFile(readmePath) {
 		return FileToHtml(readmePath)
@@ -32,31 +37,31 @@ func DirToHTML(resolvedPath string, rootDir string) ([]byte, error) {
 	}
 }
 
-func FileToHtml(filePath string) ([]byte, error) {
+func FileToHtml(filePath string) ([]byte, map[string]interface{}, error) {
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		log.Printf("Error reading file %v: %v", filePath, err)
-		return nil, err
+		return nil, nil, err
 	}
 
-	htmlData, err := toHtml(data)
+	htmlData, metadata, err := toHtml(data)
 	if err != nil {
 		log.Printf("Error parsing file %v: %v", filePath, err)
-		return nil, err
+		return nil, nil, err
 	}
-	return htmlData, nil
+	return htmlData, metadata, nil
 }
 
-func DirToIndexHtml(dirPath string, rootDir string) ([]byte, error) {
+func DirToIndexHtml(dirPath string, rootDir string) ([]byte, map[string]interface{}, error) {
 	dirIndex, err := NewDirIndex(dirPath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	dirIndexHtml, err := dirIndex.ToHtml(rootDir)
+	dirIndexHtml, _, err := dirIndex.ToHtml(rootDir)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return dirIndexHtml, nil
+	return dirIndexHtml, nil, nil
 }
 
 func GetTitle(in io.Reader) string {
@@ -102,14 +107,15 @@ func ExtractTitle(path string) (string, error) {
 
 var headingRegexp = regexp.MustCompile("^[\\s#]*#+ +(.+)$")
 
-func stringToHtml(s string) ([]byte, error) {
+func stringToHtml(s string) ([]byte, map[string]interface{}, error) {
 	return toHtml([]byte(s))
 }
 
-func toHtml(markdown []byte) ([]byte, error) {
+func toHtml(markdown []byte) ([]byte, map[string]interface{}, error) {
 	var buf bytes.Buffer
-	if err := md.Convert(markdown, &buf); err != nil {
-		return nil, err
+	context := parser.NewContext()
+	if err := md.Convert(markdown, &buf, parser.WithContext(context)); err != nil {
+		return nil, nil, err
 	}
-	return buf.Bytes(), nil
+	return buf.Bytes(), meta.Get(context), nil
 }

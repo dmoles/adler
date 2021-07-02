@@ -65,6 +65,7 @@ func resolveUrlPath(urlPath string, rootDir string) (string, error) {
 	}
 	pathElements := strings.Split(decodedPath, "/")
 	for _, pathElement := range pathElements {
+		// TODO: find a standard library method that does this
 		if pathElement == ".." {
 			return "", errors.InvalidPath(urlPath)
 		}

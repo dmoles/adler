@@ -1,12 +1,15 @@
 package server
 
 import (
+	"fmt"
 	"github.com/dmoles/adler/server/util"
 	"github.com/gorilla/mux"
 	. "github.com/onsi/gomega"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"testing"
@@ -72,6 +75,32 @@ func TestMarkdown(t *testing.T) {
 	expect(body).To(ContainSubstring("<title>Hello</title>"))
 	expect(body).To(ContainSubstring("<h1>Hello</h1>"))
 	expect(body).To(ContainSubstring("<p>Hello, world</p>"))
+}
+
+func TestMarkdownMetadata(t *testing.T) {
+	expect, recorder, router := setUp(t)
+
+	expectedTitle := "The Real Title"
+	basename := "metadata-test.md"
+
+	urlPath := path.Join("/", basename)
+	router.ServeHTTP(recorder, get(t, urlPath))
+	expect(recorder.Code).To(Equal(http.StatusOK))
+
+	body := recorder.Body.String()
+	expect(body).To(ContainSubstring("<title>" + expectedTitle + "</title>"))
+	
+	expectedStylesheets := []string {"foo.css", "css/bar.css"}
+	for _, stylesheet := range expectedStylesheets {
+		expectedLink := fmt.Sprintf("<link rel=\"stylesheet\" href=\"%s\"/>", stylesheet)
+		expect(body).To(ContainSubstring(expectedLink))
+	}
+
+	expectedScripts := []string {"foo.js", "scripts/bar.js"}
+	for _, script := range expectedScripts {
+		expectedLink := fmt.Sprintf("<script src=\"%s\"></script>", script)
+		expect(body).To(ContainSubstring(expectedLink))
+	}
 }
 
 func TestDirectoryIndex(t *testing.T) {
@@ -150,7 +179,8 @@ func TestCSSResource(t *testing.T) {
 func TestCSSOverride(t *testing.T) {
 	// Setup
 
-	cssDir, err := ioutil.TempDir("", "server_test_css_*")
+	cssDir := filepath.Join(testdataDir(), "css")
+	err := os.Mkdir(cssDir, 0700)
 	if err == nil {
 		defer util.RemoveAllQuietly(cssDir)
 	} else {
@@ -159,6 +189,7 @@ func TestCSSOverride(t *testing.T) {
 
 	cssData := "body { background-color: #808000; }"
 	cssPath := filepath.Join(cssDir, "main.css")
+
 	err = ioutil.WriteFile(cssPath, []byte(cssData), 0600)
 	if err != nil {
 		t.Error(err)

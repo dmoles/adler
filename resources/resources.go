@@ -15,6 +15,9 @@ func Get(resourcePath string) (Resource, error) {
 // Unexported
 
 // TODO: figure out how resources work so we can do something a little less messy
+//go:embed *.ico
+//go:embed *.png
+//go:embed *.webmanifest
 //go:embed css
 //go:embed fonts
 //go:embed images

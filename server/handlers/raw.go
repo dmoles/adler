@@ -9,6 +9,7 @@ import (
 )
 
 func Raw(rootDir string) Handler {
+	// TODO: simplify this -- see https://github.com/gorilla/mux#static-files
 	return &rawHandler{rootDir: rootDir}
 }
 

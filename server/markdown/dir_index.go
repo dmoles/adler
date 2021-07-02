@@ -16,7 +16,7 @@ import (
 // Exported
 
 type DirIndex interface {
-	ToHtml(rootDir string) ([]byte, error)
+	ToHtml(rootDir string) ([]byte, map[string]interface{}, error)
 }
 
 func NewDirIndex(dirPath string) (DirIndex, error) {
@@ -40,14 +40,14 @@ type dirIndex struct {
 	pathsByTitle map[string]string
 }
 
-func (d *dirIndex) ToHtml(rootDir string) ([]byte, error) {
+func (d *dirIndex) ToHtml(rootDir string) ([]byte, map[string]interface{}, error) {
 	title, err := GetTitleFromFile(d.dirPath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	relPath, err := filepath.Rel(rootDir, d.dirPath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var sb strings.Builder

@@ -11,13 +11,11 @@ type Handler interface {
 	Register(r *mux.Router)
 }
 
-func All(rootDir string, cssDir string) []Handler {
+func All(rootDir string) []Handler {
 	return []Handler{
-		CSS(cssDir),
-		FontResource(),
-		FaviconResource(),
 		MarkdownFile(rootDir),
 		DirectoryIndex(rootDir),
 		Raw(rootDir),
+		ResourceHandler(),
 	}
 }
