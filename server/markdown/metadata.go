@@ -1,19 +1,55 @@
 package markdown
 
+const (
+	titleKey = "Title"
+	stylesKey = "Styles"
+	scriptsKey = "Scripts"
+)
+
+// ------------------------------------------------------------
 // Exported
 
 type Metadata map[string]interface{}
 
-func (m Metadata) GetString(k string) (string, bool) {
-	v, ok := m[k]
-	if !ok {
-		return "", false
-	}
-	s, ok := v.(string)
-	return s, ok
+func (m Metadata) Title() string {
+	return m.getString(titleKey)
 }
 
-func (m Metadata) GetMetadata(k string) (Metadata, bool) {
+func (m Metadata) Styles() []Stylesheet {
+	var styles []Stylesheet
+	for _, src := range m.getStrings(stylesKey) {
+		styles = append(styles, &stylesheet{src})
+	}
+	return styles
+}
+
+func (m Metadata) Scripts() []Script {
+	var scripts []Script
+	for _, md := range m.getMetadatas(scriptsKey) {
+		if s, ok := scriptFrom(md); ok {
+			scripts = append(scripts, s)
+		}
+	}
+	for _, src := range m.getStrings(scriptsKey) {
+		scripts = append(scripts, &script{src: src})
+	}
+
+	return scripts
+}
+
+// ------------------------------------------------------------
+// Unexported
+
+func (m Metadata) getString(k string) string {
+	v, ok := m[k]
+	if !ok {
+		return ""
+	}
+	s, ok := v.(string)
+	return s
+}
+
+func (m Metadata) getMetadata(k string) (Metadata, bool) {
 	v, ok := m[k]
 	if !ok {
 		return nil, false
@@ -22,11 +58,11 @@ func (m Metadata) GetMetadata(k string) (Metadata, bool) {
 	return m1, ok
 }
 
-// GetStrings given an array value for `k`, returns any strings in that
+// getStrings given an array value for `k`, returns any strings in that
 // array. The strings are guaranteed to appear in the same order as in the
 // original array, but any non-string values are ignored. If the given key
 // does not exist or is not an array value, an empty slice is returned.
-func (m Metadata) GetStrings(k string) (strings []string) {
+func (m Metadata) getStrings(k string) (strings []string) {
 
 	for _, v := range m.getArray(k) {
 		if s, ok := v.(string); ok {
@@ -36,11 +72,11 @@ func (m Metadata) GetStrings(k string) (strings []string) {
 	return strings
 }
 
-// GetMetadatas given an array value for `k`, returns any metadata objects
+// getMetadatas given an array value for `k`, returns any Metadata objects
 // in that array. The objects are guaranteed to appear in the same order
 // as in the original array, but any non-object values are ignored. If the
 // given key does not exist or is not an array value, an empty slice is returned.
-func (m Metadata) GetMetadatas(k string) (metadatas []Metadata) {
+func (m Metadata) getMetadatas(k string) (metadatas []Metadata) {
 	for _, v := range m.getArray(k) {
 		if m, ok := asMetadata(v); ok {
 			metadatas = append(metadatas, m)
@@ -48,8 +84,6 @@ func (m Metadata) GetMetadatas(k string) (metadatas []Metadata) {
 	}
 	return metadatas
 }
-
-// Unexported
 
 func asMetadata(v interface{}) (m Metadata, ok bool) {
 	m, ok = v.(map[string]interface{})
@@ -68,9 +102,8 @@ func (m Metadata) getArray(k string) []interface{} {
 	return a
 }
 
-
 //
-//func (m metadata) FindString(path... string) (string, error) {
+//func (m Metadata) FindString(path... string) (string, error) {
 //	var pathLen int = len(path)
 //	if pathLen == 0 {
 //		return "", nil

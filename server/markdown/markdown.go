@@ -37,21 +37,6 @@ func DirToHTML(resolvedPath string, rootDir string) ([]byte, map[string]interfac
 	}
 }
 
-func FileToHtml(filePath string) ([]byte, Metadata, error) {
-	data, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		log.Printf("Error reading file %v: %v", filePath, err)
-		return nil, nil, err
-	}
-
-	htmlData, metadata, err := toHtml(data)
-	if err != nil {
-		log.Printf("Error parsing file %v: %v", filePath, err)
-		return nil, nil, err
-	}
-	return htmlData, metadata, nil
-}
-
 func DirToIndexHtml(dirPath string, rootDir string) ([]byte, Metadata, error) {
 	dirIndex, err := NewDirIndex(dirPath)
 	if err != nil {
