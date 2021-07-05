@@ -2,9 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/util"
-	"github.com/gorilla/mux"
-	. "github.com/onsi/gomega"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -13,6 +10,11 @@ import (
 	"path/filepath"
 	"regexp"
 	"testing"
+
+	"github.com/gorilla/mux"
+	. "github.com/onsi/gomega"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 const (
@@ -73,7 +75,7 @@ func TestMarkdown(t *testing.T) {
 
 	body := recorder.Body.String()
 	expect(body).To(ContainSubstring("<title>Hello</title>"))
-	expect(body).To(ContainSubstring("<h1>Hello</h1>"))
+	expect(body).To(ContainSubstring("<h1 id=\"hello\">Hello</h1>"))
 	expect(body).To(ContainSubstring("<p>Hello, world</p>"))
 }
 
@@ -89,17 +91,19 @@ func TestMarkdownMetadata(t *testing.T) {
 
 	body := recorder.Body.String()
 	expect(body).To(ContainSubstring("<title>" + expectedTitle + "</title>"))
-	
-	expectedStylesheets := []string {"foo.css", "css/bar.css"}
+
+	expectedStylesheets := []string{"foo.css", "css/bar.css"}
 	for _, stylesheet := range expectedStylesheets {
 		expectedLink := fmt.Sprintf("<link rel=\"stylesheet\" href=\"%s\"/>", stylesheet)
 		expect(body).To(ContainSubstring(expectedLink))
 	}
 
-	expectedScripts := []string {"foo.js", "scripts/bar.js"}
+	expectedScripts := []string{
+		"<script src=\"foo.js\" type=\"module\"></script>",
+		"<script src=\"scripts/bar.js\"></script>",
+	}
 	for _, script := range expectedScripts {
-		expectedLink := fmt.Sprintf("<script src=\"%s\"></script>", script)
-		expect(body).To(ContainSubstring(expectedLink))
+		expect(body).To(ContainSubstring(script))
 	}
 }
 
@@ -128,6 +132,31 @@ func TestDirectoryIndex(t *testing.T) {
 	expect(main).To(ContainSubstring("<li><a href=\"/hello.md\">Hello</a></li>"))
 }
 
+func TestSubdirectoryIndex(t *testing.T) {
+	expect, recorder, router := setUp(t)
+
+	router.ServeHTTP(recorder, get(t, "/subdirectory/"))
+
+	result := recorder.Result()
+	contentTypes := result.Header["Content-Type"]
+	expect(contentTypes).To(HaveLen(1))
+	expect(contentTypes[0]).To(Equal("text/html; charset=utf-8"))
+
+	body := recorder.Body.String()
+	expect(body).To(ContainSubstring("<title>Subdirectory</title>"))
+
+	// nav should still be there in subdirectories
+	navRe := regexp.MustCompile("(?s)<nav>.*</nav>")
+	nav := navRe.FindString(body)
+	expect(nav).NotTo(BeEmpty())
+	expect(nav).To(ContainSubstring("<li><a href=\"../hello.md\">Hello</a></li>"))
+
+	mainRe := regexp.MustCompile("(?s)<main>.*</main>")
+	main := mainRe.FindString(body)
+	expect(main).NotTo(BeEmpty())
+	expect(main).To(ContainSubstring("<li><a href=\"hello-again.md\">Hello again</a></li>"))
+}
+
 func TestReadme(t *testing.T) {
 	expect, recorder, router := setUp(t)
 
@@ -146,7 +175,7 @@ func TestReadme(t *testing.T) {
 	expect(contentTypes[0]).To(Equal("text/html; charset=utf-8"))
 
 	body := recorder.Body.String()
-	expect(body).To(ContainSubstring("<title>Testdata</title>"))
+	expect(body).To(ContainSubstring("<title>Testing</title>"))
 
 	navRe := regexp.MustCompile("(?s)<nav>.*</nav>")
 	nav := navRe.FindString(body)
@@ -156,7 +185,7 @@ func TestReadme(t *testing.T) {
 	mainRe := regexp.MustCompile("(?s)<main>.*</main>")
 	main := mainRe.FindString(body)
 	expect(main).NotTo(BeEmpty())
-	expect(main).To(ContainSubstring("<h1>Testing</h1>"))
+	expect(main).To(ContainSubstring("<h1 id=\"testing\">Testing</h1>"))
 	expect(main).To(ContainSubstring("<p>Testing 123</p>"))
 	expect(main).NotTo(ContainSubstring("<li><a href=\"/README.md\">Testing</a></li>"))
 }

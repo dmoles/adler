@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"net/http"
+
+	"github.com/gorilla/mux"
+
 	"github.com/dmoles/adler/server/markdown"
 	"github.com/dmoles/adler/server/util"
-	"github.com/gorilla/mux"
-	"net/http"
 )
 
 func DirectoryIndex(rootDir string) Handler {
@@ -44,12 +46,10 @@ func (h *directoryHandler) writeDirectory(w http.ResponseWriter, r *http.Request
 		return err
 	}
 
-	title := markdown.AsTitle(resolvedPath)
-
-	bodyHtml, _, err := markdown.DirToHTML(resolvedPath, rootDir)
+	mf, err := markdown.ForDirectory(resolvedPath)
 	if err != nil {
 		return err
 	}
 
-	return h.write(w, urlPath, title, nil, nil, bodyHtml)
+	return h.write(w, urlPath, mf)
 }

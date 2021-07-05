@@ -2,10 +2,11 @@ package templates
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/resources"
 	"log"
 	"path"
 	"text/template"
+
+	"github.com/dmoles/adler/resources"
 )
 
 // ------------------------------------------------------------
@@ -25,12 +26,11 @@ func Page() *template.Template {
 }
 
 type PageData struct {
-	Header string
-	Title  string
-	TOC    string
-	Body   string
-	Stylesheets []string
-	Scripts []string
+	Header      string
+	Title       string
+	HeadElements []string
+	TOC         string
+	Body        string
 }
 
 // ------------------------------------------------------------

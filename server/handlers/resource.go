@@ -1,10 +1,12 @@
 package handlers
 
 import (
-	"github.com/dmoles/adler/resources"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
+
+	"github.com/dmoles/adler/resources"
 )
 
 type resourceHandler struct {

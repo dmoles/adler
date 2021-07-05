@@ -1,30 +1,30 @@
 package markdown
 
 const (
-	titleKey = "Title"
-	stylesKey = "Styles"
+	titleKey   = "Title"
+	stylesKey  = "Stylesheets"
 	scriptsKey = "Scripts"
 )
 
 // ------------------------------------------------------------
 // Exported
 
-type Metadata map[string]interface{}
+type metadata map[string]interface{}
 
-func (m Metadata) Title() string {
+func (m metadata) Title() string {
 	return m.getString(titleKey)
 }
 
-func (m Metadata) Styles() []Stylesheet {
-	var styles []Stylesheet
+func (m metadata) Styles() []*stylesheet {
+	var styles []*stylesheet
 	for _, src := range m.getStrings(stylesKey) {
 		styles = append(styles, &stylesheet{src})
 	}
 	return styles
 }
 
-func (m Metadata) Scripts() []Script {
-	var scripts []Script
+func (m metadata) Scripts() []*script {
+	var scripts []*script
 	for _, md := range m.getMetadatas(scriptsKey) {
 		if s, ok := scriptFrom(md); ok {
 			scripts = append(scripts, s)
@@ -40,7 +40,7 @@ func (m Metadata) Scripts() []Script {
 // ------------------------------------------------------------
 // Unexported
 
-func (m Metadata) getString(k string) string {
+func (m metadata) getString(k string) string {
 	v, ok := m[k]
 	if !ok {
 		return ""
@@ -49,7 +49,7 @@ func (m Metadata) getString(k string) string {
 	return s
 }
 
-func (m Metadata) getMetadata(k string) (Metadata, bool) {
+func (m metadata) getMetadata(k string) (metadata, bool) {
 	v, ok := m[k]
 	if !ok {
 		return nil, false
@@ -62,8 +62,7 @@ func (m Metadata) getMetadata(k string) (Metadata, bool) {
 // array. The strings are guaranteed to appear in the same order as in the
 // original array, but any non-string values are ignored. If the given key
 // does not exist or is not an array value, an empty slice is returned.
-func (m Metadata) getStrings(k string) (strings []string) {
-
+func (m metadata) getStrings(k string) (strings []string) {
 	for _, v := range m.getArray(k) {
 		if s, ok := v.(string); ok {
 			strings = append(strings, s)
@@ -72,11 +71,11 @@ func (m Metadata) getStrings(k string) (strings []string) {
 	return strings
 }
 
-// getMetadatas given an array value for `k`, returns any Metadata objects
+// getMetadatas given an array value for `k`, returns any metadata objects
 // in that array. The objects are guaranteed to appear in the same order
 // as in the original array, but any non-object values are ignored. If the
 // given key does not exist or is not an array value, an empty slice is returned.
-func (m Metadata) getMetadatas(k string) (metadatas []Metadata) {
+func (m metadata) getMetadatas(k string) (metadatas []metadata) {
 	for _, v := range m.getArray(k) {
 		if m, ok := asMetadata(v); ok {
 			metadatas = append(metadatas, m)
@@ -85,15 +84,23 @@ func (m Metadata) getMetadatas(k string) (metadatas []Metadata) {
 	return metadatas
 }
 
-func asMetadata(v interface{}) (m Metadata, ok bool) {
-	m, ok = v.(map[string]interface{})
-	if !ok {
-		m, ok = v.(Metadata)
+func asMetadata(v interface{}) (m metadata, ok bool) {
+	var h map[interface{}]interface{}
+	h, ok = v.(map[interface{}]interface{})
+	if ok {
+		m = make(metadata)
+		for k, v := range h {
+			if ks, ok := k.(string); ok {
+				m[ks] = v
+			}
+		}
+	} else {
+		m, ok = v.(metadata)
 	}
 	return m, ok
 }
 
-func (m Metadata) getArray(k string) []interface{} {
+func (m metadata) getArray(k string) []interface{} {
 	v, ok := m[k]
 	if !ok {
 		return nil
@@ -101,29 +108,3 @@ func (m Metadata) getArray(k string) []interface{} {
 	a, _ := v.([]interface{})
 	return a
 }
-
-//
-//func (m Metadata) FindString(path... string) (string, error) {
-//	var pathLen int = len(path)
-//	if pathLen == 0 {
-//		return "", nil
-//	}
-//
-//	p1 := path[0]
-//	val := m[p1]
-//	if val == nil {
-//		return "", nil
-//	}
-//
-//	if pathLen == 1 {
-//		if valStr, ok := val.(string); ok {
-//			return valStr, nil
-//		} else {
-//			return "", fmt.Errorf("bad m: expected string value for key %#s, got %T: %#v", p1, val, val)
-//		}
-//	}
-//	if valMap, ok := val.(map[string]interface{}); ok {
-//		return valMap.FindString(path[1:]...)
-//	}
-//	return "", fmt.Errorf("bad m: expected map value for key %#s, got %R: %#v", p1, val, val)
-//}

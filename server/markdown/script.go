@@ -2,16 +2,6 @@ package markdown
 
 import "fmt"
 
-// ------------------------------------------------------------
-// Exported
-
-type Script interface {
-	ToHtml() string
-}
-
-// ------------------------------------------------------------
-// Unexported
-
 type script struct {
 	src string
 	typ string
@@ -19,13 +9,13 @@ type script struct {
 
 func (s *script) ToHtml() string {
 	if s.typ == "" {
-		return fmt.Sprintf("<script src='%s'></script>", s.src)
+		return fmt.Sprintf("<script src=\"%s\"></script>", s.src)
 	} else {
-		return fmt.Sprintf("<script src='%s' type='%s'></script>", s.src, s.typ)
+		return fmt.Sprintf("<script src=\"%s\" type=\"%s\"></script>", s.src, s.typ)
 	}
 }
 
-func scriptFrom(md Metadata) (Script, bool) {
+func scriptFrom(md metadata) (*script, bool) {
 	src := md.getString("src")
 	if src != "" {
 		s := script{

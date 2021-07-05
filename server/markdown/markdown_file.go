@@ -1,69 +1,55 @@
 package markdown
 
-import (
-	"io/ioutil"
-	"log"
-)
-
 // ------------------------------------------------------------
 // Exported
 
 type MarkdownFile interface {
-
+	Title() Title
+	Head() []Html
+	MainContent() Html
+	Headings() []Heading // TODO: use this to generate TOC
 }
-
-func MarkdownFileFrom(resolvedPath string) (MarkdownFile, error) {
-	md, bodyHtml, err := readMarkdown(resolvedPath)
-	if err != nil {
-		return nil, err
-	}
-
-	title := md.Title()
-	if title == "" {
-		// TODO: replace this with something that parses bodyHtml
-		title, _ = ExtractTitle(resolvedPath)
-	}
-
-	mf := &markdownFile {
-		title: title,
-		bodyHtml:    bodyHtml,
-		scripts:     md.Scripts(),
-		stylesheets: md.Styles(),
-	}
-	return mf, nil
-}
-
-
 
 // ------------------------------------------------------------
 // Unexported
 
 type markdownFile struct {
-	title string
-	bodyHtml []byte
-	stylesheets []Stylesheet
-	scripts []Script
+	title       *title
+	mainContent *mainContent
+	stylesheets []*stylesheet
+	scripts     []*script
+	headings []Heading
 }
 
-func (m *markdownFile) Stylesheets() []Stylesheet {
-	return m.stylesheets
-}
-
-func (m *markdownFile) Scripts() []Script {
-	return m.scripts
-}
-
-func readMarkdown(filePath string) (Metadata, []byte, error) {
-	data, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		log.Printf("Error reading file %v: %v", filePath, err)
-		return nil, nil, err
+func fromParseResult(titleTxt string, mc *mainContent, md metadata, headings []Heading) *markdownFile {
+	return &markdownFile{
+		title:       &title{text: titleTxt},
+		mainContent: mc,
+		scripts:     md.Scripts(),
+		stylesheets: md.Styles(),
+		headings:    headings,
 	}
+}
 
-	htmlData, metadata, err := toHtml(data)
-	if err != nil {
-		log.Printf("Error parsing file %v: %v", filePath, err)
-		return nil, nil, err
+func (m *markdownFile) Title() Title {
+	return m.title
+}
+
+func (m *markdownFile) Head() []Html {
+	var head []Html
+	for _, ss := range m.stylesheets {
+		head = append(head, ss)
 	}
-	return metadata, htmlData, nil
+	for _, sc := range m.scripts {
+		head = append(head, sc)
+	}
+	return head
+}
+
+func (m *markdownFile) MainContent() Html {
+	return m.mainContent
+}
+
+func (m *markdownFile) Headings() []Heading {
+	return m.headings
 }

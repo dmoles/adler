@@ -13,7 +13,7 @@ type Handler interface {
 
 func All(rootDir string) []Handler {
 	return []Handler{
-		MarkdownFile(rootDir),
+		Markdown(rootDir),
 		DirectoryIndex(rootDir),
 		Raw(rootDir),
 		ResourceHandler(),

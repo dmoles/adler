@@ -4,7 +4,8 @@ Stylesheets:
   - foo.css
   - css/bar.css
 Scripts:
-  - foo.js
+  - src: foo.js
+    type: module
   - scripts/bar.js
 ---
 

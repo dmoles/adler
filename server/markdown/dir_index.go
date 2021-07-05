@@ -2,73 +2,79 @@ package markdown
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/util"
-	"io"
 	"io/ioutil"
 	"log"
 	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 // ------------------------------------------------------------
-// Exported
+// Unexported
 
-type DirIndex interface {
-	ToHtml(rootDir string) ([]byte, map[string]interface{}, error)
+type dirIndex struct {
+	title        string
+	dirPath      string
+	titles       []string
+	pathsByTitle map[string]string
 }
 
-func NewDirIndex(dirPath string) (DirIndex, error) {
+func newDirIndex(dirPath string) (*dirIndex, error) {
+	var title string
+
+	readmePath := filepath.Join(dirPath, readmeMd)
+	if util.IsFile(readmePath) {
+		mf, err := FromFile(readmePath)
+		if err != nil {
+			return nil, err
+		}
+		title = mf.Title().Text()
+	}
+	if title == "" {
+		stem := filepath.Base(dirPath)
+		title = strings.Title(stem)
+	}
+
 	pathsByTitle, err := getPathsByTitle(dirPath)
 	if err != nil {
 		return nil, err
 	}
+
 	return &dirIndex{
+		title:        title,
 		dirPath:      dirPath,
 		titles:       sortedTitles(pathsByTitle),
 		pathsByTitle: pathsByTitle,
 	}, nil
 }
 
-// ------------------------------------------------------------
-// Unexported
-
-type dirIndex struct {
-	dirPath      string
-	titles       []string
-	pathsByTitle map[string]string
-}
-
-func (d *dirIndex) ToHtml(rootDir string) ([]byte, map[string]interface{}, error) {
-	title, err := GetTitleFromFile(d.dirPath)
-	if err != nil {
-		return nil, nil, err
-	}
-	relPath, err := filepath.Rel(rootDir, d.dirPath)
-	if err != nil {
-		return nil, nil, err
-	}
+func (d *dirIndex) toMarkdownFile(basePath string) (MarkdownFile, error) {
+	dirPath := d.dirPath
+	relPath := filepath.Base(dirPath)
 
 	var sb strings.Builder
 	//noinspection GoUnhandledErrorResult
-	fmt.Fprintf(&sb, "# [%s](%s)\n\n", title, relPath)
-	d.WriteMarkdown(&sb, rootDir)
+	fmt.Fprintf(&sb, "# [%s](%s)\n\n", d.title, relPath)
 
-	return stringToHtml(sb.String())
-}
-
-//noinspection GoUnhandledErrorResult
-func (d *dirIndex) WriteMarkdown(w io.Writer, rootDir string) {
 	for _, title := range d.titles {
 		path := d.pathsByTitle[title]
-		relPath, err := filepath.Rel(rootDir, path)
+		relPath, err := filepath.Rel(basePath, path)
 		if err != nil {
 			log.Printf("Error determining relative path to file: %v: %v", path, err)
 			continue
 		}
-		fmt.Fprintf(w, "- [%v](/%v)\n", title, relPath)
+		//noinspection GoUnhandledErrorResult
+		fmt.Fprintf(&sb, "- [%v](%v)\n", title, relPath)
 	}
+
+	mc, md, err := parseString(sb.String())
+	if err != nil {
+		return nil, err
+	}
+	return fromParseResult(d.title, mc, md, nil), nil
 }
 
 // ------------------------------
@@ -90,11 +96,7 @@ func sortedTitles(pathsByTitle map[string]string) []string {
 }
 
 func getPathsByTitle(dirPath string) (map[string]string, error) {
-	dirPath, err := util.ToAbsoluteDirectory(dirPath)
-	if err != nil {
-		return nil, err
-	}
-
+	// TODO: cache this so we're not constantly reparsing every file
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, err
@@ -102,19 +104,26 @@ func getPathsByTitle(dirPath string) (map[string]string, error) {
 
 	pathsByTitle := map[string]string{}
 	for _, info := range files {
-		filename := info.Name()
-		if filename == readmeMd || strings.HasPrefix(filename, ".") {
+		baseName := info.Name()
+		if baseName == readmeMd || strings.HasPrefix(baseName, ".") {
 			continue
 		}
-		if !(info.IsDir() || strings.HasSuffix(filename, ".md")) {
+		if !(info.IsDir() || strings.HasSuffix(baseName, mdExt)) {
 			continue
 		}
-		fullPath := filepath.Join(dirPath, filename)
-		title, err := GetTitleFromFile(fullPath)
+		var mf MarkdownFile
+
+		fullPath := filepath.Join(dirPath, baseName)
+		if util.IsDirectory(fullPath) {
+			mf, err = ForDirectory(fullPath)
+		} else {
+			mf, err = FromFile(fullPath)
+		}
 		if err != nil {
 			log.Printf("Error determining title from file: %v: %v", fullPath, err)
 			continue
 		}
+		title := mf.Title().Text()
 		pathsByTitle[title] = fullPath
 	}
 

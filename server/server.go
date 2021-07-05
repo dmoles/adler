@@ -3,13 +3,15 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/dmoles/adler/server/handlers"
-	"github.com/dmoles/adler/server/util"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"path/filepath"
 	"time"
+
+	"github.com/gorilla/mux"
+
+	"github.com/dmoles/adler/server/handlers"
+	"github.com/dmoles/adler/server/util"
 )
 
 // ------------------------------------------------------------

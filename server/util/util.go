@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/errors"
 	"log"
 	"mime"
 	"net/http"
@@ -12,6 +11,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/dmoles/adler/server/errors"
 )
 
 func ToAbsoluteDirectory(dirPath string) (string, error) {
@@ -58,7 +59,7 @@ func ToAbsoluteFile(filePath string) (string, error) {
 
 // TODO: recreate a Resolver object and move these to it
 
-func resolveUrlPath(urlPath string, rootDir string) (string, error) {
+func ResolveUrlPath(urlPath string, rootDir string) (string, error) {
 	decodedPath, err := url.PathUnescape(urlPath)
 	if err != nil {
 		return "", errors.InvalidPath(urlPath)
@@ -74,7 +75,7 @@ func resolveUrlPath(urlPath string, rootDir string) (string, error) {
 }
 
 func UrlPathToDirectory(urlDirPath string, rootDir string) (string, error) {
-	resolved, err := resolveUrlPath(urlDirPath, rootDir)
+	resolved, err := ResolveUrlPath(urlDirPath, rootDir)
 	if err != nil {
 		return "", err
 	}
@@ -82,7 +83,7 @@ func UrlPathToDirectory(urlDirPath string, rootDir string) (string, error) {
 }
 
 func UrlPathToFile(urlFilePath string, rootDir string) (string, error) {
-	resolved, err := resolveUrlPath(urlFilePath, rootDir)
+	resolved, err := ResolveUrlPath(urlFilePath, rootDir)
 	if err != nil {
 		return "", err
 	}
