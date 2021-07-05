@@ -58,8 +58,15 @@ func (d *dirIndex) toMarkdownFile() (MarkdownFile, error) {
 	absPath, err := util.ToAbsoluteUrlPath(dirPath, d.rootDir)
 
 	var sb strings.Builder
-	//noinspection GoUnhandledErrorResult
-	fmt.Fprintf(&sb, "# [%s](%s)\n\n", d.title, absPath)
+
+	// Only link the title if this is the root
+	if isRoot, err := util.SameFilePath(dirPath, d.rootDir); isRoot && err == nil {
+		//noinspection GoUnhandledErrorResult
+		fmt.Fprintf(&sb, "# [%s](%s)\n\n", d.title, absPath)
+	} else {
+		//noinspection GoUnhandledErrorResult
+		fmt.Fprintf(&sb, "# %s\n\n", d.title)
+	}
 
 	for _, title := range d.titles {
 		filePath := d.pathsByTitle[title]
@@ -117,7 +124,11 @@ func getPathsByTitle(dirPath string, rootDir string) (map[string]string, error) 
 
 		fullPath := filepath.Join(dirPath, baseName)
 		if util.IsDirectory(fullPath) {
-			mf, err = ForDirectory(fullPath, rootDir)
+			if util.ContainsMarkdown(fullPath) {
+				mf, err = ForDirectory(fullPath, rootDir)
+			} else {
+				continue
+			}
 		} else {
 			mf, err = FromFile(fullPath)
 		}

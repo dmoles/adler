@@ -34,6 +34,14 @@ func IsDirectory(dirPath string) bool {
 	return f.IsDir()
 }
 
+func ContainsMarkdown(dirPath string) bool {
+	matches, err := filepath.Glob(dirPath + "/*.md")
+	if err != nil {
+		return false
+	}
+	return len(matches) > 0
+}
+
 func IsFile(dirPath string) bool {
 	f, err := os.Stat(dirPath)
 	if err != nil {
@@ -97,6 +105,18 @@ func ToAbsoluteUrlPath(filePath string, rootDir string) (string, error) {
 	}
 	urlPath := filepath.ToSlash(relPath)
 	return path.Join("/", urlPath), nil
+}
+
+func SameFilePath(p1 string, p2 string) (bool, error) {
+	p1Abs, err := filepath.Abs(p1)
+	if err != nil {
+		return false, err
+	}
+	p2Abs, err := filepath.Abs(p2)
+	if err != nil {
+		return false, err
+	}
+	return p1Abs == p2Abs, nil
 }
 
 func ContentType(urlPath string) string {
