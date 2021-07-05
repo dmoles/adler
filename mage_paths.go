@@ -4,13 +4,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/util"
-	"github.com/go-git/go-git/v5"
-	"github.com/magefile/mage/mg"
 	"io"
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/go-git/go-git/v5"
+	"github.com/magefile/mage/mg"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 func newPath(relPath string) (*path, error) {

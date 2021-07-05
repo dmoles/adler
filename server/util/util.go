@@ -90,6 +90,15 @@ func UrlPathToFile(urlFilePath string, rootDir string) (string, error) {
 	return ToAbsoluteFile(resolved)
 }
 
+func ToAbsoluteUrlPath(filePath string, rootDir string) (string, error) {
+	relPath, err := filepath.Rel(rootDir, filePath)
+	if err != nil {
+		return "", err
+	}
+	urlPath := filepath.ToSlash(relPath)
+	return path.Join("/", urlPath), nil
+}
+
 func ContentType(urlPath string) string {
 	// TODO: use http.DetectContentType() instead?
 	if path.Base(urlPath) == "site.webmanifest" {

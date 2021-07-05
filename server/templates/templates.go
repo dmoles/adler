@@ -26,11 +26,11 @@ func Page() *template.Template {
 }
 
 type PageData struct {
-	Header      string
-	Title       string
+	Header       string
+	Title        string
 	HeadElements []string
-	TOC         string
-	Body        string
+	TOC          string
+	Body         string
 }
 
 // ------------------------------------------------------------

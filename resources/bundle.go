@@ -1,12 +1,13 @@
 package resources
 
 import (
-	"github.com/dmoles/adler/server/util"
 	"io/fs"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 // ------------------------------------------------------------

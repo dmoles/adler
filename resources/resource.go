@@ -2,7 +2,6 @@ package resources
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/util"
 	"io"
 	"io/fs"
 	"io/ioutil"
@@ -11,6 +10,8 @@ import (
 	"path"
 	"strconv"
 	"strings"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 // Resource An individual resource

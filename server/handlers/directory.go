@@ -46,7 +46,7 @@ func (h *directoryHandler) writeDirectory(w http.ResponseWriter, r *http.Request
 		return err
 	}
 
-	mf, err := markdown.ForDirectory(resolvedPath)
+	mf, err := markdown.ForDirectory(resolvedPath, rootDir)
 	if err != nil {
 		return err
 	}

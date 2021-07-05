@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"crypto/md5"
 	"fmt"
-	"github.com/dmoles/adler/server/util"
-	"github.com/get-woke/go-gitignore"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/get-woke/go-gitignore"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 // ------------------------------------------------------------

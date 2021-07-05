@@ -45,21 +45,21 @@ func FromFile(filePath string) (MarkdownFile, error) {
 	return fromParseResult(titleTxt, mc, md, headings), nil
 }
 
-func ForDirectory(dirPath string) (MarkdownFile, error) {
+func ForDirectory(dirPath string, rootDir string) (MarkdownFile, error) {
 	readmePath := filepath.Join(dirPath, readmeMd)
 	if util.IsFile(readmePath) {
 		return FromFile(readmePath)
 	}
 
-	return DirectoryIndex(dirPath, dirPath)
+	return DirectoryIndex(dirPath, rootDir)
 }
 
-func DirectoryIndex(dirPath string, basePath string) (MarkdownFile, error) {
-	dx, err := newDirIndex(dirPath)
+func DirectoryIndex(dirPath string, rootDir string) (MarkdownFile, error) {
+	dx, err := newDirIndex(dirPath, rootDir)
 	if err != nil {
 		return nil, err
 	}
-	return dx.toMarkdownFile(basePath)
+	return dx.toMarkdownFile()
 }
 
 var md = goldmark.New(

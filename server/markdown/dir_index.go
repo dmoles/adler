@@ -18,11 +18,12 @@ import (
 type dirIndex struct {
 	title        string
 	dirPath      string
+	rootDir      string
 	titles       []string
 	pathsByTitle map[string]string
 }
 
-func newDirIndex(dirPath string) (*dirIndex, error) {
+func newDirIndex(dirPath string, rootDir string) (*dirIndex, error) {
 	var title string
 
 	readmePath := filepath.Join(dirPath, readmeMd)
@@ -38,7 +39,7 @@ func newDirIndex(dirPath string) (*dirIndex, error) {
 		title = strings.Title(stem)
 	}
 
-	pathsByTitle, err := getPathsByTitle(dirPath)
+	pathsByTitle, err := getPathsByTitle(dirPath, rootDir)
 	if err != nil {
 		return nil, err
 	}
@@ -46,28 +47,29 @@ func newDirIndex(dirPath string) (*dirIndex, error) {
 	return &dirIndex{
 		title:        title,
 		dirPath:      dirPath,
+		rootDir:      rootDir,
 		titles:       sortedTitles(pathsByTitle),
 		pathsByTitle: pathsByTitle,
 	}, nil
 }
 
-func (d *dirIndex) toMarkdownFile(basePath string) (MarkdownFile, error) {
+func (d *dirIndex) toMarkdownFile() (MarkdownFile, error) {
 	dirPath := d.dirPath
-	relPath := filepath.Base(dirPath)
+	absPath, err := util.ToAbsoluteUrlPath(dirPath, d.rootDir)
 
 	var sb strings.Builder
 	//noinspection GoUnhandledErrorResult
-	fmt.Fprintf(&sb, "# [%s](%s)\n\n", d.title, relPath)
+	fmt.Fprintf(&sb, "# [%s](%s)\n\n", d.title, absPath)
 
 	for _, title := range d.titles {
-		path := d.pathsByTitle[title]
-		relPath, err := filepath.Rel(basePath, path)
+		filePath := d.pathsByTitle[title]
+		absPath, err = util.ToAbsoluteUrlPath(filePath, d.rootDir)
 		if err != nil {
-			log.Printf("Error determining relative path to file: %v: %v", path, err)
+			log.Printf("Error determining relative path to file: %v: %v", filePath, err)
 			continue
 		}
 		//noinspection GoUnhandledErrorResult
-		fmt.Fprintf(&sb, "- [%v](%v)\n", title, relPath)
+		fmt.Fprintf(&sb, "- [%v](%v)\n", title, absPath)
 	}
 
 	mc, md, err := parseString(sb.String())
@@ -95,7 +97,7 @@ func sortedTitles(pathsByTitle map[string]string) []string {
 	return titles
 }
 
-func getPathsByTitle(dirPath string) (map[string]string, error) {
+func getPathsByTitle(dirPath string, rootDir string) (map[string]string, error) {
 	// TODO: cache this so we're not constantly reparsing every file
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
@@ -115,7 +117,7 @@ func getPathsByTitle(dirPath string) (map[string]string, error) {
 
 		fullPath := filepath.Join(dirPath, baseName)
 		if util.IsDirectory(fullPath) {
-			mf, err = ForDirectory(fullPath)
+			mf, err = ForDirectory(fullPath, rootDir)
 		} else {
 			mf, err = FromFile(fullPath)
 		}

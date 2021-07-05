@@ -18,7 +18,7 @@ type markdownFile struct {
 	mainContent *mainContent
 	stylesheets []*stylesheet
 	scripts     []*script
-	headings []Heading
+	headings    []Heading
 }
 
 func fromParseResult(titleTxt string, mc *mainContent, md metadata, headings []Heading) *markdownFile {

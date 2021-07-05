@@ -14,8 +14,7 @@ type markdownHandlerBase struct {
 }
 
 func (h *markdownHandlerBase) write(w http.ResponseWriter, urlPath string, mf markdown.MarkdownFile) error {
-	resolvedPath, err := util.ResolveUrlPath(urlPath, h.rootDir)
-	rootIndex, err := markdown.DirectoryIndex(h.rootDir, resolvedPath)
+	rootIndex, err := markdown.DirectoryIndex(h.rootDir, h.rootDir)
 	if err != nil {
 		return err
 	}

@@ -149,12 +149,37 @@ func TestSubdirectoryIndex(t *testing.T) {
 	navRe := regexp.MustCompile("(?s)<nav>.*</nav>")
 	nav := navRe.FindString(body)
 	expect(nav).NotTo(BeEmpty())
-	expect(nav).To(ContainSubstring("<li><a href=\"../hello.md\">Hello</a></li>"))
+	expect(nav).To(ContainSubstring("<li><a href=\"/hello.md\">Hello</a></li>"))
 
 	mainRe := regexp.MustCompile("(?s)<main>.*</main>")
 	main := mainRe.FindString(body)
 	expect(main).NotTo(BeEmpty())
-	expect(main).To(ContainSubstring("<li><a href=\"hello-again.md\">Hello again</a></li>"))
+	expect(main).To(ContainSubstring("<li><a href=\"/subdirectory/hello-again.md\">hello again</a></li>"))
+}
+
+func TestSubdirectoryWithoutTrailingSlash(t *testing.T) {
+	expect, recorder, router := setUp(t)
+
+	router.ServeHTTP(recorder, get(t, "/subdirectory/"))
+
+	result := recorder.Result()
+	contentTypes := result.Header["Content-Type"]
+	expect(contentTypes).To(HaveLen(1))
+	expect(contentTypes[0]).To(Equal("text/html; charset=utf-8"))
+
+	body := recorder.Body.String()
+	expect(body).To(ContainSubstring("<title>Subdirectory</title>"))
+
+	// nav should still be there in subdirectories
+	navRe := regexp.MustCompile("(?s)<nav>.*</nav>")
+	nav := navRe.FindString(body)
+	expect(nav).NotTo(BeEmpty())
+	expect(nav).To(ContainSubstring("<li><a href=\"/hello.md\">Hello</a></li>"))
+
+	mainRe := regexp.MustCompile("(?s)<main>.*</main>")
+	main := mainRe.FindString(body)
+	expect(main).NotTo(BeEmpty())
+	expect(main).To(ContainSubstring("<li><a href=\"/subdirectory/hello-again.md\">hello again</a></li>"))
 }
 
 func TestReadme(t *testing.T) {
