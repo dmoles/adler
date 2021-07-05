@@ -2,10 +2,11 @@ package templates
 
 import (
 	"fmt"
-	resources2 "github.com/dmoles/adler/resources"
 	"log"
 	"path"
 	"text/template"
+
+	"github.com/dmoles/adler/resources"
 )
 
 // ------------------------------------------------------------
@@ -25,10 +26,11 @@ func Page() *template.Template {
 }
 
 type PageData struct {
-	Header string
-	Title  string
-	TOC    string
-	Body   string
+	Header       string
+	Title        string
+	HeadElements []string
+	TOC          string
+	Body         string
 }
 
 // ------------------------------------------------------------
@@ -36,7 +38,7 @@ type PageData struct {
 
 func load(name string) *template.Template {
 	tmplPath := path.Join("/templates", name)
-	resource, err := resources2.Get(tmplPath)
+	resource, err := resources.Get(tmplPath)
 	if err != nil {
 		msg := fmt.Sprintf("Error locating template %s: %v", tmplPath, err)
 		log.Fatal(msg)

@@ -1,14 +1,17 @@
 package handlers
 
 import (
-	"github.com/dmoles/adler/server/util"
-	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 func Raw(rootDir string) Handler {
+	// TODO: simplify this -- see https://github.com/gorilla/mux#static-files
 	return &rawHandler{rootDir: rootDir}
 }
 

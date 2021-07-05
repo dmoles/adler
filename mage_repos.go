@@ -3,11 +3,13 @@
 package main
 
 import (
-	"github.com/dmoles/adler/server/util"
-	ignore "github.com/get-woke/go-gitignore"
-	"github.com/go-git/go-git/v5"
 	"os/exec"
 	"time"
+
+	ignore "github.com/get-woke/go-gitignore"
+	"github.com/go-git/go-git/v5"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 var repo *git.Repository

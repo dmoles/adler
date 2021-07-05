@@ -2,7 +2,6 @@ package resources
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/util"
 	"io"
 	"io/fs"
 	"io/ioutil"
@@ -11,6 +10,8 @@ import (
 	"path"
 	"strconv"
 	"strings"
+
+	"github.com/dmoles/adler/server/util"
 )
 
 // Resource An individual resource
@@ -27,14 +28,14 @@ type Resource interface {
 	ContentType() string
 }
 
-func Resolve(resourceDir string, relativePath string) (Resource, error) {
+func Resolve(relativePath string) (Resource, error) {
 	relativePathClean := path.Clean(relativePath)
+	// TODO: can either of these ever happen?
 	if relativePath == "" || strings.Contains(relativePath, "..") {
 		return nil, fmt.Errorf("invalid resource path: %v", relativePath)
 	}
-
-	resolvedPath := path.Join(resourceDir, relativePathClean)
-	return Get(resolvedPath)
+	relativePathClean = strings.TrimPrefix(relativePathClean, "/")
+	return Get(relativePathClean)
 }
 
 // ------------------------------------------------------------

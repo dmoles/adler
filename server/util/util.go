@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/errors"
 	"log"
 	"mime"
 	"net/http"
@@ -12,6 +11,8 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/dmoles/adler/server/errors"
 )
 
 func ToAbsoluteDirectory(dirPath string) (string, error) {
@@ -31,6 +32,14 @@ func IsDirectory(dirPath string) bool {
 		return false
 	}
 	return f.IsDir()
+}
+
+func ContainsMarkdown(dirPath string) bool {
+	matches, err := filepath.Glob(dirPath + "/*.md")
+	if err != nil {
+		return false
+	}
+	return len(matches) > 0
 }
 
 func IsFile(dirPath string) bool {
@@ -58,13 +67,14 @@ func ToAbsoluteFile(filePath string) (string, error) {
 
 // TODO: recreate a Resolver object and move these to it
 
-func resolveUrlPath(urlPath string, rootDir string) (string, error) {
+func ResolveUrlPath(urlPath string, rootDir string) (string, error) {
 	decodedPath, err := url.PathUnescape(urlPath)
 	if err != nil {
 		return "", errors.InvalidPath(urlPath)
 	}
 	pathElements := strings.Split(decodedPath, "/")
 	for _, pathElement := range pathElements {
+		// TODO: find a standard library method that does this
 		if pathElement == ".." {
 			return "", errors.InvalidPath(urlPath)
 		}
@@ -73,7 +83,7 @@ func resolveUrlPath(urlPath string, rootDir string) (string, error) {
 }
 
 func UrlPathToDirectory(urlDirPath string, rootDir string) (string, error) {
-	resolved, err := resolveUrlPath(urlDirPath, rootDir)
+	resolved, err := ResolveUrlPath(urlDirPath, rootDir)
 	if err != nil {
 		return "", err
 	}
@@ -81,11 +91,32 @@ func UrlPathToDirectory(urlDirPath string, rootDir string) (string, error) {
 }
 
 func UrlPathToFile(urlFilePath string, rootDir string) (string, error) {
-	resolved, err := resolveUrlPath(urlFilePath, rootDir)
+	resolved, err := ResolveUrlPath(urlFilePath, rootDir)
 	if err != nil {
 		return "", err
 	}
 	return ToAbsoluteFile(resolved)
+}
+
+func ToAbsoluteUrlPath(filePath string, rootDir string) (string, error) {
+	relPath, err := filepath.Rel(rootDir, filePath)
+	if err != nil {
+		return "", err
+	}
+	urlPath := filepath.ToSlash(relPath)
+	return path.Join("/", urlPath), nil
+}
+
+func SameFilePath(p1 string, p2 string) (bool, error) {
+	p1Abs, err := filepath.Abs(p1)
+	if err != nil {
+		return false, err
+	}
+	p2Abs, err := filepath.Abs(p2)
+	if err != nil {
+		return false, err
+	}
+	return p1Abs == p2Abs, nil
 }
 
 func ContentType(urlPath string) string {

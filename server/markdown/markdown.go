@@ -1,115 +1,104 @@
 package markdown
 
 import (
-	"bufio"
 	"bytes"
-	"github.com/dmoles/adler/server/util"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/renderer/html"
-	"io"
 	"io/ioutil"
 	"log"
-	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
+
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark-meta"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
+
+	"github.com/dmoles/adler/server/util"
 )
+
+// ------------------------------------------------------------
+// Exported
+
+// TODO: cache this so we don't keep parsing everything repeatedly
+func FromFile(filePath string) (MarkdownFile, error) {
+	mc, md, err := parseFile(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	headings := findHeadings(filePath)
+
+	titleTxt := md.Title()
+	if titleTxt == "" {
+		titleTxt = titleFromHeadings(headings)
+	}
+	if titleTxt == "" {
+		baseName := filepath.Base(filePath)
+		stem := strings.TrimSuffix(baseName, mdExt)
+		if strings.ToUpper(stem) == readme {
+			dirPath := filepath.Dir(filePath)
+			stem = filepath.Base(dirPath)
+		}
+		titleTxt = strings.Title(stem)
+	}
+
+	return fromParseResult(titleTxt, mc, md, headings), nil
+}
+
+func ForDirectory(dirPath string, rootDir string) (MarkdownFile, error) {
+	readmePath := filepath.Join(dirPath, readmeMd)
+	if util.IsFile(readmePath) {
+		return FromFile(readmePath)
+	}
+
+	return DirectoryIndex(dirPath, rootDir)
+}
+
+func DirectoryIndex(dirPath string, rootDir string) (MarkdownFile, error) {
+	dx, err := newDirIndex(dirPath, rootDir)
+	if err != nil {
+		return nil, err
+	}
+	return dx.toMarkdownFile()
+}
 
 var md = goldmark.New(
-	goldmark.WithExtensions(extension.GFM),
+	goldmark.WithExtensions(
+		meta.Meta,
+		extension.GFM,
+	),
+	goldmark.WithParserOptions(
+		parser.WithAutoHeadingID(),
+	),
 	goldmark.WithRendererOptions(html.WithUnsafe()),
 )
-
-const readmeMd = "README.md"
-
-func DirToHTML(resolvedPath string, rootDir string) ([]byte, error) {
-	readmePath := filepath.Join(resolvedPath, readmeMd)
-	if util.IsFile(readmePath) {
-		return FileToHtml(readmePath)
-	} else {
-		return DirToIndexHtml(resolvedPath, rootDir)
-	}
-}
-
-func FileToHtml(filePath string) ([]byte, error) {
-	data, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		log.Printf("Error reading file %v: %v", filePath, err)
-		return nil, err
-	}
-
-	htmlData, err := toHtml(data)
-	if err != nil {
-		log.Printf("Error parsing file %v: %v", filePath, err)
-		return nil, err
-	}
-	return htmlData, nil
-}
-
-func DirToIndexHtml(dirPath string, rootDir string) ([]byte, error) {
-	dirIndex, err := NewDirIndex(dirPath)
-	if err != nil {
-		return nil, err
-	}
-	dirIndexHtml, err := dirIndex.ToHtml(rootDir)
-	if err != nil {
-		return nil, err
-	}
-	return dirIndexHtml, nil
-}
-
-func GetTitle(in io.Reader) string {
-	scanner := bufio.NewScanner(in)
-	for scanner.Scan() {
-		text := scanner.Text()
-		matches := headingRegexp.FindStringSubmatch(text)
-		if len(matches) > 1 {
-			return matches[1]
-		}
-	}
-	return ""
-}
-
-func GetTitleFromFile(path string) (string, error) {
-	if util.IsDirectory(path) {
-		return AsTitle(path), nil
-	}
-	return ExtractTitle(path)
-}
-
-func AsTitle(path string) string {
-	title := filepath.Base(path)
-	title = strings.TrimSuffix(title, ".md")
-	return strings.Title(title)
-}
-
-func ExtractTitle(path string) (string, error) {
-	in, err := os.Open(path)
-	defer util.CloseQuietly(in)
-	if err != nil {
-		return "", err
-	}
-	title := GetTitle(in)
-	if title != "" {
-		return title, nil
-	}
-	return AsTitle(path), nil
-}
 
 // ------------------------------------------------------------
 // Unexported
 
-var headingRegexp = regexp.MustCompile("^[\\s#]*#+ +(.+)$")
+const readme = "README"
+const mdExt = ".md"
+const readmeMd = readme + mdExt
 
-func stringToHtml(s string) ([]byte, error) {
-	return toHtml([]byte(s))
+func parseFile(filePath string) (*mainContent, metadata, error) {
+	data, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Printf("Error reading file %v: %v", filePath, err)
+		return nil, nil, err
+	}
+	return parseBytes(data)
 }
 
-func toHtml(markdown []byte) ([]byte, error) {
+func parseString(markdown string) (*mainContent, metadata, error) {
+	return parseBytes([]byte(markdown))
+}
+
+func parseBytes(markdown []byte) (*mainContent, metadata, error) {
 	var buf bytes.Buffer
-	if err := md.Convert(markdown, &buf); err != nil {
-		return nil, err
+	context := parser.NewContext()
+	if err := md.Convert(markdown, &buf, parser.WithContext(context)); err != nil {
+		return nil, nil, err
 	}
-	return buf.Bytes(), nil
+	mainContentStr := string(buf.Bytes())
+	return &mainContent{mainContentStr}, meta.Get(context), nil
 }

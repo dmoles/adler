@@ -2,73 +2,88 @@ package markdown
 
 import (
 	"fmt"
-	"github.com/dmoles/adler/server/util"
-	"io"
 	"io/ioutil"
 	"log"
 	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/dmoles/adler/server/util"
 )
-
-// ------------------------------------------------------------
-// Exported
-
-type DirIndex interface {
-	ToHtml(rootDir string) ([]byte, error)
-}
-
-func NewDirIndex(dirPath string) (DirIndex, error) {
-	pathsByTitle, err := getPathsByTitle(dirPath)
-	if err != nil {
-		return nil, err
-	}
-	return &dirIndex{
-		dirPath:      dirPath,
-		titles:       sortedTitles(pathsByTitle),
-		pathsByTitle: pathsByTitle,
-	}, nil
-}
 
 // ------------------------------------------------------------
 // Unexported
 
 type dirIndex struct {
+	title        string
 	dirPath      string
+	rootDir      string
 	titles       []string
 	pathsByTitle map[string]string
 }
 
-func (d *dirIndex) ToHtml(rootDir string) ([]byte, error) {
-	title, err := GetTitleFromFile(d.dirPath)
-	if err != nil {
-		return nil, err
+func newDirIndex(dirPath string, rootDir string) (*dirIndex, error) {
+	var title string
+
+	readmePath := filepath.Join(dirPath, readmeMd)
+	if util.IsFile(readmePath) {
+		mf, err := FromFile(readmePath)
+		if err != nil {
+			return nil, err
+		}
+		title = mf.Title().Text()
 	}
-	relPath, err := filepath.Rel(rootDir, d.dirPath)
+	if title == "" {
+		stem := filepath.Base(dirPath)
+		title = strings.Title(stem)
+	}
+
+	pathsByTitle, err := getPathsByTitle(dirPath, rootDir)
 	if err != nil {
 		return nil, err
 	}
 
-	var sb strings.Builder
-	//noinspection GoUnhandledErrorResult
-	fmt.Fprintf(&sb, "# [%s](%s)\n\n", title, relPath)
-	d.WriteMarkdown(&sb, rootDir)
-
-	return stringToHtml(sb.String())
+	return &dirIndex{
+		title:        title,
+		dirPath:      dirPath,
+		rootDir:      rootDir,
+		titles:       sortedTitles(pathsByTitle),
+		pathsByTitle: pathsByTitle,
+	}, nil
 }
 
-//noinspection GoUnhandledErrorResult
-func (d *dirIndex) WriteMarkdown(w io.Writer, rootDir string) {
+func (d *dirIndex) toMarkdownFile() (MarkdownFile, error) {
+	dirPath := d.dirPath
+	absPath, err := util.ToAbsoluteUrlPath(dirPath, d.rootDir)
+
+	var sb strings.Builder
+
+	// Only link the title if this is the root
+	if isRoot, err := util.SameFilePath(dirPath, d.rootDir); isRoot && err == nil {
+		//noinspection GoUnhandledErrorResult
+		fmt.Fprintf(&sb, "# [%s](%s)\n\n", d.title, absPath)
+	} else {
+		//noinspection GoUnhandledErrorResult
+		fmt.Fprintf(&sb, "# %s\n\n", d.title)
+	}
+
 	for _, title := range d.titles {
-		path := d.pathsByTitle[title]
-		relPath, err := filepath.Rel(rootDir, path)
+		filePath := d.pathsByTitle[title]
+		absPath, err = util.ToAbsoluteUrlPath(filePath, d.rootDir)
 		if err != nil {
-			log.Printf("Error determining relative path to file: %v: %v", path, err)
+			log.Printf("Error determining relative path to file: %v: %v", filePath, err)
 			continue
 		}
-		fmt.Fprintf(w, "- [%v](/%v)\n", title, relPath)
+		//noinspection GoUnhandledErrorResult
+		fmt.Fprintf(&sb, "- [%v](%v)\n", title, absPath)
 	}
+
+	mc, md, err := parseString(sb.String())
+	if err != nil {
+		return nil, err
+	}
+	return fromParseResult(d.title, mc, md, nil), nil
 }
 
 // ------------------------------
@@ -89,12 +104,8 @@ func sortedTitles(pathsByTitle map[string]string) []string {
 	return titles
 }
 
-func getPathsByTitle(dirPath string) (map[string]string, error) {
-	dirPath, err := util.ToAbsoluteDirectory(dirPath)
-	if err != nil {
-		return nil, err
-	}
-
+func getPathsByTitle(dirPath string, rootDir string) (map[string]string, error) {
+	// TODO: cache this so we're not constantly reparsing every file
 	files, err := ioutil.ReadDir(dirPath)
 	if err != nil {
 		return nil, err
@@ -102,19 +113,30 @@ func getPathsByTitle(dirPath string) (map[string]string, error) {
 
 	pathsByTitle := map[string]string{}
 	for _, info := range files {
-		filename := info.Name()
-		if filename == readmeMd || strings.HasPrefix(filename, ".") {
+		baseName := info.Name()
+		if baseName == readmeMd || strings.HasPrefix(baseName, ".") {
 			continue
 		}
-		if !(info.IsDir() || strings.HasSuffix(filename, ".md")) {
+		if !(info.IsDir() || strings.HasSuffix(baseName, mdExt)) {
 			continue
 		}
-		fullPath := filepath.Join(dirPath, filename)
-		title, err := GetTitleFromFile(fullPath)
+		var mf MarkdownFile
+
+		fullPath := filepath.Join(dirPath, baseName)
+		if util.IsDirectory(fullPath) {
+			if util.ContainsMarkdown(fullPath) {
+				mf, err = ForDirectory(fullPath, rootDir)
+			} else {
+				continue
+			}
+		} else {
+			mf, err = FromFile(fullPath)
+		}
 		if err != nil {
 			log.Printf("Error determining title from file: %v: %v", fullPath, err)
 			continue
 		}
+		title := mf.Title().Text()
 		pathsByTitle[title] = fullPath
 	}
 

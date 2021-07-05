@@ -1,39 +1,52 @@
 package handlers
 
 import (
-	"github.com/dmoles/adler/server/markdown"
-	"github.com/dmoles/adler/server/templates"
-	"github.com/dmoles/adler/server/util"
+	"log"
 	"net/http"
-	"strings"
+
+	"github.com/gorilla/mux"
+
+	"github.com/dmoles/adler/server/markdown"
+	"github.com/dmoles/adler/server/util"
 )
 
-type markdownHandlerBase struct {
-	rootDir string
+const markdownPathPattern = "/{path:.+\\.md}"
+
+func Markdown(rootDir string) Handler {
+	h := markdownHandler{}
+	h.rootDir = rootDir
+	return &h
 }
 
-func (h *markdownHandlerBase) write(w http.ResponseWriter, urlPath string, title string, bodyHtml []byte) error {
-	rootIndexHtml, err := markdown.DirToIndexHtml(h.rootDir, h.rootDir)
+type markdownHandler struct {
+	markdownHandlerBase
+}
+
+func (h *markdownHandler) Register(r *mux.Router) {
+	r.HandleFunc(markdownPathPattern, h.handle)
+}
+
+func (h *markdownHandler) handle(w http.ResponseWriter, r *http.Request) {
+	err := h.writeFile(w, r)
+	if err != nil {
+		log.Println(err)
+		http.NotFound(w, r)
+	}
+}
+
+func (h *markdownHandler) writeFile(w http.ResponseWriter, r *http.Request) error {
+	urlPath := r.URL.Path
+	//log.Printf("write(): %v", urlPath)
+
+	resolvedPath, err := util.UrlPathToFile(urlPath, h.rootDir)
 	if err != nil {
 		return err
 	}
 
-	siteTitle, err := markdown.GetTitleFromFile(h.rootDir)
+	mf, err := markdown.FromFile(resolvedPath)
 	if err != nil {
 		return err
 	}
 
-	pageData := templates.PageData{
-		Header: siteTitle,
-		Title:  title,
-		TOC:    string(rootIndexHtml),
-		Body:   string(bodyHtml),
-	}
-
-	var sb strings.Builder
-	err = templates.Page().Execute(&sb, pageData)
-	if err != nil {
-		return err
-	}
-	return util.WriteData(w, urlPath, []byte(sb.String()))
+	return h.write(w, urlPath, mf)
 }

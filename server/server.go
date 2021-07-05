@@ -3,13 +3,15 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/dmoles/adler/server/handlers"
-	"github.com/dmoles/adler/server/util"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"path/filepath"
 	"time"
+
+	"github.com/gorilla/mux"
+
+	"github.com/dmoles/adler/server/handlers"
+	"github.com/dmoles/adler/server/util"
 )
 
 // ------------------------------------------------------------
@@ -73,9 +75,10 @@ type server struct {
 func (s *server) newRouter() *mux.Router {
 	// TODO: support single-page version
 	r := mux.NewRouter()
-	for _, h := range handlers.All(s.rootDir, s.cssDir) {
+	for _, h := range handlers.All(s.rootDir) {
 		h.Register(r)
 	}
+
 	return r
 }
 
