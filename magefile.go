@@ -167,6 +167,10 @@ func skipValidation() bool {
 var timeZero = time.Time{}
 
 func ignored(path string) bool {
+	if _, err := os.Stat(".gitignore"); err != nil {
+		return false
+	}
+
 	gi, err := gitIgnore()
 	if err != nil {
 		panic(err)

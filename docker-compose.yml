@@ -1,0 +1,9 @@
+services:
+  adler:
+    build:
+      context: .
+      target: base
+    ports:
+      - 8181:8181
+    volumes:
+      - ./testdata:/go/src/app/content
