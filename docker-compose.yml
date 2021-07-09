@@ -1,5 +1,5 @@
 services:
-  adler:
+  adler: &services-adler
     build:
       context: .
       target: base
@@ -7,3 +7,8 @@ services:
       - 8181:8181
     volumes:
       - ./testdata:/go/src/app/content
+
+  sass-lint:
+    <<: *services-adler
+    entrypoint: [ 'sass-lint', '-v', '-c', 'scss/.sass-lint.yml', 'scss/*.scss' ]
+    ports: []
